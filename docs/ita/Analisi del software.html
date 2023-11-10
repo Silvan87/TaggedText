@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="../_style/analysis.css">
+    <script src="../_style/analysis.js"></script>
+    <title>Analisi del software</title>
+<style>
+.state-0::before { content:"Bozza"; }
+.state-1::before { content:"Pronta da sviluppare"; }
+.state-2::before { content:"In sviluppo"; }
+.state-3::before { content:"Da revisionare"; }
+.state-4::before { content:"In revisione"; }
+.state-5::before { content:"Da testare"; }
+.state-6::before { content:"Sotto test"; }
+.state-7::before { content:"Da rilasciare"; }
+.state-8::before { content:"Fatto"; }
+.state-9::before { content:"Sospesa"; }
+.state-10::before { content:"Bloccata"; }
+</style>
+</head>
+<body onload="colorSections(); composeSprintBacklog(); showSection(2)">
+    <aside>
+        <nav id="menu"><ul>
+            <li onclick="showSection(0)">Vision</li>
+            <li onclick="showSection(1)">Product backlog</li>
+            <li onclick="showSection(2)">Sprint backlog</li>
+        </ul></nav>
+    </aside>
+    <div id="content">
+        <section id="vision">
+            <article>
+                <p>Avere una <b>sintassi semplice, minimale ed espressiva</b> per descrivere principalmente <b>contenuti testuali</b>, ma in futuro anche <b>dati binari</b> (es. byte, integer 16 bit, integer 32 bit, con o senza segno...), e per descrivere dei <b>modelli di presentazione</b> che applicati ai file di contenuto possano produrre <b>file distribuibili</b> (es. pagine html, libri elettronici, siti web vetrina o qualsiasi file di tipo testuale, in futuro anche file binari).</p>
+            </article>
+        </section>
+        <section id="product-backlog">
+            <!-- Put the <article> elements in the order according to the product priority -->
+            <article>
+                <header>
+                    <div class="us-id">1</div>
+                    <h2>Come creatore di contenuti, vorrei una sintassi semplice, minimale ed espressiva per descrivere qualsiasi contenuto testuale, così da focalizzarmi sul contenuto ed avere un codice sorgente del contenuto senza pensare minimamente al layout e alla grafica.</h2>
+                    <div class="priority high"></div>
+                </header>
+                <div class="description">
+                    <p>La sintassi deve essere:</p>
+                    <ul>
+                        <li><b>semplice</b> da leggere per un umano, possibilmente comprensibile "a colpo d'occhio".</li>
+                        <li><b>minimale</b>, ovvero usare il numero minimo di caratteri speciali e convenzioni pur non limitando l'espressività.</li>
+                        <li><b>comoda</b>, il principale ausilio all'uso di questo linguaggio sarà la colorazione del testo, salvo questo si deve poter scrivere come testo semplice senza necessitare di complessi strumenti come gli ambienti di sviluppo.</li>
+                        <li>ampiamente <b>espressiva</b>, si può tenere come riferimento di espressività il linguaggio html. Si deve poter definire un contenuto testuale qualificando i pezzi di testo con un aggettivo (o un tag). Questi pezzi di testo possono essere definiti arbitrariamente in numero, lunghezza, inizio della sotto stringa e fine della sotto stringa. Questi pezzi di testo qualificati (o taggati) si devono poter inserire in una struttura gerarchica con un numero di livelli grande quanto l'utente ha bisogno.</li>
+                        <li><b>focalizzata sul contenuto</b> e quindi <b>flessibile</b>, nell'ottica di avere modelli per generare layout, impaginazioni e grafica, la sintassi dovrebbe qualificare in senso semantico le parti di testo per usarle con grande libertà in un momento successivo, non si dovrebbe avvertire la necessità di pensare alla disposizione dei contenuti, al massimo giusto un ordine sequenziale degli stessi.</li>
+                    </ul>
+                    <p>La sintassi rimarrà aperta a miglioramenti se eventuali limiti di espressività futuri risulteranno scomodi.</p>
+                </div>
+                <div class="assignment">
+                    <p><b>Epica</b>: Definizione sintassi</p>
+                    <p><b>Stato</b>: <span class="state-8"></span></p>
+                    <p><b>Assegnatario</b>: Silvan</p>
+                </div>
+                <div class="duration">
+                    <p><b>Creatore</b>: Silvan</p>
+                    <p><b>Data creazione</b>: 2018</p>
+                    <p><b>Data inizio</b>: Nov 2018</p>
+                    <p><b>Data fine</b>: 22 Mag 2022</p>
+                </div>
+                <ul class="subtasks">
+                    <li><span class="state-8"></span> Ideazione di tutti i dettagli della sintassi richiesta.</li>
+                    <li><span class="state-8"></span> Scrittura di un capitolo nella documentazione tecnica dove illustrare tutti i dettagli della sintassi richiesta.</li>
+                    <li><span class="state-8"></span> Versione inglese della documentazione.</li>
+                    <li><span class="state-8"></span> Versione italiana della documentazione.</li>
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <div class="us-id">2</div>
+                    <h2>Come creatore di contenuti, vorrei usare la sintassi definita con la US-1 per descrivere dei template che usino i contenuti scritti con la medisima sintassi per produrre potenzialmente qualsiasi file testuale distribuibile</h2>
+                    <div class="priority medium"></div>
+                </header>
+                <div class="description">
+                    <p>La sintassi definita con la US-1, chiamata TT (Tagged Text), si deve poter usare per descrivere dei file speciali di template che permettano di usare testi in TT, applicare delle regole tramite i file template TT e produrre potenzialmente qualsiasi file testuale.</p>
+                    <p>Per semplificare il lavoro tecnico sia i file sorgenti con il contenuto, sia i file template che i file distribuibili, useranno di default la codifica UTF-8.</p>
+                    <p>I file distribuibili prodotti, anche detti <em>pubblicazione</em>, devono poter essere almeno in formato html, ma non deve esserci nessuna restrizione o legame specifico con il formato html, quindi qualsiasi formato testuale deve poter essere prodotto.</p>
+                </div>
+                <div class="assignment">
+                    <p><b>Epica</b>: Definizione sintassi</p>
+                    <p><b>Stato</b>: <span class="state-2"></span></p>
+                    <p><b>Assegnatario</b>: Silvan</p>
+                </div>
+                <div class="duration">
+                    <p><b>Creatore</b>: Silvan</p>
+                    <p><b>Data creazione</b>: 2018</p>
+                    <p><b>Data inizio</b>: Nov 2018</p>
+                    <p><b>Data fine</b>: Gen 2023</p>
+                </div>
+                <ul class="subtasks">
+                    <li><span class="state-8"></span> Definizione della composizione dei file template in TT per avere una pubblicazione.</li>
+                    <li><span class="state-8"></span> Definizione delle regole in un file template in TT da applicare ad un contenuto in TT.</li>
+                    <li><span class="state-2"></span> Versione inglese della documentazione.</li>
+                    <li><span class="state-8"></span> Versione italiana della documentazione.</li>
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <div class="us-id">3</div>
+                    <h2>Come creatore di contenuti, vorrei poter scrivere un file spine minimale con qualche file di contenuto e un file modello minimale per eseguire una prima pubblicazione minimale</h2>
+                    <div class="priority high"></div>
+                </header>
+                <div class="description">
+                    <p></p>
+                </div>
+                <div class="assignment">
+                    <p><b>Epica</b>: Elaboratore</p>
+                    <p><b>Stato</b>: <span class="state-2"></span></p>
+                    <p><b>Assegnatario</b>: Silvan</p>
+                </div>
+                <div class="duration">
+                    <p><b>Creatore</b>: Silvan</p>
+                    <p><b>Data creazione</b>: 2018</p>
+                    <p><b>Data inizio</b>: Nov 2018</p>
+                    <p><b>Data fine</b>: Ott 2023</p>
+                </div>
+                <ul class="subtasks">
+                    <li><span class="state-2"></span> TODO</li>
+                </ul>
+            </article>
+        </section>
+        <section id="sprint-backlog">
+        </section>
+    </div>
+</body>
+</html>

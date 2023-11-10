@@ -1,0 +1,121 @@
+* { margin:0; padding:0; }
+
+.state-0, .state-1, .state-2, .state-3, .state-4, .state-5, .state-6, .state-7, .state-8, .state-9, .state-10 {
+    padding:.25em .75em;
+    border-radius:1em;
+}
+.state-0 { border:.15em dashed #333; }
+.state-1 { background:#ccc; }
+.state-2 { background:#cc0; }
+.state-3 { background:#7df; }
+.state-4 { background:#79f; }
+.state-5 { background:#f88; }
+.state-6 { background:#f94; }
+.state-7 { background:#de0; }
+.state-8 { background:#0e0; }
+.state-9 { background:#ccc; }
+.state-10 { background:#f55; }
+
+body {
+    font-family:'Noto Sans', 'Calibri', sans-serif;
+    background:#808080;
+}
+aside {
+    display:block;
+    position:fixed;
+    top:0;
+    left:0;
+    width:12em;
+    height:100vh;
+    margin-right:-.5em;
+    padding:1em 0 1em 1em;
+    z-index:2;
+    color:#ddf;
+}
+aside li {
+    list-style:none;
+    margin:0;
+    padding:.75em 0;
+    font-weight:bold;
+    text-align:center;
+    border-radius:2em 0 0 2em;
+}
+aside li:hover {
+    margin-left:-1em !important;
+}
+#content {
+    position:absolute;
+    right:0;
+    width:calc(100vw - 13em);
+}
+#content section {
+    padding:1em 1em 0 1em;
+    border-radius:0 0 0 1em;
+    width:calc(100vw - 15.4em);
+    min-height:10em;
+}
+#content section article {
+    padding:1em;
+    margin-bottom:1em;
+    border-radius:1em;
+    background:#eee;
+}
+.description {
+    margin-bottom:1.2em;
+}
+.assignment, .duration {
+    display:flex;
+    justify-content: space-between;
+}
+#content header {
+    display:flex;
+}
+#content header .priority {
+    display:block;
+    min-width:2em;
+    max-width:2em;
+    min-height:2em;
+    max-height:2em;
+    border-radius:1em;
+}
+#content header .priority.high { background:#c00; color:#fff; }
+#content header .priority.medium { background:#fc0; }
+#content header .priority.low { background:#be0; }
+
+#content .us-id {
+    font-size:16px;
+    font-weight:bold;
+    text-align:center;
+    line-height:100%;
+    height:2.25em;
+    background:#ccc;
+    padding:.25em .25em .25em .25em;
+    margin:0 .5em 0 0;
+    border-radius:.5em;
+}
+#content .us-id::before {
+    content:"US ";
+}
+#content h2 {
+    font-size:16px;
+    color:#444;
+    margin-bottom:.5em;
+}
+#content p, #content ul {
+    font-size:14px;
+    margin-bottom:.5em;
+}
+#content ul li {
+    margin-left:1.5em;
+}
+#content .subtasks {
+    list-style-type:none;
+    margin-top:.5em;
+}
+#content .subtasks li {
+    list-style-type:none;
+    margin:-2px 0 0 0;
+    padding:.5em .25em;
+    border-radius:1em;
+    border:2px dashed #888;
+}
