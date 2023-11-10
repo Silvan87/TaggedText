@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="../_style/documentation.css">
+	<title>Documentazione tecnica</title>
+</head>
+<body>
+    <h1>Documentazione tecnica</h1>
+
+    <nav>
+    <ol type="1">
+        <li>La sintassi Tagged Text
+            <ol type="1">
+                <li>Requisiti</li>
+                <li>Valutazione di linguaggi simili esistenti</li>
+                <li>Definizione di contenuto semplice</li>
+                <li>Definizione di contenuto taggato</li>
+                <li>Definizione di tag in linea</li>
+                <li>Definizione di tag senza contenuto</li>
+                <li>Definizione di tag di 2° livello ed oltre</li>
+                <li>Definizione di tag con id</li>
+                <li>Definizione di commento</li>
+                <li>Definizione del carattere di uscita</li>
+                <li>Nome della sintassi ideata</li>
+            </ol>
+        </li>
+        <li>Le regole dei modelli in Tagged Text
+            <ol type="1">
+                <li>Composizione dei file contenuto e modello</li>
+                <ol type="1">
+                    <li>Il file spina della pubblicazione</li>
+                    <li>Definire la cartella dei file modello</li>
+                    <li>Definire la cartella della pubblicazione</li>
+                    <li>Definire una variabile generale</li>
+                    <li>Definire una lista di file</li>
+                    <li>Applicare dei modelli ad un file contenuto</li>
+                    <li>Applicare dei modelli ad una lista di file contenuto</li>
+                    <li>Pubblicare una lista di file usando una lista di file contenuto</li>
+                </ol>
+                <li>Regole applicabili al contenuto TT</li>
+                <ol type="1">
+                    <li>Regola per il contenuto ad inizio file</li>
+                    <li>Regola per il contenuto a fine file</li>
+                    <li>Regola per il contenuto di un tag</li>
+                    <li>Regola per il contenuto di una lista di tag</li>
+                    <li>Regola per dividere il contenuto in elementi e comporli in una lista</li>
+                    <li>Regola per recuperare tag sparsi e comporli in una lista</li>
+                    <li>Regola per definire un contatore</li>
+                </ol>
+            </ol>
+        </li>
+    </ol>
+    </nav>
+
+    <h2>1. La sintassi Tagged Text <span class="badge">User story 1</span></h2>
+
+    <h3>1.1. Requisiti</h3>
+
+    <p>I requisiti per ideare la sintassi sono minini e quindi permettono molte scelte. La sintassi deve essere <b>semplice</b> da leggere per un umano, possibilmente comprensibile "a colpo d'occhio". Sarà necessario ricorrere a caratteri speciali per distinguere gli attributi del contenuto dal contenuto stesso, ma andranno usati in modo <b>minimale</b>. Il linguaggio dovrà risultare <b>comodo</b> da scrivere, l'evidenziazione del codice tramite editor di testo è prevista, ma deve risultare facile da scrivere senza l'aiuto di complessi ambienti di sviluppo. Al tempo stesso l'<b>espressività</b> deve essere paragonabile a quella del linguaggio <i>html</i>. Ma a differenza di quest'ultimo ci deve essere un maggior <b>focus sul contenuto</b>, non solo rispetto alla grafica, ma anche rispetto all'impaginazione e alla disposizione degli elementi. Dunque si deve poter lavorare in modo <b>flessibile</b>, qualificando le porzioni di testo da un punto di vista semantico per elaborarle in un momento successivo.</p>
+
+    <p>In merito all'espressività, essa deve ammettere qualsiasi contenuto testuale. Qualsiasi stringa o sottostringa deve poter ricevere un attributo. Si potrà definire una stringa di qualsiasi lunghezza, partendo da un qualsiasi carattere, fino ad un qualsiasi altro carattere successivo. Questi pezzi di testo qualificati (o taggati) devono poter essere strutturati in una struttura gerarchica a più livelli senza un limite definito.</p>
+
+    <h3>1.2. Valutazione di linguaggi simili esistenti</h3>
+
+    <p>Prima di ideare una nuova sintassi, sono stati esaminati alcuni linguaggi esistenti che potessero soddisfare i requisiti proposti. Sono stati esaminati: html, LaTeX, markdown, reStructuredText, txt2tags, textile, json, yaml. Ma sono stati tutti scartati per le seguenti ragioni:</p>
+    <ul>
+        <li><b>html</b>: alcuni difetti salienti rispetto ai requisiti sono: <b>(1)</b> è scomodo aprire e chiudere tag &lt;&gt;&lt;/&gt; serve lasciare e premere shift alternativamente per digitare &lt;&gt; e servirsi di un ulteriore carattere di chiusura / che ne diminuisce la comodità d'uso nell'ottica di lavorarci come testo semplice in conflitto con il requisito di comodità; <b>(2)</b> il tag assegnato ad una porzione di testo va ripetuto in chiusura causando verbosità e ridondanza in conflitto con il requisito di minimalità; <b>(3)</b> un tag html può definire una porzione di testo ed il tag stesso può ricevere attributi con valori, però usando un numero più elevato di tag è possibile esprimere tutto quello che può esprimere l'html ma con una sintassi più semplice, ciò è in conflitto con il requisito di minimalità; <b>(4)</b> l'html per quanto riesca a separare la grafica dalla disposizione dei contenuti è abbastanza vincolato alla struttura e alla disposizione dei contenuti, richiede che si pensi in anticipo attraverso tabelle o divisori a soluzioni ammesse da <i>css</i> ma applicabili ad html solo se preparato in anticipo per quelle soluzioni, quindi non riesce effettivamente a disaccoppiarsi dalla disposizione del contenuto. L'elenco è più che sufficiente per ragionare su una diversa sintassi.</li>
+        <li><b>LaTeX</b>: questa sintassi non è solo per marcare il testo, ma offre la possibilità di inserire comandi per il documento da generare. Sicuramente l'espressività è ampia e ricca, ma <b>(1)</b> non è sufficientemente semplice e minimale. Si consideri che la sintassi che si vorrebbe realizzare potrebbe utilizzare come formati di destinazione pagine html o documenti in LaTeX che a loro volta possono produrre una pubblicazione stampabile o su altri supporti. Sono linguaggi che potrebbero lavorare in simbiosi, ma quello che si ricerca ora deve essere molto più semplice di LaTeX e molto più comodo da scrivere con ordinari editor di testo.</li>
+        <li><b>markdown</b>: principalmente markdown permette la produzione di paragrafi html arricchiti con effetti ai caratteri, con link ed elementi testuali come paragrafi, elenchi puntati, titoli, tabelle e simili. Lo stile della sintassi è piuttosto naturale e intuitivo, il ché lo rende semplice e comodo, però <b>(1)</b> si serve di una serie di convenzioni specifiche che lo legano eccessivamente ad un sottoinsieme dei tag di html limitando molto la sua espressività; inoltre queste convenzioni specifiche <b>(2)</b> non rendono la sintassi abbastanza minimale ma la articolano eccessivamente per marcare ogni lieve differenza di stile e di elemento. Per quanto risulti preferibile ad html, non può soddisfare 2 importanti requisiti e quindi va scartato.</li>
+        <li><b>reStructuredText</b>, <b>txt2tags</b>, <b>textile</b>: quanto detto per markdown, si applica anche a reStructuredText, txt2tags e textile, essi usano altri espedienti sintattici che potrebbero piacere di più o di meno come stile, ma restano eccessivamente legati ad una semplificazione di alcuni tag ricorrenti in html, che li rendono suscettibili alle due critiche precedenti <b>(1) (2)</b>.</li>
+        <li><b>json</b>: la sintassi di json è semplice, apprezzabilmente minimale, ampiamente espressiva e flessibile. L'unico serio difetto è che <b>(1)</b> non è comodo da scrivere. Verosimilmente avremo elenchi di elementi da inserire nelle parentesi quadre [] e questi elementi raramente saranno solo pezzi di stringa, ma saranno oggetti da descrivere quindi con parantesi graffe {} ed ogni attributo andrà specificato usando le virgolette "", richieste anche dal valore dell'attributo. È facile comprendere che nell'ottica di descrivere un intero libro o un sito vetrina o una collezione di script questi grandi oggetti json diventeranno presto di difficilissima lettura ed arduamenti modificabile senza causare incoerenze nella struttura delle parentesi. Leggibilità e comodità non sono soddisfatte da json e vale la pena ideare una differente sintassi.</li>
+        <li><b>yaml</b>: oltre ad essere semplice, minimale, espressivo e flessibile come json ed anche meglio, risulta anche piuttosto comodo da scrivere. Un sottoinsieme della grammatica di yaml risulterebbe sufficientemente minimale e adatto allo scopo. Un limite tra i più impattanti per gli scopi prefissi è che <b>(1)</b> le mappe yaml, composte di chiave e valore, non permettono all'interno del valore di definire porzioni di testo con tag particolari, come per esempio permette di fare html, bisognerebbe spezzare il testo in modo innaturale e mapparlo, per esempio, in pezzi normali e in pezzi che vanno rappresentati in grassetto o con altri effetti. Un requisito dell'espressività era che qualsiasi sottostringa potesse ricevere un attributo, conservando una soluzione minimale e comoda, purtroppo yaml non è soddisfacente a tal riguardo. <b>(2)</b> Una seconda ragione meno impattante ma menzionabile è che yaml è ben interpretabile se si conoscono le strutture dati liste e mappe e non è da escludere che si possa trovare un modo ancora più semplice unicamente legato al concetto di tag o attributo, vale a dire usando solo la struttura della mappa. Se c'è un unico elemento possibile nella sintassi non serve controllare nulla per capire se ci si trova dentro una lista o dentro una mappa. Ed ancora, <b>(3)</b> yaml si serve di svariati caratteri speciali per conservare la preformattazione o un certo tipo di concatenamento tra stringhe interrotte da un ritorno a capo, anche in questo caso potrebbe essere utile trovare soluzioni più semplici. Risulta sicuramente un buon candidato, ma è preferibile ricercare una sintassi più rispondente agli scopi prefissi.</li>
+    </ul>
+
+    <h3>1.3. Definizione di contenuto semplice</h3>
+
+    <p>Un contenuto senza <i>tag</i> (senza <i>attributi</i> o <i>qualificazioni</i>, qui considerati concettualmente sinonimi) dovrebbe poter essere scritto liberamente, senza caratteri introduttivi, virgolette o altri marcatori, esattamente come un testo semplice in formato <i>txt</i>.</p>
+
+    <code>Questo è un paragrafo che non ha ricevuto alcun tag.<br />È possibile andare a capo e continuare a scrivere quel che si desidera.<br />= Si dovrebbero poter usare più o meno tutti i caratteri .;'/-\:,. senza conseguenze indesiderate =</code>
+
+    <h3>1.4. Definizione di contenuto taggato</h3>
+
+    <p>Per permettere al contenuto semplice di continuare ad esistere senza essere disturbato, un tag deve essere dedicato ad una linea di testo speciale e per definire che quella linea è speciale servirà un carattere speciale. Si propone il noto carattere di tag cancelletto # la cui digitazione è ragionevolmente comoda <span class="key">Alt Gr</span> + <span class="key">à</span>, attaccato ad esso seguirà il nome del tag che per ragioni di chiarezza si deve comporre di una tipologia di caratteri limitata: lettere minuscole, maiuscole, numeri ed il trattino -. Qualsiasi altro carattere interromperà il nome del tag, ma si raccomanda di utilizzare lo spazio per interrompere il nome del tag. La rimanente parte di linea può essere ignorata iniziando a scrivere nella linea successiva oppure sarà considerata testo semplice taggato con il tag appena definito. I tag dovrebbero preferibilmente specificare il valore semantico di quel contenuto disaccoppiandosi dallo stile grafico. Per esempio, <b>#titolo-libro</b> è preferibile a <b>#grande1-rosso</b>.</p>
+
+    <code><b class="tag1">#titolo</b> La casa nel bosco<br /><br /><b class="tag1">#paragrafo</b><br />In un'ampia radura del bosco si ergeva una graziosa casetta di legno...<br /><br /><b class="tag1">#NomeCheMostra123-i-caratteri-possibili</b>@per il nome di un tag<br /></code>
+
+    <p>Notare nell'esempio sopra che l'utilizzo di un carattere diverso da quelli ammessi dal nome del tag comporta l'inizio di normale testo semplice. Inoltre, il testo taggato o semplice viene considerato così come è, ovvero con spazi, andate a capo e tabulazioni, però tutti i caratteri bianchi ad inizio e a fine testo (taggato o semplice) verranno rimossi. Per esempio, il titolo taggato nella prima linea è letteralmente " La casa nel bosco", ma il valore considerato sarà "La casa nel bosco". Anche il testo del paragrafo sarebbe "[ritorno a capo]In un'ampia radura [ecc.]", ma [ritorno a capo] è un carattere bianco ad inizio stringa e quindi verrà rimosso.</p>
+
+    <p>Le tabulazioni o i caratteri bianchi prima dei tag o ad inizio stringa verranno, come detto, rimossi, quindi si potrà tabulare il documento come si preferisce. Non si intende usare la tabulazione come elemento speciale per definire i livelli perché <b>(1)</b> creando molteplici livelli si costringerebbe a spostare verso destra il contenuto e potrebbe non essere desiderabile. Inoltre, <b>(2)</b> alternare gli elementi, più dentro, più fuori, può essere una buona tecnica per migliorare la leggibilità del testo taggato e non sarebbe possibile se elementi dello stesso livello sono costretti a conservare lo stesso numero di tabulazioni. Si preferisce dunque lasciare la gestione della tabulazione del testo da parte dell'utente libera da effetti sulla sintassi. Segue un esempio.</p>
+
+    <code><span class="tab"></span><b class="tag1">#titolo-capitolo</b> La spada fantasma<br /><br /><b class="tag1">#titolo-sezione</b> Incontro nel castello<br /><br /><span class="tab"></span><b class="tag1">#paragrafo</b><br /><span class="tab"></span>Questo è il primo paragrafo della prima sezione...<br /><br /><span class="tab"></span><b class="tag1">#paragrafo</b><br /><span class="tab"></span>Questo è il secondo paragrafo della prima sezione...<br /><br /><b class="tag1">#titolo-sezione</b> Nella stanza segreta<br /><br /><span class="tab"></span><b class="tag1">#paragrafo</b><br /><span class="tab"></span>Questo è il primo paragrafo della seconda sezione...</code>
+
+    <h3>1.5. Definizione di tag in linea</h3>
+
+    <p>La possibilità di taggare una sotto stringa è offerta da html ma con la sua tipica verbosità e non è presente in un linguaggio più elegante come yaml. Quello che si propone qui è di prendere ispirazione dai commenti in linea di alcuni linguaggi di programmazione e adottare una colorazione tipica dei commenti, quindi meno vistosa rispetto al contenuto che si vuol taggare. Per aprire un tag in linea si userà slash-asterisco <span class="key">/</span><span class="key">*</span> e per chiuderlo asterisco-slash <span class="key">*</span><span class="key">/</span> , la combinazione di chiusura <span class="key">*</span><span class="key">/</span> verrà usata due volte: la prima volta indica la fine del nome del tag, la seconda volta indica la fine della sottostringa taggata. I caratteri da usare sono 2, però non richiedono Shift, Alt Gr o altri tasti da premere in simultanea, e risultano vicini nel tastierino numerico. Inoltre, gli asterischi che saranno ad inizio e alla fine del nome del tag in linea enfatizzeranno quel tag. Ecco una rappresentazione:</p>
+
+    <code><b class="tag1">#sunto</b><br /><b class="tag4">/*chiave*/</b>Cibo<b class="tag4">*/</b> fornisce energia e "materiali per costruire". <b class="tag4">/*chiave*/</b>Macronutrienti<b class="tag4">*/</b>: carboidrati, grassi, proteine. <b class="tag4">/*chiave*/</b>Micronutrienti<b class="tag4">*/</b>: vitamine, minerali, elementi essenziali. <b class="tag4">/*chiave*/</b>Energia<b class="tag4">*/</b> proviene da carboidrati e grassi. "<b class="tag4">/*chiave*/</b>Materiali per costruire<b class="tag4">*/</b>" sono amminoacidi (eventualmente convertiti in energia), grassi e micronutrienti.</code>
+
+    <p>Se non viene usata la breve sequenza slash-asterisco <span class="key">/</span><span class="key">*</span>, allora altre combinazioni di slash, asterischi o la stessa breve sequenza di chiusura saranno considerate una normale parte del testo.</p>
+
+    <code>Formula 3*4/2 ** Caratteri di chiusura*/ Fine //</code>
+
+    <p>Siccome un tag in linea si trova dentro una stringa che è un valore testuale taggato (e se non viene taggato, riceverà comunque un tag vuoto), esso sarà sempre di secondo livello o di livello inferiore, precisamente un livello sotto rispetto al livello del tag della porzione di testo in cui stiamo inserendo il tag in linea.</p>
+
+    <p>È anche possibile proseguire i livelli della struttura gerarchica di tag inserendo tag in linea dentro tag in linea. L'unico uso che sarà vietato, come in html, sarà l'intersecazione parziale di due sottostringe taggate. Ma siccome i due caratteri di chiusura non riportano il nome del tag che chiudono, è di fatto impossibile creare queste indesiderate intersecazioni. Per esempio, in html potremmo avere: <b>&lt;tag-1&gt;</b>Parole di <b>&lt;tag-2&gt;</b>esempio<b class="error">&lt;/tag-1&gt;</b> tag parzialmente intersecati<b>&lt;/tag-2&gt;</b>. Se si prova a ripetere questo caso con la sintassi proposta: <b>/*tag-1*/</b>Parole di <b>/*tag-2*/</b>esempio<b>*/</b> tag parzialmente intersecati<b>*/</b>. Si nota che il tag-2 sarà applicato solo ad 'esempio' e tag-1 viene esteso a tutta la frase. La stessa sintassi risolve automaticamente questo tipo di casi indesiderati.</p>
+
+    <h3>1.6. Definizione di tag senza contenuto</h3>
+
+    <p>Non sempre serve un contenuto da trattare in qualche modo seguendo la direttiva di un tag. Potremmo avere la necessità di inserire un indice completamente costruito o una nota automaticamente numerata o un altro elemento semplicemente da nominare con un tag che non richiede alcun contenuto. È già possibile fare questo con la sintassi introdotta fino a qui.</p>
+
+    <code><b class="tag1">#titolo</b> Esempi di tag senza contenuto.<br /><br /><b class="tag1">#indice</b><br /><br /><b class="tag1">#paragrafo</b> Anche nel testo in linea<b class="tag4">/*nota*/*/</b> possiamo avere un tag senza contenuto.</code>
+
+    <p>Però, non è elegante oltre che ridondante aprire e chiudere tag in linea senza contenuto ed anche i tag che non taggano nulla possono lasciare un po' disorientati. Quindi si propone di usare un cancelletto <span class="key">#</span> ad inizio e fine nome del tag per indicare sia su una riga a sé stante sia su del testo in linea un tag senza contenuto. Ecco come apparirebbe:</p>
+
+    <code><b class="tag1">#titolo</b> Esempi di tag senza contenuto.<br /><br /><b class="tag3">#indice#</b><br /><br /><b class="tag1">#paragrafo</b> Anche nel testo in linea<b class="tag3">#nota#</b> possiamo avere un tag senza contenuto.</code>
+
+    <p>Entrambe le due opzioni qui sopra illustrate porteranno allo stesso risultato, semplicemente il secondo modo sarà raccomandabile perché più leggibile.</p>
+
+    <h3>1.7. Definizione di tag di 2° livello ed oltre</h3>
+
+    <p>Attraverso l'uso di tag in linea abbiamo già visto come creare tag di 2° livello, e creando tag in linea dentro tag in linea, si arrivano a definire tag di 3° o 4° o ulteriore livello. Però, la sintassi deve offrire un modo di creare queste strutture nello stile principale dei tag ordinari (quelli definiti dedicando una riga di testo a loro). La soluzione proposta consiste nell'usare più simboli cancelletto <span class="key">#</span> per definire il livello al quale ci si trova. Segue un esempio.</p>
+
+    <code><b class="tag1">#tipo</b> Album musicale<br /><b class="tag1">#titolo</b> Fiocchi di neve<br /><br />
+    <b class="tag1">#canzone</b><br /><b class="tag2">##num</b> 1<br /><b class="tag2">##artista</b><br /><span class="tab"></span><b class="tag2">###nome</b> Snowman<br /><span class="tab"></span><b class="tag2">###cognome</b> Whiteland<br /><b class="tag2">##titolo</b> Ancora più bianco<br /><b class="tag2">##durata</b> 3:10<br /><br />
+    <b class="tag1">#canzone</b><br /><b class="tag2">##num</b> 2<br /><b class="tag2">##artista</b><br /><span class="tab"></span><b class="tag2">###nome</b> Snowman<br /><span class="tab"></span><b class="tag2">###cognome</b> Whiteland<br /><b class="tag2">##titolo</b> Il mondo è coperto<br /><b class="tag2">##durata</b> 3:38</code>
+
+    <p>Notare che si intende avere una colorazione per i tag di livello inferiore al primo differente. Spesso un tag di primo livello definisce in qualche modo un oggetto, potrebbe essere una nota, una canzone, una fonte bibliografica, ecc. Quindi il documento è più leggibile se suddiviso a colpo d'occhio in oggetti di primo livello. Servirsi liberamente e personalmente della tabulazione può aiutare la lettura di tag di terzo o ulteriore livello, come nome e cognome dell'artista nell'esempio sopra.</p>
+
+    <p>Per quanto non ci sarà un limite ai livelli di questa struttura gerarchica di contenuti taggati, si ritiene che spesso un uso prevalentemente lineare con pochi livelli per dettagliare degli oggetti principali, sia sufficiente a descrivere molti tipi di documento: libri, siti web vetrina, collezioni di varia natura, pubblicazioni elettroniche, ecc.</p>
+
+    <p>Quando si scende di livello aumentano i cancelletti <span class="key">#</span> e, rimanendo essi attaccati al nome del tag che introducono, la leggibilità può risultare disturbata. Quindi si prevede di poter mettere uno spazio opzionale tra la sequenza di cancelletti di tag di 2° o ulteriore livello e il nome del tag. In questo modo:</p>
+
+    <code><b class="tag1">#tipo</b> Album musicale<br /><b class="tag1">#titolo</b> Fiocchi di neve<br /><br />
+    <b class="tag1">#canzone</b><br /><b class="tag2">## num</b> 1<br /><b class="tag2">## artista</b><br /><span class="tab"></span><b class="tag2">### nome</b> Snowman<br /><span class="tab"></span><b class="tag2">### cognome</b> Whiteland<br /><b class="tag2">## titolo</b> Ancora più bianco<br /><b class="tag2">## durata</b> 3:10<br /><br />
+    <b class="tag1">#canzone</b><br /><b class="tag2">## num</b> 2<br /><b class="tag2">## artista</b><br /><span class="tab"></span><b class="tag2">### nome</b> Snowman<br /><span class="tab"></span><b class="tag2">### cognome</b> Whiteland<br /><b class="tag2">## titolo</b> Il mondo è coperto<br /><b class="tag2">## durata</b> 3:38</code>
+
+    <p>Invece i tag di primo livello non ammetteranno spazi tra il cancelletto e il nome del tag.</p>
+
+    <h3>1.8. Definizione di tag con id</h3>
+
+    <p>Non si intende trascurare le strategie per abbreviare la quantità di testo taggato scritto. Una situazione facilmente immaginabile è quando per oggetti diversi, come le canzoni dell'esempio sopra, abbiamo lo stesso artista che a sua volta può essere un oggetto complesso. Così risulterà utile definire una volta soltanto quell'oggetto ripetuto. Questo è possibile se si associa un id ad un tag e riutilizzando quell'id per un successivo tag con lo stesso nome, l'interprete della sintassi potrà capire che si tratta dello stesso oggetto.</p>
+
+    <p>Questa strategia basata sull'id permette di evitare ripetizioni, ma anche di creare collegamenti. Per esempio, se diversi punti di un paragrafo devono rimandare alla stessa nota, avendo un sistema automatico di numerazione delle note, non sarebbe possibile creare delle eccezioni per cui, per esempio, la nota numero 5 debba essere ripetuta in 3 punti sparsi in una sezione di testo. Ma se una nota può ricevere un id allora diventa possibile gestire questo tipo di eccezioni.</p>
+
+    <p>L'id dovrà ricevere una colorazione distinta dagli elementi visti finora. L'id potrà essere specificato con il simbolo barra verticale <span class="key">|</span> subito dopo un tag di qualsiasi livello, compreso un tag senza contenuto, ma si esclude l'applicazione ai tag in linea. Il motivo è che se si necessita di questa strategia, probabilmente si tratta di un oggetto relativamente complesso che sarà definito a parte e non dentro un testo taggato. Ma in futuro sarà sempre possibile rivedere questa scelta. Inoltre, il nome dell'id ammetterà gli stessi caratteri del nome di un tag.</p>
+
+
+    <code><b class="tag1">#tipo</b> Album musicale<br /><b class="tag1">#titolo</b> Fiocchi di neve<br /><br /><span class="tab"></span><b class="tag3">#playlist#</b><b class="id">|FiocchiNeve</b><br /><br />
+    <b class="tag1">#canzone</b><br /><b class="tag2">## num</b> 1<br /><b class="tag2">## artista</b><b class="id">|WhitelandS</b><br /><span class="tab"></span><b class="tag2">### nome</b> Snowman<br /><span class="tab"></span><b class="tag2">### cognome</b> Whiteland<br /><b class="tag2">## titolo</b> Ancora più bianco<br /><b class="tag2">## durata</b> 3:10<br /><br />
+    <b class="tag1">#canzone</b><br /><b class="tag2">## num</b> 2<br /><b class="tag2">## artista<b class="id">|WhitelandS</b></b><br /><b class="tag2">## titolo</b> Il mondo è coperto<br /><b class="tag2">## durata</b> 3:38<br /><br /><span class="tab"></span><b class="tag3">#playlist#</b><b class="id">|FiocchiNeve</b></code>
+
+    <p>Quando il programma incontrerà per la prima volta l'id associato ad un certo nome di tag, elaborerà normalmente il contenuto secondo un modello che gli verrà dato, però il risultato di quella elaborazione verrà segnata in memoria con quell'id e quel nome di tag. Quando il programma incontrerà nuovamente lo stesso nome di tag con lo stesso id, allora ignorerà l'eventuale struttura definita (che si raccomanda appunto di non definire) e semplicemente applicherà il risultato già prodotto in precedenza. Questo permette di ridurre la ripetizione dei contenuti.</p>
+
+    <p>Anche nel caso del tag <b>#playlist</b> senza contenuto, esso potrebbe essere un oggetto complesso costruito da un modello applicato a questo tag e per evitare che venga costruito ogni volta o per assicurarsi che la sua ricostruzione in un punto diverso del documento eviti il rischio di cambiamenti non previsti, si può usare l'id e si avrà quanto prodotto ad inizio documento anche a fine documento.</p>
+
+    <h3>1.9. Definizione di commento</h3>
+
+    <p>Il cancelletto è usato nelle piattaforme social per definire una parola chiave, e in diversi linguaggi di programmazione è usato per definire un commento. In questo contesto si intende avvalersi di entrambi i significati. Siccome il tag di primo livello non accetta nessuno spazio tra il cancelletto singolo e il nome del tag, si userà questa combinazione cancelletto e spazio <span class="key">#</span> <span class="key">&nbsp;&nbsp;</span> ad inizio riga per definire un commento su una riga singola.</p>
+
+    <code><b class="esc"># Questo è un commento /*ed ogni altro carattere speciale*/ viene qui ignorato*/</b><br /><b class="tag1">#tag-ordinario</b> e questo è del testo taggato.<br /><br /><span class="tab"></span><b class="esc"># Resta possibile usare tabulazioni ad inizio commento</b><br /><b class="esc">#<span class="tab"></span> e usare più caratteri bianchi tra il cancelletto e il commento effettivo</b></code>
+
+    <p>Come mostra l'esempio, la combinazione cancelletto e spazio non è rigida, bensì si possono usare spazi e tabulazioni ad inizio riga (dato che vale per ogni genere di riga), e si può usare una generica serie di caratteri bianchi tra il cancelletto e il commento effettivo.</p>
+
+    <p>È inoltre possibile avere un commento multilinea. Esso inizia con una sequenza di cancelletti <span class="key">#</span> (anche uno soltanto) e, fatta eccezione per i caratteri bianchi ad inizio riga, non deve presentare alcun altro carattere. Dalla riga successiva, qualsiasi cosa si scriverà risulterà un commento, ogni carattere speciale sarà ignorato. Per chiudere la modalità commento multilinea occorre ripetere la sequenza iniziale di cancelletti <span class="key">#</span> (non necessariamente con lo stesso numero). Infine, può risultare visivamente utile se dentro un commento multilinea un classico tag introdotto da una serie di cancelletti <span class="key">#</span> riceva una colorazione speciale. Può aiutare a strutturare meglio il contenuto del commento, anche se non avrà alcuna funzione effettiva. Ecco un esempio:</p>
+
+    <code><b class="esc">###<br />Questo è un commento multilinea dove /*i caratteri speciali*/ vengono ignorati*/. /<br />Alcune parole </b><b class="tag5">#chiave</b> <b class="esc">potrebbero essere evidenziate</b> <b class="tag5">#taggandole</b> <b class="esc">come al solito.<br />Può tornare utile anche per indicare un </b><b class="tag5">#TODO</b><b class="esc"> o un </b><b class="tag5">#BUG</b><b class="esc">.<br />###</b><br />Finito il commento il testo torna ad essere un contenuto generico.</code>
+
+    <h3>1.10. Definizione del carattere di uscita</h3>
+
+    <p>Nel caso in cui volessimo usare dei caratteri speciali come carattere normali, dunque facenti parte del contenuto inserito, possiamo usare il classico carattere di uscita barra rovesciata <span class="key">\</span> prima di un carattere speciale. Il carattere di uscita avrà la stessa colorazione dei commenti, dato che è una sorta di commento ad un singolo carattere (quello successivo) ed esso dovrebbe essere visivamente ignorabile insieme ai commenti qualora ci si focalizzi sul contenuto. Segue l'elenco di tutti gli usi significativi possibili:</p>
+
+    <code><b class="esc">\</b># Questo è un normale contenuto, anziché un commento, che comprende il cancelletto iniziale.<br />
+    <b class="esc">\</b>#tag-ignorato Tutta la linea è un contenuto dato che il tag iniziale non viene interpretato come tag.<br />
+    <b class="esc">\</b> così lo spazio iniziale farà parte del contenuto (altrimenti viene rimosso).<br />
+    Così lo spazio finale dopo il punto farà parte del contenuto (altrimenti viene rimosso). <b class="esc">\</b><br />
+    <b class="esc">\</b>la barra rovesciata può sempre essere usata ad inizio riga e verà rimossa dal contenuto<br />
+    <b class="esc">\</b>\ se si vuole iniziare un contenuto con la barra rovesciata, basta usarla 2 volte.<br />
+    Se si vuole terminare un contenuto con la barra rovesciata, basta usarla 2 volte. \<b class="esc">\</b><br />
+    In qualsiasi altra posizione \ la barra rovesciata sarà considerata un carattere normale.<br />
+    Se invece, pur nel mezzo del contenuto, la barra rovesciata precede <b class="esc">\</b>/*esempio*/un carattere speciale*/, quel carattere diventerà parte del contenuto, anche nel caso di un <b class="esc">\</b>#tag# senza contenuto, come questo.<br />
+    <b class="tag1">#tag</b><b class="esc">\</b>|id-ignorato infine è possibile annullare il carattere speciale di id di un tag.
+    </code>
+
+    <p>In sintesi, gli usi possibili si riassumono in tre casistiche: (1) il carattere di uscita ad inizio riga forza il carattere successivo ad essere interpretato come normale contenuto; (2) il carattere di uscita a fine righe forza i caratteri bianchi che sarebbero normalmente rimossi a far parte del contenuto; (3) il carattere di uscita prima di una sequenza di caratteri speciali forza essi ad essere interpretati come normale contenuto. In qualsiasi altro caso, la barra rovesciata non sarà un carattere speciale ma verrà considerata parte del normale contenuto.</p>
+
+    <h3>1.11 Nome della sintassi ideata</h3>
+
+    <p>L'aspetto più caratterizzante di questo tipo di sintassi è il classico tag con cui possiamo qualificare una porzione di testo. Questi tag possono essere strutturati in modo gerarchico e c'è una sola variante rispetto al simbolo speciale cancelletto # adottata per il tag in linea, che resta pur sempre un tag riscrivibile con le definizioni basate sul cancelletto. Dunque il nome di questa sintassi sarà <b>Tagged Text</b> (testo taggato) in sigla TT.</p>
+
+    <h2>2. Le regole dei modelli in Tagged Text <span class="badge">User story 2</span></h2>
+
+    <h3>2.1. Composizione dei file contenuto e modello</h3>
+
+    <h4>2.1.1. Il file spina della pubblicazione</h4>
+
+    <p>Una pubblicazione viene generata leggendo il contenuto scritto nei file sorgenti TT ed applicando le regole di un insieme di file modello sempre scritti in TT. Però, l'insieme di file modello e il processo di generazione della pubblicazione deve essere guidato da un file speciale che verrà chiamato "spina" (in inglese "spine").</p>
+
+    <p>Il file spina è anch'esso scritto in TT, la particolarità del file spina (o dei file modello) è che alcuni tag sono speciali e definiscono regole o direttive da seguire. Il compito principale della spina è indicare i file contenuto che verranno usati, indicare i file modello che verrano usati, stabilire quali file modello verranno applicati ai vari file contenuto, e definire il nome e l'estensione dei file prodotti a seguito dell'applicazione delle regole. Secondariamente, sarà possibile definire delle variabili generali che possono tornare utili da modificare per avere un effetto su tutti i punti della pubblicazione dove esse dovranno comparire.</p>
+
+    <p>Il file spina deve essere collocato insieme ai file contenuto e devono stare tutti insieme nella stessa cartella. Quindi dovranno per forza avere anche tutti nomi unici. Il file spina dovrà chiamarsi 'spine.tt' non sarà strettamente necessario quel nome, ma sarà una convenzione raccomandata.</p>
+
+    <h4>2.1.2. Definire la cartella dei file modello</h4>
+
+    <p>I file modello possono essere collocati in una cartella differente rispetto ai file di contenuto. Le cartelle sono definite in modo relativo a partire dalla posizione del file 'spine.tt'. Il tag usato è <b>#template-path</b>, come nell'esempio:</p>
+
+    <code><b class="tag1">#template-path</b> template<br /></code>
+
+    <p>L'esempio dice di usare la sottocartella 'template' per trovare tutti i file template. Se più tag <b>#template-path</b> vengono specificati, solo l'ultimo sarà considerato quello effettivo, i precedenti saranno di volta in volta sovrascritti ad ogni incontro di <b>#template-path</b>. Questo comportamento segue il principio delle "regole a cascata", nel caso di regole o direttive ripetute anziché bloccare il processo per incoerenza, si ignorano le istruzioni precedenti e si ritiene valida l'ultima incontrata.</p>
+
+    <p>La cartella è relativa e può usare i caratteri che nel proprio sistema operativo sono usati per definire i percorsi dei file. Per esempio, se si volesse risalire alla cartella padre si può usare il noto simbolo <b>. .</b> , inoltre possiamo raggiungere sottocartelle con <b>/</b>.</p>
+
+    <code><b class="tag1">#template-path</b> ../templates/mybook<br /></code>
+
+    <h4>2.1.3. Definire la cartella della pubblicazione</h4>
+
+    <p>I file contenuto e i file modello dovranno generare una pubblicazione o anche detti "file distribuibili". Quindi serve specificare una cartella dove i file distribuibili (che possono essere più di uno) verranno raccolti. Il tag da usare è <b>#publication-path</b>. Esso segue il principio delle "regole a cascata" visto sopra, e il valore dovrà essere una cartella relativa come nell'esempio precedente.</p>
+
+    <code><b class="tag1">#publication-path</b> pub<br /><b class="tag1">#publication-path</b> ../publications/mywork<br /></code>
+
+    <h4>2.1.4. Definire una variabile generale</h4>
+
+    <p>Può essere utile definire un valore che si ripete spesso nella pubblicazione, ma non siamo ancora sicuri se il valore che abbiamo trovato è quello definitivo o potremmo cambiarlo. Per esempio, il titolo di un libro o il nome di un personaggio o il nome di una località, ecc. Quindi nei file modello avremo la possibilità di usare regole che recuperano il valore da una variabile generale magari applicata ad un tag senza contenuto tipo <b>#nome-eroe#</b>. Per definire una variabile generale nel file spina si usa il tag <b>#var</b> in questo modo:</p>
+
+    <code><b class="tag1">#var</b> nome-eroe<br /><b class="tag2">##text</b> Ercole<br /></code>
+
+    <p>Nell'esempio si può vedere che il tag principale <b>#var</b> definisce il nome della variabile, mentre il tag secondario <b>##text</b> definisce il valore testuale di quella variabile.</p>
+
+    <h4>2.1.5. Definire una lista di file</h4>
+
+    <p>Siccome il file spina può applicare lo stesso modello a più file contenuto, è utile avere il nome di una lista di file contenuto. Ciò sarà possibile con il tag <b>#file-list</b> seguito dal nome della lista e il sotto tag <b>##files</b> che avrà come valore l'elenco dei file che faranno parte di quella lista. I nomi dei file devono essere separati da uno spazio. Se ci sono spazi nel nome del file, allora non si può usare questo tag, ma si devono specificare i nomi contenenti uno spazio con il sotto tag <b>##file</b>. Alcuni esempi:</p>
+
+    <code><b class="tag1">#file-list</b> capitoli<br /><b class="tag2">##files</b> capitolo1 capitolo2 capitolo3<br /><br /><b class="tag1">#file-list</b> collezione-test<br /><b class="tag2">##files</b> api-session api-page<br /><b class="tag2">##file</b> api-image gallery<br /><b class="tag2">##file</b> api-audio gallery<br /><b class="tag2">##files</b> api-task api-setting api-log<br /></code>
+
+    <p>I file contenuto sono sempre file TT con l'estensione '.tt', ma nel file 'spine.tt' si può omettere l'estensione perché è sottointesa, oppure specificarla se lo si desidera. Una lista di file può essere sia una lista di file contenuto che una lista di file modello. La lista di file modello può raccogliere molte regole potenzialmente incoerenti tra loro (soprattutto usando più file per volta), ma le regole verranno applicate secondo il principio a cascata, ovvero se una regola è ripetuta e mostra una variazione rispetto ad una precedente, verrà applicata l'ultima versione incontrata dal software.</p>
+
+    <h4>2.1.6. Applicare dei modelli ad un file contenuto</h4>
+
+    <p>Il tag più caratterizzante del file spina è <b>#publish</b>. Infatti, esso indica il nome del file da pubblicare con la sua estensione (o formato del file) che verrà generato usando un file contenuto a seguito dell'applicazione delle regole di un file modello. Segue un esempio.</p>
+
+    <code><b class="tag1">#publish</b> indice<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> indice<br /><b class="tag2">##template</b> stile-presentazione<br /></code>
+
+    <p>In questo caso abbiamo un file 'indice.html' che verrà pubblicato leggendo il contenuto su 'indice.tt' e applicando le regole del file modello (template) 'stile-presentazione.tt', ricordando gli esempi precedenti possiamo supporre che il modello verrà cercato nella sottocartella 'template' e il file di pubblicazione verrà generato nella sottocartella 'pub'.</p>
+
+    <p>Possiamo anche specificare più file modello da applicare in cascata, per esempio:</p>
+
+    <code><b class="tag1">#publish</b> epilogo<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> epilogo<br /><b class="tag2">##template</b> stile-capitolo stile-presentazione<br /></code>
+
+    <p>Come si vede, un capitolo speciale chiamato 'epilogo' potrebbe aver bisogno delle regole specificate per ogni capitolo dentro 'stile-capitolo.tt', ma anche di alcune regole aggiuntive presenti in 'stile-presentazione.tt'. Potremmo anche mettere un elenco di file modello in un tag <b>#file-list</b> e chiamare questa lista di modelli 'stile-epilogo'.</p>
+
+    <h4>2.1.7. Applicare dei modelli ad una lista di file contenuto</h4>
+
+    <p>Così come si può usare una lista per i file modello, si può usare una lista anche per i file contenuto. Possiamo considerare la precedente lista di esempio 'capitoli' che conteneva i file 'capitolo1.tt', 'capitolo2.tt', 'capitolo3.tt' e scrivere quest'altro esempio:</p>
+
+    <code><b class="tag1">#publish</b> sitografia<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> sitografia capitoli<br /><b class="tag2">##template</b> stile-presentazione<br /></code>
+
+    <p>Quando ci sono più file contenuto specificati, il primo file contenuto è come se fosse la "spina" del gruppo di file da cui attingere contenuti. Infatti serve un inizio, una sequenza di tag da processare ed una fine, questo compito spetta sempre al primo file contenuto. Gli altri file contenuto non verranno processati come il primo, ma risulteranno del materiale a disposizione se il primo file avrà regole che andranno a pescare del contenuto dagli altri file. Si vedrà <em>come</em> con le regole dei template.</p>
+
+    <p>Nell'esempio dato si può immaginare un titolo per la sitografia e un lungo elenco di URL numerati. Il file 'sitografia.tt' conterrà il titolo e la definizione di questo elenco, però per comporre quell'elenco bisognerà consultare tutti i capitoli del libro dove gli indirizzi dei siti web compaiono, per questo il tag <b>#content</b> deve includere tutta la lista dei capitoli tramite il nome della suddetta lista.</p>
+
+    <h4>2.1.8. Pubblicare una lista di file usando una lista di file contenuto</h4>
+
+    <p>Abbiamo visto che specificata una lista di file, questa si può associare al sotto tag <b>##template</b>, al sotto tag <b>##content</b>, ma anche al tag primario <b>#publish</b>. In questo caso, con una sola direttiva "publish" (pubblica) verranno pubblicati più file contemporaneamente. L'unica condizione da rispettare è che il numero di file tramite lista indicati su <b>#publish</b> deve essere uguale al numero di file di contenuto indicati su <b>##content</b>, in questo modo il primo file "publish" verrà generato con il primo file su "content", il secondo file "publish" riceverà il secondo file da "content" e così via. Se i numeri non corrispondono verrà generato un errore e interrotto il processo di pubblicazione.</p>
+
+    <code><b class="tag1">#publish</b> capitoli<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> capitoli<br /><b class="tag2">##template</b> stile-capitolo<br /></code>
+
+    <p>Nell'esempio vediamo il caso più comune, ovvero avere lo stesso nome della lista sia su <b>#publish</b> che su <b>##content</b>, così certamente avremo lo stesso numero di file contenuto e da pubblicare. In accordo con l'esempio precedente, verrà generato il file capitolo1.html leggendo capitolo1.tt, capitolo2.html leggendo capitolo2.tt, ecc. Volendo avere nomi tra file contenuto e file pubblicati differenti, si possono usare due liste differenti, però è necessario creare questa corrispondenza sequenziale tra i file.</p>
+
+    <h3>2.2. Regole applicabili al contenuto TT</h3>
+
+    <p>In questa sezione vedremo come scrivere le regole dentro un file modello. Generalmente avremo dei tag con del contenuto nel file contenuto e questi tag possono avere una corrispondenza con delle regole nel file modello, così si potrà applicare del contenuto extra proveniente dalle regole, prima del contenuto taggato e/o dopo di esso. Non mancano alcune eccezioni a questa possibilità generale.</p>
+
+    <p>Se un contenuto taggato con un tag di primo livello presenta un tag a cui non è associata alcuna regola, allora viene ignorato dall'elaboratore. Se invece il tag senza regole è di secondo o successivo livello, allora viene usato il contenuto "grezzo". Se invece il tag principale ha una regola e presenta dei sotto tag non gestiti da alcuna regola, allora essi nuovamente vengono ignorati.</p>
+
+    <h4>2.2.1. Regola per il contenuto ad inizio file</h4>
+
+    <p>Una comoda regola è poter inserire del contenuto fisso all'inizio del file di pubblicazione. Si userà il tag <b>#file-opening</b> e si andrà a specificare del normale testo che sarà il testo di apertura del file da pubblicare. Nell'esempio abbiamo un'apertura minimale di un file html.</p>
+
+    <code><b class="tag1">#file-opening</b><br />&lt;!DOCTYPE html&gt;<br />&lt;html&gt;<br />&lt;head&gt;&lt;title&gt;La mia pagina&lt;/title&gt;&lt;/head&gt;<br />&lt;body&gt;</code>
+
+    <p>È possibile introdurre il testo semplice con il sotto tag <b>##text</b> che conviene usarlo quando ci si serve di più tipi di sotto tag, i quali sono disponibili per quasi tutte le regole e li vedremo più avanti. Esempio con sotto tag <b>##text</b>.</p>
+
+    <code><b class="tag1">#file-opening</b><br /><b class="tag2">##text</b><br />&lt;!DOCTYPE html&gt;<br />&lt;html&gt;<br />&lt;head&gt;&lt;title&gt;La mia pagina&lt;/title&gt;&lt;/head&gt;<br />&lt;body&gt;</code>
+
+    <h4>2.2.2. Regola per il contenuto a fine file</h4>
+
+    <p>Ovviamente serve anche una regola per inserire del contenuto fisso alla fine del file di pubblicazione. Si userà il tag <b>#file-ending</b> e si andrà a specificare del normale testo che sarà il testo di chiusura del file da pubblicare. Nell'esempio abbiamo una chiusura minimale di un file html. Si tenga presente che il sotto tag <b>##text</b> è possibile utilizzarlo anche in questo caso.</p>
+
+    <code><b class="tag1">#file-ending</b><br />&lt;/body&gt;<br />&lt;/html&gt;</code>
+
+    <h4>2.2.3. Regola per il contenuto di un tag</h4>
+
+    <p>Quando si incontra un tag, in vista della pubblicazione, il nome del tag viene ovviamente rimosso e il contenuto del tag può essere ignorato oppure usato oppure combinato con molti tipi di elementi testuali che questa regola può offrire. Vediamo prima il caso più semplice.</p>
+
+    <p>Estratto del file contenuto:</p>
+    <code><b class="tag1">#title</b><br />La mia prima pubblicazione</code>
+    <p>Estratto del file modello:</p>
+    <code><b class="tag1">#tag</b> title<br /><b class="tag2">##text</b> h2<br /><b class="tag2">##content</b><br /><b class="tag2">##text</b> h2</code>
+    <p>Estratto del file pubblicato:</p>
+    <code><b class="tag1">&lt;h1&gt;</b>La mia prima pubblicazione<b class="tag1">&lt;/h1&gt;</b></code>
+
+    <p>La regola per il contenuto di un tag si definisce semplicemente con <b>#tag</b> seguito dal nome del tag a cui verrà applicata questa regola. I sotto tag riconoscibili dal doppio cancelletto vanno a definire ulteriori dettagli per la regola.</p>
+
+    <ul class="subtag"><li><span><b>content</b> è uno dei sotto tag più importanti e riporta esattamente il contenuto taggato. Se il contenuto taggato a sua volta ha ulteriori tag questi verrano processati e il risultato finale verrà inserito nella posizione prevista dal sotto tag <b>##content</b>. Esso può essere usato più volte.</span></li>
+
+    <li><span><b>text</b> è stato già presentato nelle regole precedenti, è un sotto tag che si limita ad inserire del testo statico nella posizione in cui il sotto tag compare ed esso può essere usato più volte.</span></li>
+
+    <li><span><b>from-next-tag</b> è un altro sotto tag che recupera il contenuto del successivo tag di medesimo livello che abbia il nome specificato di seguito al sotto tag. Esempio della regola:</span></li></ul>
+
+    <code><b class="tag1">#file-opening</b><br /><b class="tag2">##text</b><br />&lt;!DOCTYPE html&gt;<br />&lt;html&gt;<br />&lt;head&gt;<br /><span class="tab"></span>&lt;title&gt;La mia pagina&lt;/title&gt;<br /><span class="tab"></span>&lt;link rel="stylesheet" href="stile-<br /><b class="tag2">##from-next-tag</b> colore-capitolo<br /><b class="tag2">##text</b> .css"&gt;<br />&lt;/head&gt;<br />&lt;body&gt;</code>
+
+    <p>Siccome <b>#file-opening</b> si applica all'inizio del file, quando l'elaboratore incontra <b>##from-next-tag</b>, a cominciare dall'inizio del file contenuto processato, l'elaboratore cerca il successivo tag con nome "colore-capitolo", quando lo trova userà quel contenuto (che potrebbe essere per esempio "rosso") e lo inserirà tra i due pezzi di testo definiti con <b>##text</b>.</p>
+
+    <p>Se invece di un tag di medesimo livello, si vuole recuperare un successivo tag di livello più profondo, si possono specificare più tag separati da uno spazio secondo questo criterio: prossimo-tag-di-medesimo-livello, prossimo-tag-contenuto-nel-precedente, prossimo-tag-contenuto-nel-precedente, ecc. Ovviamente il "prossimo tag contenuto nel precedente" sarà un tag di livello più profondo rispetto al precedente. Inoltre, se i tag di medesimo livello finiscono ed occorre risalire di livelli per incontrare nuovi prossimi tag idonei, il processo si interrompe e non tenta di recupera altri tag, in tal caso il valore restituito sarà una stringa vuota. Esempio di regola:</p>
+
+    <code><b class="tag1">#tag</b> immagine-copertina<br /><b class="tag2">##text</b> &lt;img src="<br /><b class="tag2">##from-next-tag</b> canzone artista<br /><b class="tag2">##from-next-tag</b> canzone album<br /><b class="tag2">##from-next-tag</b> canzone anno-pubblicazione<br /><b class="tag2">##text</b> .jpg" /&gt;</code>
+
+    <p>Il risultato nel file di pubblicazione html sarà per esempio:</p>
+    <code><b class="tag1">&lt;img</b> src="SingerAlbum2000.jpg" <b class="tag1">/&gt;</b></code>
+
+    <ul class="subtag"><li><span><b>from-subtag</b> è simile al precedente, ma invece di cercare il successivo tag di medesimo livello, cerca direttamente dentro il tag in cui ci si trova, ovviamente il tag corrente deve avere dei sotto tag, altrimenti verrà restituita stringa vuota sia in assenza di sotto tag sia in caso di sotto tag non trovato. Infatti, dopo <b>##from-subtag</b> occorre specificare il nome del sotto tag da cui vogliamo recuperare del contenuto.</span></li>
+
+    <li><span><b>from-var</b> questo sotto tag permette di usare il contenuto di una variabile definita nel file 'spine.tt', specificando semplicemente il nome della variabile da usare.</span></li>
+
+    <li><span><b>from-file</b> serve per recuperare il contenuto testuale da un file di testo (può essere txt, html, json, l'importante è che il contenuto effettivo sia di tipo testuale). Il valore da specificare per questo sotto tag è il percorso relativo che punti al file di testo da usare. La posizione corrente da cui far partire il percorso relativo è la cartella dei template.</span></li>
+
+    <li><span><b>from-counter</b> serve per ricevere un valore da un contatore e va specificato solamente il nome del contatore. Ogni volta che l'elaboratore incontra questo sotto tag con il medesimo nome del contatore, allora il valore inserito sarà quello successivo previsto dal contatore. Per esempio: 1, poi 2, poi 3, ecc. Il contatore può partire da un numero arbitrario e procedere anche per salti, ma i dettagli del contatore li vedremo nella regola dedicata ad esso.</span></li>
+
+    <li><span><b>space</b> questo tag non prevede valori da specificare, possiamo inserire uno spazio a fine riga servendoci del carattere di escape, ma possiamo anche usare questo sotto tag.</span></li>
+
+    <li><span><b>new-line</b> analogamente al tag precedente, è possibile inserire un ritorno a capo tramite sotto tag.</span></li>
+
+    <li><span><b>final-chars</b> Si può specificare una sequenza di caratteri con cui il valore del tag principale in lavorazione costruito, fino a questo punto, deve presentare. Se presenta i caratteri attesi, non succede nulla, se quei caratteri mancano, allora vengono aggiunti i caratteri specificati in questo sotto tag. Il sotto tag si può usare più volte ed ogni volta avrà effetto sull'ultimo pezzo di stringa elaborato fino a quel momento.</span></li></ul>
+
+    <h4>2.2.4. Regola per il contenuto di una lista di tag</h4>
+
+    <p>Oltre a lavorare con un tipo di tag per volta, è possibile lavorare con diversi tipi di tag per volta per costruire strutture assimilabili ad una lista intesa come quella che possiamo trovare in un libro, ovvero con un inizio lista, un possibile separatore degli elementi ed una chiusura lista. Infatti, avremo tre sotto tag per gestire: la lista nel suo complesso, la separazione degli elementi e ciascun elemento.</p>
+
+    <ul class="subtag"><li><span><b>list</b> in questo sotto tag si possono usare tutti i sotto tag (che risulteranno dunque di 3° livello) visti nella regola precedente, con la particolarità che <b>###content</b> si potrà usare una sola volta e rappresenta la serie di elementi che la lista conterrà. Prima dei sotto tag, si deve specificare un valore per <b>#tag-list</b> e questo sarà l'elenco dei nomi dei tag, separati da uno spazio, che si intende trattare insieme come facenti parte di una lista.</span></li>
+
+    <li><span><b>item-separator</b> serve a definire il carattere o la stringa che separerà gli elementi. Non si devono usare ulteriori sotto tag qui e volendo si può omettere se non ci serve un separatore.</span></li>
+
+    <li><span><b>item</b> serve a trattare ciascun elemento e lo farà in modo del tutto analogo alla regola precedente, quindi con tutti i sotto tag (che risulteranno dunque di 3° livello) per comporre il valore finale. <b>###content</b> potrà essere usato più di una volta e riceverà il contenuto dei tag che volta per volta si incontrano come definiti da <b>#tag-list</b>. Segue un esempio.</span></li></ul>
+
+    <code><b class="tag1">#tag-list</b> nota fonte curiosita<br /><b class="tag2">##list</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;div class="gruppo-note"&gt;<br /><span class="tab"></span><b class="tag2">###content</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;/div&gt;<br /><b class="tag2">##item-separator</b> &lt;hr /&gt;<br /><b class="tag2">##item</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;p&gt;<br /><span class="tab"></span><b class="tag2">###content</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;/p&gt;</code>
+
+    <h4>2.2.5. Regola per dividere il contenuto in elementi e comporli in una lista</h4>
+
+    <p>Risulta comodo poter definire una lista nel modo più congeniale per l'utente ed anziché taggare ciascun elemento, saranno uno o più caratteri arbitrari, compreso il ritorno a capo, a scandire in quanti e quali elementi il contenuto di un singolo tag deve essere suddiviso. Una volta definito ciò possiamo applicare i sotto tag <b>##list</b> e <b>##item</b> esattamente come visto sopra. Segue un esempio.</p>
+
+    <code><b class="tag1">#content-list</b> elenco<br /><b class="tag2">##item-separator</b> - <b class="esc">\</b><br /><b class="tag2">##list</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;ul&gt;<br /><span class="tab"></span><b class="tag2">###content</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;/ul&gt;<br /><b class="tag2">##item</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;li&gt;<br /><span class="tab"></span><b class="tag2">###content</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;/li&gt;</code>
+
+    <p>Nell'esempio c'è un elenco taggato con 'elenco' ed ogni elemento è introdotto da una linea breve seguita da uno spazio '- '. Il carattere di separazione viene riconosciuto per suddividere gli elementi, ma viene anche rimosso dal contenuto finale. Se lo si desidera, si può ripetere dentro il tag <b>##item</b> introdotto come un pezzo di testo iniziale con <b>###text</b>. Per il resto offre le stesse possibilità della regola precedente.</p>
+
+    <h4>2.2.6. Regola per recuperare tag sparsi e comporli in una lista</h4>
+
+    <p>Un altro caso utile è quando in un punto, dove compare un tag, vogliamo prendere tutti gli elementi, per esempio i titoli, cercati tra i contenuti di un file da pubblicare (definito con il tag <b>#publish</b> dentro 'spine') e dobbiamo appunto andarne in cerca ovunque essi siano sparsi, per comporli in una lista ordinata. Ecco un esempio.</p>
+
+    <code><b class="tag1">#catching-tag</b> indice<br /><b class="tag2">##caught-tags</b> titolo-sezione titolo-sezione-riassuntiva<br /><span class="tab"></span><b class="tag2">###raw-content</b><br /><b class="tag2">##list</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;ol&gt;<br /><span class="tab"></span><b class="tag2">###content</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;/ol&gt;<br /><b class="tag2">##item</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;li&gt;<br /><span class="tab"></span><b class="tag2">###content</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;/li&gt;</code>
+
+    <p>Il primo valore è il "tag catturante" a cui si applica la regola e che al suo posto verrà creata la struttura qui definita. Seguono i "tag catturati" ovvero tutti i tag di cui bisognerà riportare il valore a seguito dell'applicazione delle regole. Ma se non vogliamo portarci dietro le decorazioni dei titoli (o in generale vogliamo elaborare qui il contenuto e non riceverlo già elaborato da altre regole), allora possiamo usare il sotto tag <b>###raw-content</b> che restituirà il contenuto grezzo. Se il contenuto grezzo risulta strutturato con sotto tag, verrà restituito solo il valore direttamente associato al tag ricercato ed ignorati i contenuti presenti in ulteriori sotto tag. La rimanente parte definita dai sotto tag <b>##list</b> e <b>##item</b> si comporta come è ormai noto.</p>
+
+    <h4>2.2.7. Regola per definire un contatore</h4>
+
+    <p>Sono molto utili i contatori per numerare elementi siano essi titoli, note, speciali occorrenze, ecc. Essenzialmente il contatore avrà un nome, come fosse una variabile speciale, che ogni volta che viene usata si incrementa e la prossima volta restituirà il valore successivo al precedente. Si può stabilire da che numero deve iniziare a contare e con quale intervallo deve incrementare la variabile. Infine va definita la portata (scope) del contatore, praticamente essa indica quando il contatore si trova in un contesto per cui deve riprendere a contare dall'inizio. Vediamo un esempio:</p>
+
+    <code><b class="tag1">#counter</b> num-nota<br /><b class="tag2">##scope</b> publication-file|publication-spine<br /><b class="tag2">##start</b> 1<br /><b class="tag2">##step</b> 1</code>
+
+    <p>Il nome del contatore viene specificato come primo valore dopo il tag principale. Poi il tag secondario 'scope' può assumere due valori: <b>publication-file</b> e <b>publication-spine</b>. Il primo dipende dall'istruzione 'publish' dentro il file 'spine.tt' ed ogni volta che si passa al successivo file di pubblicazione, il contatore riparte da zero. Altrimenti, il secondo valore non resetta mai il contatore durante tutto il processo di una intera pubblicazione definita da un file 'spine.tt'.</p>
+
+</body>
+</html>
