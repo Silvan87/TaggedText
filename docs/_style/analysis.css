@@ -117,5 +117,6 @@ aside li:hover {
     margin:-2px 0 0 0;
     padding:.5em .25em;
     border-radius:1em;
+    background:#eee;
     border:2px dashed #888;
 }
