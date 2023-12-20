@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="../_style/documentation.css">
+	<title>Technical Documentation</title>
+</head>
+<body>
+    <h1>Technical Documentation</h1>
+
+    <nav>
+    <ol type="1">
+        <li>Tagged Text Syntax
+            <ol type="1">
+                <li>Requirements</li>
+                <li>Analysis of existing similar languages</li>
+                <li>Definition of simple content</li>
+                <li>Definition of tagged content</li>
+                <li>Definition of inline tag</li>
+                <li>Definition of tag without content</li>
+                <li>Definition of tag of 2° and higher level</li>
+                <li>Definition of tag with id</li>
+                <li>Definition of comment</li>
+                <li>Definition of escape character</li>
+                <li>Name of the conceived syntax</li>
+            </ol>
+        </li>
+        <li>Rules for models in Tagged Text
+            <ol type="1">
+                <li>Composition of content and template files</li>
+                <ol type="1">
+                    <li>The publication file spine</li>
+                    <li>Defining the folder of template files</li>
+                    <li>Defining the folder of publication files</li>
+                    <li>Defining a general variable</li>
+                    <li>Defining a list of files</li>
+                    <li>Applying templates to a single content file</li>
+                    <li>Applying templates to a list of content files</li>
+                    <li>Publishing a list of files using a list of content files</li>
+                </ol>
+                <li>Rules applicable to TT content</li>
+                <ol type="1">
+                    <li>Rule for content at the beginning of a file</li>
+                    <li>Rule for content at the end of a file</li>
+                    <li>Rule for content of a tag</li>
+                    <li>Rule for content of a list of tags</li>
+                    <li>Rule to split the content into elements and compose them into a list</li>
+                    <li>Rule for retrieving scattered tags and composing them into a list</li>
+                    <li>Rule to define a counter</li>
+                </ol>
+            </ol>
+        </li>
+    </ol>
+    </nav>
+
+    <h2>1. Syntax design <span class="badge">User story 1</span></h2>
+
+    <h3>1.1. Requirements</h3>
+
+    <p>The requirements for devising the syntax are minimal and so many choices are possible. The syntax has to be <b>simple</b> to read by a human, possibly understandable "at a glance". It will be necessary to use special characters to distinguish the attributes of the content from the content itself, but they should be used in a <b>minimal</b> way. The language should be <b>comfortable</b> to write, a code highlighting via text editors is expected, but it should be easy to write without the help of complex development environments. At the same time the <b>expressiveness</b> must be comparable to the <i>html</i> language. But unlike the latter there must be a greater <b>focus on the content</b>, not only with respect to the graphics, but also with respect to the layout and arrangement of the elements. So you must be able to work in a <b>flexible</b> way, qualifying the text portions from a semantic point of view to process them at a later time.</p>
+
+    <p>Regarding the expressiveness, it must manage any textual content. Any string or substring must be able to receive an attribute. You can define a string of any length, starting from any character, up to any other following character. These qualified (or tagged) pieces of text must be able to be structured in a multi-level hierarchical structure without a defined limit.</p>
+
+    <h3>1.2. Analysis of existing similar languages</h3>
+
+    <p>Before devising a new syntax, some existing languages have been examined that could satisfy the proposed requirements. Those reviewed languages are: html, LaTeX, markdown, reStructuredText, txt2tags, textile, json, yaml. But they have been all discarded for the following reasons:</p>
+    <ul>
+        <li><b>html</b>: some salient flaws considering the requirements are: <b>(1)</b> it is uncomfortable to open and close tags &lt;&gt;&lt;/&gt; you have to release and press lasciare alternately shift key to type &lt;&gt; and you need an additional closure character / that reduces ease of use with a view to working with it as plain text conflitting comfort requirement; <b>(2)</b> the tag assigned to a portion of text is repeated at the end causing verbosity and redundancy in conflict with the requirement of minimality; <b>(3)</b> an html tag can define a piece of text, but the tag itself can receive attributes with values, using a higher number of tags it is possible to express everything that html can express but with a simpler syntax, this conflicts with the minimal requirement; <b>(4)</b> although html is able to separate the graphics from the arrangement of the contents, it is quite bound to the structure and arrangement of the contents, it requires thinking in advance through tables or dividers of solutions admitted by <i>css</i> but applicable to html only if prepared in advance for those solutions, so it fails to actually decouple from content arrangement. The list of reasons is more than enough to think about a different syntax.</li>
+        <li><b>LaTeX</b>: This syntax is not just for marking up text, but it also allows for inserting commands for the generated document. Certainly, its expressiveness is extensive and rich, but <b>(1)</b> it is not sufficiently simple and minimal. Consider that the desired syntax could use target formats such as HTML pages or LaTeX documents that can, in turn, produce a printable publication or other media. These would be languages that could work in symbiosis, but what is currently being sought must be much simpler than LaTeX and much more convenient to write with ordinary text editors.</li>
+        <li><b>markdown</b>: Mainly, Markdown allows for the production of HTML paragraphs enriched with character effects, links, and textual elements such as paragraphs, bullet lists, titles, tables, and similar items. The syntax style is quite natural and intuitive, which makes it simple and convenient. However, <b>(1)</b> it employs a set of specific conventions that tie it excessively to a subset of HTML tags, limiting its expressiveness significantly. Moreover, these specific conventions <b>(2)</b> do not make the syntax minimal enough, but rather over-articulate it to mark every slight difference in style and element. Although preferable to HTML, it cannot satisfy two important requirements and therefore needs to be discarded.</li>
+        <li><b>reStructuredText</b>, <b>txt2tags</b>, <b>textile</b>: what has been said about markdown also applies to reStructuredText, txt2tags, and textile. They use other syntactic tricks that may be more or less pleasing in style, but they remain overly tied to a simplification of some recurring tags in HTML, which makes them susceptible to the two previous criticisms. <b>(1) (2)</b>.</li>
+        <li><b>json</b>: the syntax of JSON is simple, admirably minimal, widely expressive and flexible. The only serious drawback is that <b>(1)</b> it's not convenient to write. Presumably, we will have lists of elements that require square brackets [] and these will rarely be just parts of a string, but objects to describe, so with curly braces {} and each attribute must be specified in double quotes "" along with its value. It's easy to understand that when describing an entire book or a showcase website or a collection of scripts, these large JSON objects will soon become very difficult to read and modify without causing inconsistencies in the structure of the parentheses. Readability and convenience are not satisfied by JSON, and it's worth designing a different syntax.</li>
+        <li><b>yaml</b>: In addition to being simple, minimal, expressive, and flexible like JSON and even better, it is also quite convenient to write. A subset of YAML's grammar would be sufficiently minimal and suitable for the purpose. One of the most impactful limitations for the intended purposes is that <b>(1)</b> YAML maps, composed of key-value pairs, do not allow defining portions of text with special tags inside the value, as HTML allows, so the text would have to be broken up unnaturally and mapped, for example, into regular pieces and pieces that need to be represented in bold or with other effects. A requirement of expressiveness was that any substring could receive an attribute, while maintaining a minimal and convenient solution, unfortunately YAML is not satisfactory in this regard. <b>(2)</b> A second, less impactful but worth mentioning reason is that YAML is easily interpretable if one knows the data structures of lists and maps, and it's not excluded that an even simpler way could be found solely linked to the concept of tag or attribute, meaning by using only the map structure. If there is only one possible element in the syntax, there is no need to check anything to understand whether one is inside a list or inside a map. And furthermore, <b>(3)</b> YAML employs several special characters to preserve preformatting or a certain type of concatenation between strings interrupted by a line break, in this case too, it might be useful to find simpler solutions. It is certainly a good candidate, but it's preferable to search for a syntax that better meets the intended purposes.</li>
+    </ul>
+
+    <h3>1.3. Definition of simple content</h3>
+
+    <p>Content without tags (without attributes or qualifications, which are considered conceptually synonymous here) should be written freely, without introductory characters, quotes or other markers, exactly like a plain text in <i>txt</i> format.</p>
+
+    <code>This is a paragraph that hasn't received any tag.<br />It's possible to line break and continue writing whatever you want.<br />= One should be able to use more or less all characters without undesired consequences. =</code>
+
+    <h3>1.4. Definition of tagged content</h3>
+
+    <p>To allow the simple content to continue to exist undisturbed, a tag must be dedicated to a special line of text and to define that the line is special, a special character will be needed. The well-known tag character hash # is proposed, which is reasonably convenient to type. <span class="key">Alt Gr</span> + <span class="key">0</span>, attached to it will be the tag name, which for clarity reasons must be composed of a limited set of characters: lowercase and uppercase letters, numbers, and the hyphen -. Any other character will interrupt the tag name, but it is recommended to use a space to interrupt the tag name. The remaining part of the line can be ignored by starting to write on the next line, or it will be considered plain text tagged with the just-defined tag. Tag names should preferably specify the semantic value of that content, decoupling from the graphic style. For example, #book-title is preferable to #big1-red.</p>
+
+    <code><b class="tag1">#title</b> The house in the woods<br /><br /><b class="tag1">#paragraph</b><br />In a wide clearing in the woods stood a charming wooden house...<br /><br /><b class="tag1">#NameThatShows123-the-possible-characters</b>@for the name of a tag<br /></code>
+
+    <p>Note in the example above that using a character different from those allowed by the tag name results in the start of normal plain text. Additionally, both tagged or plain text are considered as they are, with spaces, line breaks, and tabs, but all leading and trailing whitespace characters (tagged or plain) will be removed. For example, the tagged title on the first line is literally " The house in the woods", but the value considered will be "The house in the woods". The paragraph text would also be "[line break]In a wide clearing [etc.]", but [line break] is a leading whitespace character and will therefore be removed.</p>
+
+    <p>Tabs or leading whitespace characters before tags or at the beginning of a string will be removed, as mentioned, so the document can be indented as desired. It is not intended to use indentation as a special element to define levels because <b>(1)</b> creating multiple levels would force the content to be shifted to the right and might not be desirable. Furthermore, <b>(2)</b> alternating elements, more indented, less indented, can be a good technique to improve the readability of tagged text, and it would not be possible if same-level elements are forced to maintain the same number of indentations. Therefore, it is preferred to leave the management of text indentation free from effects on syntax. An example follows.</p>
+
+    <code><span class="tab"></span><b class="tag1">#chapter-title</b> The Phantom Sword<br /><br /><b class="tag1">#section-title</b> Meeting in the Castle<br /><br /><span class="tab"></span><b class="tag1">#paragraph</b><br /><span class="tab"></span>This is the first paragraph of the first section...<br /><br /><span class="tab"></span><b class="tag1">#paragraph</b><br /><span class="tab"></span>This is the second paragraph of the first section...<br /><br /><b class="tag1">#section-title</b> In the secret room<br /><br /><span class="tab"></span><b class="tag1">#paragraph</b><br /><span class="tab"></span>This is the first paragraph of the second section...</code>
+
+    <h3>1.5. Definition of inline tag</h3>
+
+    <p>The possibility to tag a substring is offered by HTML but with its typical verbosity and it is not present in a more elegant language such as YAML. What is proposed here is to take inspiration from inline comments in some programming languages and adopt a typical coloring of comments, therefore less noticeable compared to the content to be tagged. To open an inline tag, it will be used slash-asterisk <span class="key">/</span><span class="key">*</span> and to close it asterisk-slash <span class="key">*</span><span class="key">/</span> , the closing combination <span class="key">*</span><span class="key">/</span> will be used twice: the first time indicates the end of the tag name, the second time indicates the end of the tagged substring. The characters to be used are 2, but they do not require Shift, Alt Gr, or other keys to be pressed simultaneously and are close on the numeric keypad. Furthermore, the asterisks that will be at the beginning and end of the inline tag will emphasize that tag. Here is a representation:</p>
+
+    <code><b class="tag1">#summary</b><br /><b class="tag4">/*keyword*/</b>Food<b class="tag4">*/</b> provides energy and "building materials". <b class="tag4">/*keyword*/</b>Macronutrients<b class="tag4">*/</b>: carbohydrates, fats, proteins. <b class="tag4">/*keyword*/</b>Micronutrients<b class="tag4">*/</b>: vitamins, minerals, essential elements. <b class="tag4">/*keyword*/</b>Energy<b class="tag4">*/</b> comes from carbohydrates and fats. "<b class="tag4">/*keyword*/</b>Building materials<b class="tag4">*/</b>" are amino acids (in case converted into energy), fats, and micronutrients.</code>
+
+    <p>If the short slash-asterisk <span class="key">/</span><span class="key">*</span> sequence is not used, then other combinations of slash, asterisks, or the same short closing sequence will be considered a normal part of the text.</p>
+
+    <code>Formula 3*4/2 ** Closing characters*/ End //</code>
+
+    <p>Since an inline tag is part of a tagged value (and if it is not tagged, it will still be tagged with an empty tag), it will always be a second-level or lower-level tag, precisely one level below the tag of the portion of text in which we are inserting the inline tag.</p>
+
+    <p>It is also possible to continue the levels of the tag hierarchy by inserting inline tags within inline tags. The only use that will be prohibited, as in html, will be the partial intersection of two tagged substrings. But since the two closing characters do not carry the name of the tag they close, it is effectively impossible to create these unwanted intersections. For example, in html it would be <b>&lt;tag-1&gt;</b>Words of <b>&lt;tag-2&gt;</b>example<b class="error">&lt;/tag-1&gt;</b> partially intersected tags<b>&lt;/tag-2&gt;</b>. If you try to repeat this case with the proposed syntax: <b>/*tag-1*/</b>Words of <b>/*tag-2*/</b>example<b>*/</b> partially intersected <b>*/</b> tags. Note that tag-2 will only be applied to 'example' and tag-1 is extended to the whole sentence. The same syntax automatically fixes this kind of undesirable case.</p>
+
+    <h3>1.6. Definition of tag without content</h3>
+
+    <p>Not always is a content needed to be somehow processed following the directive of a tag. We may need to insert a fully constructed index or an automatically numbered note or another element simply to be named with a tag that does not require any content. This is already possible with the syntax introduced so far.</p>
+
+    <code><b class="tag1">#title</b> Examples of tags without content.<br /><br /><b class="tag1">#index</b><br /><br /><b class="tag1">#paragraph</b> Even inside inline text<b class="tag4">/*note*/*/</b> we can have a tag without content.</code>
+
+    <p>However, it is not elegant, as well as redundant, to open and close tags in line without content, and even tags that do not tag anything can be a bit disorienting. Therefore, it is suggested to use a hash symbol <span class="key">#</span> at the beginning and end of the tag name to indicate both on a separate line and on an inline text a tag without content. Here is how it would appear:</p>
+
+    <code><b class="tag1">#title</b> Examples of tags without content.<br /><br /><b class="tag3">#index#</b><br /><br /><b class="tag1">#paragraph</b> Even inside inline text<b class="tag3">#note#</b> we can have a tag without content.</code>
+
+    <p>Both of the options illustrated above will lead to the same result; simply, the second way is recommended because it is more readable.</p>
+
+    <h3>1.7. Definition of tag of 2° and higher level</h3>
+
+    <p>Through the use of inline tags, we have already seen how to create second-level tags, and by creating inline tags within inline tags, we can define third-level or fourth-level tags, or even further. However, the syntax must provide a way to create these structures in the main style of regular tags (those defined by dedicating a line of text to them). The proposed solution is to use multiple hash symbols <span class="key">#</span> to define the level we are at. Here is an example.</p>
+
+    <code><b class="tag1">#type</b> Music album<br /><b class="tag1">#title</b> Snowflakes<br /><br />
+    <b class="tag1">#song</b><br /><b class="tag2">##num</b> 1<br /><b class="tag2">##artist</b><br /><span class="tab"></span><b class="tag2">###name</b> Snowman<br /><span class="tab"></span><b class="tag2">###surname</b> Whiteland<br /><b class="tag2">##title</b> Even whiter<br /><b class="tag2">##duration</b> 3:10<br /><br />
+    <b class="tag1">#song</b><br /><b class="tag2">##num</b> 2<br /><b class="tag2">##artist</b><br /><span class="tab"></span><b class="tag2">###name</b> Snowman<br /><span class="tab"></span><b class="tag2">###surname</b> Whiteland<br /><b class="tag2">##title</b> The world is covered<br /><b class="tag2">##duration</b> 3:38</code>
+
+    <p>Note that it is intended to have a different coloration for tags of levels lower than the first. Often, a first-level tag somehow defines an object, which could be a note, a song, a bibliographic reference, etc. Therefore, the document is more readable if it is visually divided into first-level objects. Using tabulation freely and personally can help to read third or further level tags, such as the artist's name and surname in the example above.</p>
+
+    <p>Although there is no limit to the levels of this hierarchical structure of tagged content, it is believed that a primarily linear use with a few levels to detail main objects is often sufficient to describe many types of documents, such as books, showcase websites, collections of various types, electronic publications, etc.</p>
+
+    <p>When you go down a level, the number of hashtags <span class="key">#</span> increases and, as they remain attached to the name of the tag they introduce, readability can be disrupted. Therefore, it is envisaged to be able to optionally add a space between the sequence of hashtags for 2nd or further level tags and the tag name. In this way:</p>
+
+    <code><b class="tag1">#type</b> Music album<br /><b class="tag1">#title</b> Snowflakes<br /><br />
+    <b class="tag1">#song</b><br /><b class="tag2">## num</b> 1<br /><b class="tag2">## artist</b><br /><span class="tab"></span><b class="tag2">### name</b> Snowman<br /><span class="tab"></span><b class="tag2">### surname</b> Whiteland<br /><b class="tag2">## title</b> Even whiter<br /><b class="tag2">## duration</b> 3:10<br /><br />
+    <b class="tag1">#song</b><br /><b class="tag2">## num</b> 2<br /><b class="tag2">## artist</b><br /><span class="tab"></span><b class="tag2">### name</b> Snowman<br /><span class="tab"></span><b class="tag2">### surname</b> Whiteland<br /><b class="tag2">## title</b> The world is covered<br /><b class="tag2">## duration</b> 3:38</code>
+
+    <p>Meanwhile top-level tags will not allow spaces between the hashtag sign and the tag name.</p>
+
+    <h3>1.8. Definition of tag with id</h3>
+
+    <p>It is not intended to overlook strategies for abbreviating the amount of tagged text written. An easily imaginable situation is when, for different objects such as the songs in the above example, we have the same artist who can in turn be a complex object. Thus, it will be useful to define that repeated object only once. This is possible if an ID is associated with a tag and by reusing that ID for a subsequent tag with the same name, the interpreter of the syntax can understand that it is the same object.</p>
+
+    <p>This ID-based strategy allows us to avoid repetitions while also creating links. For example, if different points within a paragraph need to refer to the same note, having an automated system for numbering notes would not allow for exceptions. For instance, it wouldn't be possible to repeat note number 5 in three different places within a section of text. However, if a note can be assigned an ID, it becomes possible to manage these kinds of exceptions.</p>
+
+    <p>The id will need to have a distinct coloration from the elements seen so far. The id can be specified with the pipe symbol <span class="key">|</span> immediately following a tag of any level, including an empty tag, but it excludes application to inline tags. The reason is that if this strategy is needed, it's likely for a relatively complex object that will be defined separately and not within tagged text. However, it will always be possible to revisit this choice in the future. Furthermore, the id name will allow the same characters as a tag name.</p>
+
+    <code><b class="tag1">#type</b> Music album<br /><b class="tag1">#title</b> Snow flakes<br /><br /><span class="tab"></span><b class="tag3">#playlist#</b><b class="id">|SnowFlakes</b><br /><br />
+    <b class="tag1">#song</b><br /><b class="tag2">## num</b> 1<br /><b class="tag2">## artist</b><b class="id">|WhitelandS</b><br /><span class="tab"></span><b class="tag2">### name</b> Snowman<br /><span class="tab"></span><b class="tag2">### surname</b> Whiteland<br /><b class="tag2">## title</b> Even whiter<br /><b class="tag2">## length</b> 3:10<br /><br />
+    <b class="tag1">#song</b><br /><b class="tag2">## num</b> 2<br /><b class="tag2">## artist<b class="id">|WhitelandS</b></b><br /><b class="tag2">## title</b> The world is covered<br /><b class="tag2">## length</b> 3:38<br /><br /><span class="tab"></span><b class="tag3">#playlist#</b><b class="id">|SnowFlakes</b></code>
+
+    <p>When the program first encounters the ID associated with a certain tag name, it will process the content according to a provided template, but the result of that processing will be stored in memory with that ID and tag name. When the program encounters the same tag name with the same ID again, it will then ignore any defined structure (which is recommended not to define) and simply apply the previously generated result. This allows for reducing content repetition.</p>
+
+    <p>Even in the case of the <b>#playlist</b> tag without content, it could be a complex object constructed from a template applied to this tagged text. To prevent it from being constructed every time or to ensure that its reconstruction in a different part of the document avoids the risk of unforeseen changes, you can use the ID and have what was produced at the beginning of the document also at the end of the document.</p>
+
+    <h3>1.9. Definition of comment</h3>
+
+    <p>The hashtag is used on social platforms to define a keyword, and in various programming languages, it is used to define a comment. In this context, we intend to make use of both meanings. Since the top-level tag does not accept any space between the single hashtag and the tag name, this combination of hashtag and space <span class="key">#</span> <span class="key">&nbsp;&nbsp;</span> at the beginning of a line will be used to define a single-line comment.</p>
+
+    <code><b class="esc"># This is a comment /*and every other special character*/ will be ignored*/</b><br /><b class="tag1">#ordinary-tag</b> and this is some tagged text.<br /><br /><span class="tab"></span><b class="esc"># It is possible to use indentation at the beginning of the comment.</b><br /><b class="esc">#<span class="tab"></span> and to use multiple white characters between the hash sign and the actual comment.</b></code>
+
+    <p>As shown in the example, the combination of a hashtag and a space is not strict. Instead, spaces and tabs can be used at the beginning of a line (since this applies to any type of line), and a generic series of white characters can be used between the hashtag and the actual comment.</p>
+
+    <p>It is also possible to have a multiline comment. It starts with a sequence of hash symbols <span class="key">#</span> (even just one), and except for leading whitespace, it should not contain any other characters. From the next line, anything written will be considered a comment, and any special characters will be ignored. To close the multiline comment mode, you need to repeat the initial sequence of hash symbols <span class="key">#</span> (not necessarily with the same number). Finally, it can be visually helpful if, within a multiline comment, a regular tag introduced by a series of hash symbols <span class="key">#</span> receives a special color. It can help structure the content of the comment better, even though it won't have any actual function. Here's an example:</p>
+
+    <code><b class="esc">###<br />This is a multiline comment where /*the special characters*/ are ignored*/. /<br />Some</b> <b class="tag5">#key</b> <b class="esc">words could be highlighted</b> <b class="tag5">#tagging</b> <b class="esc">them as usual.<br />It could be useful to indicate a </b><b class="tag5">#TODO</b><b class="esc"> or a </b><b class="tag5">#BUG</b><b class="esc">.<br />###</b><br />After the comment, the text returns to being generic content.</code>
+
+    <h3>1.10. Definition of escape character</h3>
+
+    <p>In case we want to use special characters as normal characters, that is, as part of the inserted content, we can use the classic escape character, the backslash <span class="key">\</span>, before a special character. The escape character will have the same styling as comments, as it is a kind of comment for a single character (the one that follows it), and it should be visually ignorable along with comments when focusing on the content. Here is a list of all the possible meaningful uses:</p>
+
+    <code><b class="esc">\</b># This is normal content, rather than a comment, since it includes the initial hashtag.<br />
+    <b class="esc">\</b>#tag-ignored The entire line is content since the initial tag is not interpreted as a tag.<br />
+    <b class="esc">\</b> so the initial space will be part of the content (otherwise, it gets removed).<br />
+    So the final space after the full stop will be part of the content (otherwise, it gets removed). <b class="esc">\</b><br />
+    <b class="esc">\</b>The backslash can always be used at the beginning of a line and will be removed from the content.<br />
+    <b class="esc">\</b>\ If you want to start content with a backslash, simply use it twice.<br />
+    In any other position, \ the backslash will be considered a normal character.<br />
+    If, on the other hand, in the middle of the content, the backslash precedes <b class="esc">\</b>/*example*/a special character*/, that character will become part of the content, even in the case of a <b class="esc">\</b>#tag# without content, like this.<br />
+    <b class="tag1">#tag</b><b class="esc">\</b>|id-ignored also, it's possible to cancel the special ID character of a tag.
+    </code>
+
+    <p>In summary, the possible uses can be summarized in three scenarios: (1) the escape character at the beginning of a line forces the next character to be interpreted as normal content; (2) the escape character at the end of a line forces whitespace that would normally be removed to be part of the content; (3) the escape character before a sequence of special characters forces them to be interpreted as normal content. In any other case, the backslash will not be a special character but will be considered part of the normal content.</p>
+
+    <h3>1.11 Name of the conceived syntax</h3>
+
+    <p>The most distinctive aspect of this syntax type is the classic tag that we can use to qualify a portion of text. These tags can be structured hierarchically, and there is only one variation compared to the special hashtag symbol # used for inline tags, which still remains a tag rewritable with hashtag-based definitions. Therefore, the name of this syntax will be <b>Tagged Text</b> abbreviated as TT.</p>
+
+    <h2>2. Rules of the Tagged Text templates <span class="badge">User story 2</span></h2>
+
+    <h3>2.1. Composition of content and template files</h3>
+
+    <h4>2.1.1. The publication file spine</h4>
+
+    <p>A publication is generated by reading the content written in TT source files and applying the rules from a set of template files, also written in TT. However, the set of template files and the publication generation process must be guided by a special file called "spine".</p>
+
+    <p>The spine file is also written in TT. The peculiarity of the spine file (or the template files) is that some tags are special and define rules or directives to follow. The main task of the spine is to indicate the content files that will be used, specify the template files that will be used, establish which template files will be applied to various content files, and define the name and extension of the files produced following the application of the rules. Secondly, it will be possible to define general variables that can be useful to modify in order to have an effect on all points of the publication where they should appear.</p>
+
+    <p>The spine file must be placed alongside the content files, and they all must be in the same folder. Therefore, they must all have unique names. The spine file should be named 'spine.tt'; it may not be strictly necessary, but it is a recommended convention.</p>
+
+    <h4>2.1.2. Defining the folder of template files</h4>
+
+    <p>Template files can be placed in a different folder than the content files. The folders are defined relative to the location of the 'spine.tt' file. The tag used is <b>#template-path</b>, as in the example:</p>
+
+    <code><b class="tag1">#template-path</b> template<br /></code>
+
+    <p>The example instructs to use the 'template' subfolder to find all template files. If multiple <b>#template-path</b> tags are specified, only the last one will be considered the effective one; the previous ones will be overwritten each time a <b>#template-path</b> tag is encountered. This behavior follows the principle of "cascading rules", where in the case of repeated rules or directives, instead of halting the process due to inconsistency, the previous instructions are ignored, and the last encountered one is deemed valid.</p>
+
+    <p>The folder is relative and can use the characters that are used in your operating system to define file paths. For example, if you want to navigate to the parent folder, you can use the familiar symbol <b>. .</b>; then, you can reach subfolders using <b>/</b>.</p>
+
+    <code><b class="tag1">#template-path</b> ../templates/mybook<br /></code>
+
+    <h4>2.1.3. Defining the folder of publication files</h4>
+
+    <p>The content files and template files will need to generate a publication, also referred to as "distributable files." Therefore, it is necessary to specify a folder where the distributable files (which can be more than one) will be gathered. The tag to use is <b>#publication-path</b>. It follows the principle of "cascading rules" mentioned above, and the value should be a relative folder as in the previous example.</p>
+
+    <code><b class="tag1">#publication-path</b> pub<br /><b class="tag1">#publication-path</b> ../publications/mywork<br /></code>
+
+    <h4>2.1.4. Defining a general variable</h4>
+
+    <p>It can be useful to define a value that repeats often in the publication, but we are not yet certain if the found value is final or subject to change. For instance, the title of a book, the name of a character, or the name of a location, etc. Therefore, in template files, we have the option to use rules that retrieve the value from a general variable, perhaps applied to an empty-content tag like <b>#hero-name#</b>. To define a general variable in the spine file, the <b>#var</b> tag is used in the following way:</p>
+
+    <code><b class="tag1">#var</b> hero-name<br /><b class="tag2">##text</b> Hercules<br /></code>
+
+    <p>In the example, you can see that the main tag <b>#var</b> defines the name of the variable, while the secondary tag <b>##text</b> defines the textual value of that variable.</p>
+
+    <h4>2.1.5. Defining a list of files</h4>
+
+    <p>Since the spine file can apply the same pattern to multiple content files, it is useful to have the name of a list of content files. It will be possible with the tag <b>#file-list</b> followed by the name of the list and the subtag <b>##files</b> which will have as its value the list of files that will be part of that list. File names must be separated by a space. If there are spaces in the file name, you cannot use this tag, but you must specify names containing a space with the subtag <b>##file</b>. Some examples:</p>
+
+    <code><b class="tag1">#file-list</b> chapters<br /><b class="tag2">##files</b> chapter1 chapter2 chapter3<br /><br /><b class="tag1">#file-list</b> test-collection<br /><b class="tag2">##files</b> api-session api-page<br /><b class="tag2">##file</b> api-image gallery<br /><b class="tag2">##file</b> api-audio gallery<br /><b class="tag2">##files</b> api-task api-setting api-log<br /></code>
+
+    <p>The content files are always TT files with the '.tt' extension, but in the 'spine.tt' file, you can omit the extension because it is implied, or you can specify it if desired. A list of files can be either a list of content files or a list of template files. The list of template files can gather many potentially inconsistent rules (especially when using multiple files at once), but the rules will be applied according to the cascade principle. That is, if a rule is repeated and shows a variation from a previous one, the latest version encountered by the software will be applied.</p>
+
+    <h4>2.1.6. Applying templates to a single content file</h4>
+
+    <p>The most distinctive tag in the 'spine' file is <b>#publish</b>. In fact, it indicates the name of the file to be published, along with its extension (or file format), which will be generated using a content file following the application of rules from a template file. An example follows.</p>
+
+    <code><b class="tag1">#publish</b> index<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> index<br /><b class="tag2">##template</b> presentation-style<br /></code>
+
+    <p>In this case, we have an 'index.html' file that will be published by reading the content from 'index.tt' and applying the rules from the template file 'presentation-style.tt'. Considering the previous examples, we can assume that the template will be searched for in the 'template' subfolder, and the published file will be generated in the 'pub' subfolder.</p>
+
+    <p>We can also specify multiple template files to apply in cascade, for example:</p>
+
+    <code><b class="tag1">#publish</b> epilogue<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> epilogue<br /><b class="tag2">##template</b> chapter-style presentation-style<br /></code>
+
+    <p>As you can see, a special chapter called 'epilogue' may need the rules specified for each chapter within 'chapter-style.tt', but also some additional rules present in 'presentation-style.tt'. We could also place a list of template files in a <b>#file-list</b> tag and call this list of templates 'epilogue-style'.</p>
+
+    <h4>2.1.7. Applying templates to a list of content files</h4>
+
+    <p>Just as you can use a list for template files, you can also use a list for content files. We can consider the previous example list 'chapters' containing the files 'chapter1.tt', 'chapter2.tt', 'chapter3.tt' and write this other example:</p>
+
+    <code><b class="tag1">#publish</b> sitography<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> sitography chapters<br /><b class="tag2">##template</b> presentation-style<br /></code>
+
+    <p>When there are multiple specified content files, the first content file is like the "spine" of the group of files from which to get content. In fact, it serves as a starting point, a sequence of tags to process, and an endpoint; this task always falls to the first content file. The other content files will not be processed like the first one, but they will be available as material if the first file has rules that extract content from the other files. You will see <em>how</em> this happens with template rules.</p>
+
+    <p>In the given example, you can imagine a title for the bibliography and a long list of numbered URLs. The 'bibliography.tt' file will contain the title and the definition of this list, but to compile that list, you will need to consult all the chapters of the book where the web addresses appear. For this reason, the <b>#content</b> tag must include the entire list of chapters through the name of the aforementioned list.</p>
+
+    <h4>2.1.8. Publishing a list of files using a list of content files</h4>
+
+    <p>We have seen that, when specifying a list of files, it can be associated with the subtag <b>##template</b>, the subtag <b>##content</b>, and also with the primary tag <b>#publish</b>. In this case, with a single "publish" directive, multiple files will be published simultaneously. The only condition to be met is that the number of files indicated on <b>#publish</b> through the list must be equal to the number of content files indicated on <b>##content</b>. This way, the first "publish" file will be generated with the first file from "content", the second "publish" file will receive the second file from "content," and so on. If the numbers do not match, an error will be generated, and the publishing process will be interrupted.</p>
+
+    <code><b class="tag1">#publish</b> chapters<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> chapters<br /><b class="tag2">##template</b> chapter-style<br /></code>
+
+    <p>In the example, we see the most common case, which is to have the same name for the list on <b>#publish</b> and on <b>##content</b>, ensuring that we have the same number of content files and files to publish. Following the previous example, the file chapter1.html will be generated by reading chapter1.tt, chapter2.html by reading chapter2.tt, and so on. If you want to have different names between content files and published files, you can use two different lists, but it is necessary to create this sequential correspondence between the files.</p>
+
+    <h3>2.2. Rules applicable to TT content</h3>
+
+    <p>In this section, we will see how to write rules within a template file. Generally, we will have tags with content in the content file, and these tags can correspond to rules in the template file. This allows applying additional content from the rules, either before or after the tagged content. There are some exceptions to this general possibility.</p>
+
+    <p>If a content tagged with a first-level tag has that tag not associated to any rule, it is ignored by the processor. However, if the tag without rules is a second-level or subsequent level, the "raw" content is used.</p>
+
+    <h4>2.2.1. Rule for content at the beginning of a file</h4>
+
+    <p>A useful rule is being able to include fixed content at the beginning of a publication file. The <b>#file-opening</b> tag will be used and normal text will be specified as the opening text for the file to be published. In the example, we have a minimal opening for an HTML file.</p>
+
+    <code><b class="tag1">#file-opening</b><br />&lt;!DOCTYPE html&gt;<br />&lt;html&gt;<br />&lt;head&gt;&lt;title&gt;My page&lt;/title&gt;&lt;/head&gt;<br />&lt;body&gt;</code>
+
+    <p>It is possible to introduce plain text with the subtag <b>##text</b>, which is convenient to use when employing multiple types of subtags, available for almost all rules, as we will see later. Example with the <b>##text</b> sub-tag.</p>
+
+    <code><b class="tag1">#file-opening</b><br /><b class="tag2">##text</b><br />&lt;!DOCTYPE html&gt;<br />&lt;html&gt;<br />&lt;head&gt;&lt;title&gt;My page&lt;/title&gt;&lt;/head&gt;<br />&lt;body&gt;</code>
+
+    <h4>2.2.2. Rule for content at the end of a file</h4>
+
+    <p>Of course, a rule is also needed to include fixed content at the end of the publication file. The <b>#file-ending</b> tag will be used and normal text will be specified as the closing text for the file to be published. In the example, we have a minimal closing for an HTML file. It should be noted that the <b>##text</b> subtag can also be used in this case.</p>
+
+    <code><b class="tag1">#file-ending</b><br />&lt;/body&gt;<br />&lt;/html&gt;</code>
+
+    <h4>2.2.3. Rule for content of a tag</h4>
+
+    <p>When encountering a tag in preparation for publication, the tag's name is naturally removed, and the content of the tag can be either ignored, used, or combined with various types of textual elements that this rule can provide. Let's first look at the simplest case.</p>
+
+    <p>Snippet from the content file:</p>
+    <code><b class="tag1">#title</b><br />My first publication</code>
+    <p>Snippet from the template file:</p>
+    <code><b class="tag1">#tag</b> title<br /><b class="tag2">##text</b> h2<br /><b class="tag2">##content</b><br /><b class="tag2">##text</b> h2</code>
+    <p>Snippet from the published file:</p>
+    <code><b class="tag1">&lt;h1&gt;</b>My first publication<b class="tag1">&lt;/h1&gt;</b></code>
+
+    <p>The rule for the content of a tag is simply defined with <b>#tag</b> followed by the name of the tag to which this rule will be applied. Subtags, recognizable by the double hash sign, further define additional details for the rule.</p>
+
+    <ul class="subtag"><li><span><b>content</b> is one of the most important subtags, and it precisely reflects the tagged content. If the tagged content itself has additional tags, they will be processed, and the final result will be inserted in the position specified by the subtag <b>##content</b>. It can be used multiple times.</span></li>
+
+    <li><span><b>text</b> has already been introduced in the previous rules. It is a subtag that simply inserts static text in the position where the subtag appears, and it can be used multiple times.</span></li>
+
+    <li><span><b>from-next-tag</b> is another subtag that retrieves the content of the next tag at the same level with the specified name following the subtag. Example of the rule:</span></li></ul>
+
+    <code><b class="tag1">#file-opening</b><br /><b class="tag2">##text</b><br />&lt;!DOCTYPE html&gt;<br />&lt;html&gt;<br />&lt;head&gt;<br /><span class="tab"></span>&lt;title&gt;My page&lt;/title&gt;<br /><span class="tab"></span>&lt;link rel="stylesheet" href="style-<br /><b class="tag2">##from-next-tag</b> chapter-color<br /><b class="tag2">##text</b> .css"&gt;<br />&lt;/head&gt;<br />&lt;body&gt;</code>
+
+    <p>Since <b>#file-opening</b> is applied at the beginning of the file, when the processor encounters <b>##from-next-tag</b>, starting from the beginning of the processed file content, the processor looks for the next tag with the name "chapter-color"; when found, it will use that content (which could be, for example, "red") and insert it between the two pieces of text defined with <b>##text</b>.</p>
+
+    <p>If, instead of a tag of the same level, you want to retrieve a subsequent tag at a deeper level, you can specify multiple tags separated by a space according to this criterion: next-tag-of-same-level, next-tag-contained-in-previous, next-tag-contained-in-the-previous, etc. Obviously, the "next tag contained in the previous one" will be a tag at a deeper level than the previous one. Furthermore, if tags of the same level end and it is necessary to go up levels to encounter new eligible next tags, the process stops and does not attempt to retrieve other tags. In such a case, the returned value will be an empty string. Example of a rule:</p>
+
+    <code><b class="tag1">#tag</b> cover-image<br /><b class="tag2">##text</b> &lt;img src="<br /><b class="tag2">##from-next-tag</b> song artist<br /><b class="tag2">##from-next-tag</b> song album<br /><b class="tag2">##from-next-tag</b> song publication-year<br /><b class="tag2">##text</b> .jpg" /&gt;</code>
+
+    <p>The result in the publishing html file will be, for example:</p>
+    <code><b class="tag1">&lt;img</b> src="SingerAlbum2000.jpg" <b class="tag1">/&gt;</b></code>
+
+    <ul class="subtag"><li><span><b>from-subtag</b> is similar to the previous one, but instead of looking for the next tag of the same level, it searches directly within the current tag. Of course, the current tag must have subtags; otherwise, an empty string will be returned in the absence of subtags or if the specified subtag is not found. In fact, after <b>##from-subtag</b>, you need to specify the name of the subtag from which you want to retrieve content.</span></li>
+
+    <li><span><b>from-var</b> this subtag allows you to use the content of a variable defined in the 'spine.tt' file by simply specifying the name of the variable to use.</span></li>
+
+    <li><span><b>from-file</b> is used to retrieve textual content from a text file (it can be txt, html, json, as long as the actual content is text-based). The value to specify for this subtag is the relative path pointing to the text file to be used. The current location from which to start the relative path is the template folder.</span></li>
+
+    <li><span><b>from-counter</b> is used to receive a value from a counter, and only the name of the counter needs to be specified. Every time the processor encounters this subtag with the same counter name, the inserted value will be the next one expected by the counter. For example: 1, then 2, then 3, etc. The counter can start from an arbitrary number and proceed even with jumps, but the details of the counter will be seen in the rule dedicated to it.</span></li>
+
+    <li><span><b>space</b> this tag does not require specific values. While you can insert a space at the end of a line using the escape character, you can also use this subtag.</span></li>
+
+    <li><span><b>new-line</b> similarly to the previous tag, you can insert a line break using this subtag.</span></li>
+
+    <li><span><b>final-chars</b> you can specify a sequence of characters that the constructed value of the main working tag, up to this point, must contain. If the expected characters are present, nothing happens. If those characters are missing, then the specified characters in this subtag are added. The subtag can be used multiple times, and each time it will have an effect on the last piece of string processed up to that point.</span></li></ul>
+
+    <h4>2.2.4. Rule for content of a list of tags</h4>
+
+    <p>In addition to working with one type of tag at a time, it is possible to work with different types of tags simultaneously to build structures similar to a list, as we might find in a book, with a list beginning, a possible separator between elements, and a list closure. In fact, we will have three subtags to manage: the list as a whole, the separation of elements, and each individual element.</p>
+
+    <ul class="subtag"><li><span><b>list</b> in this subtag, you can use all the subtags (which will be of 3rd level) seen in the previous rule, with the particularity that <b>###content</b> can be used only once and represents the series of elements that the list will contain. Before the subtags, you must specify a value for <b>#tag-list</b>, which will be the list of tag names, separated by a space, that you intend to treat together as part of a list.</span></li>
+
+    <li><span><b>item-separator</b> is used to define the character or string that will separate the elements. No further subtags should be used here, and it can be omitted if no separator is needed.</span></li>
+
+    <li><span><b>item</b> is used to process each element, and it will do that in a manner entirely analogous to the previous rule, using all the subtags (which will be of 3rd level) to compose the final value. <b>###content</b> can be used more than once and will receive the content of the tags encountered one by one as defined by <b>#tag-list</b>. Here's an example.</span></li></ul>
+
+    <code><b class="tag1">#tag-list</b> note reference curiosity<br /><b class="tag2">##list</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;div class="note-group"&gt;<br /><span class="tab"></span><b class="tag2">###content</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;/div&gt;<br /><b class="tag2">##item-separator</b> &lt;hr /&gt;<br /><b class="tag2">##item</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;p&gt;<br /><span class="tab"></span><b class="tag2">###content</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;/p&gt;</code>
+
+    <h4>2.2.5. Rule to split the content into elements and compose them into a list</h4>
+
+    <p>It is convenient to be able to define a list in the most user-friendly way, and instead of tagging each element, one or more arbitrary characters, including line breaks, will be used to determine how many and which elements the content of a single tag should be divided into. Once this is defined, we can apply the subtags <b>##list</b> and <b>##item</b> exactly as seen above. Here's an example.</p>
+
+    <code><b class="tag1">#content-list</b> list<br /><b class="tag2">##item-separator</b> - <b class="esc">\</b><br /><b class="tag2">##list</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;ul&gt;<br /><span class="tab"></span><b class="tag2">###content</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;/ul&gt;<br /><b class="tag2">##item</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;li&gt;<br /><span class="tab"></span><b class="tag2">###content</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;/li&gt;</code>
+
+    <p>In the example, there is a list tagged with 'list', and each element is introduced by a short dash followed by a space '- '. The separation character is recognized to divide the elements, but it is also removed from the final content. If desired, it can be retained within the <b>##item</b> tag introduced as an initial text piece with <b>###text</b>. For the rest, it offers the same possibilities as the previous rule.</p>
+
+    <h4>2.2.6. Rule for retrieving scattered tags and composing them into a list</h4>
+
+    <p>Another useful case is when at a certain point, where a tag appears, we want to gather all the elements, for example, titles, searched among the contents of a file to be published (defined with the <b>#publish</b> tag within 'spine'), and we need to search for them wherever they are scattered to compose them into an ordered list. Here is an example.</p>
+
+    <code><b class="tag1">#catching-tag</b> index<br /><b class="tag2">##caught-tags</b> title-section title-summary-section<br /><span class="tab"></span><b class="tag2">###raw-content</b><br /><b class="tag2">##list</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;ol&gt;<br /><span class="tab"></span><b class="tag2">###content</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;/ol&gt;<br /><b class="tag2">##item</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;li&gt;<br /><span class="tab"></span><b class="tag2">###content</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;/li&gt;</code>
+
+    <p>The first value is the "capturing tag" to which the rule applies, and where the structure defined here will be created. Next are the "captured tags," which are all the tags whose values need to be reported following the application of the rules. However, if we don't want to carry along the decorations of the titles (or, in general, if we want to process the content here and not receive it already processed by other rules), then we can use the subtag <b>###raw-content</b>, which will return the raw content. If the raw content is structured with subtags, only the value directly associated with the searched tag will be returned, and the contents present in additional subtags will be ignored. The remaining part defined by the subtags <b>##list</b> and <b>##item</b> behaves as is now known.</p>
+
+    <h4>2.2.7. Rule to define a counter</h4>
+
+    <p>Counters are very useful for numbering elements, whether they are titles, notes, special occurrences, etc. Essentially, the counter has a name, as if it were a special variable, which increments each time it is used, and the next time it returns the value succeeding the previous one. You can establish from which number it should start counting and with what interval the variable should increase. Finally, the scope of the counter must be defined, essentially indicating when the counter is in a context where it needs to start counting from the beginning. Let's see an example:</p>
+
+    <code><b class="tag1">#counter</b> note-num<br /><b class="tag2">##scope</b> publication-file|publication-spine<br /><b class="tag2">##start</b> 1<br /><b class="tag2">##step</b> 1</code>
+
+    <p>The name of the counter is specified as the first value after the main tag. Then, the secondary tag 'scope' can take two values: <b>publication-file</b> and <b>publication-spine</b>. The first depends on the 'publish' instruction inside the 'spine.tt' file, and every time you move on to the next publishing file, the counter resets to zero. Otherwise, the second value never resets the counter throughout the entire process of an entire publication defined by a 'spine.tt' file.</p>
+
+</body>
+</html>
