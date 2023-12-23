@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="../_style/documentation.css">
+	<title>Manuale utente</title>
+</head>
+<body>
+    <h1>Manuale utente</h1>
+
+    <nav>
+	<ol type="1">
+		<li>Preparare l'editor di testo
+			<ol type="1">
+				<li>Il formato .tt (Tagged Text)</li>
+				<li>Usare la codfica UTF-8</li>
+				<li>Usare il ritorno a capo New Line</li>
+				<li>Editor di testo supportati</li>
+				<ol type="1">
+					<li>Kate</li>
+				</ol>
+			</ol>
+		</li>
+	</ol>
+    </nav>
+
+    <h2>1. Preparare l'editor di testo <span class="badge">User story 3</span></h2>
+
+	<h3>1.1 Il formato .tt (Tagged Text)</h3>
+
+    <p>La sintassi Tagged Text è ideata per focalizzarsi sul contenuto e  dare la possibilità in un secondo momento di produrre elaborati file di testo che avranno una disposizione degli elementi, stili grafici ed eventualmente più versioni a seconda dei formati finali desiderati o delle lingue da supportare.</p>
+
+    <p>Per scrivere in Tagged Text è sufficiente dotarsi di un qualsiasi editor di testo e salvare il file anziché in formato txt come 'mio_file.txt' in 'mio_file.tt'. Nel contenuto testuale potete usare tabulazioni fatte con il carattere speciale di tabulazione o fatte con spazi semplici, non fa differenza.</p>
+
+    <h3>1.2. Usare la codfica UTF-8</h3>
+
+	<p>È necessario impostare la codifica del testo a UTF-8 tramite il vostro editor di testo preferito. In futuro potrebbero essere supportate altre codifiche, ma questa permette di codificare quasi tutte le lingue del mondo, oltre ad essere lo standard preferito in molte applicazioni.</p>
+
+    <h3>1.3. Usare il ritorno a capo New Line</h3>
+
+	<p>Infine, il ritorno a capo va impostato per essere realizzato con il carattere ASCII 10 anche rappresentato dal simbolo \n (New Line). Infatti, esiste anche il ritorno a capo con carattere ASCII 13 rappresentato da \r (Carriage Return). Su Windows a volte viene usato un doppio ritorno a capo \n\r che l'editor di testo mostra come singolo ritorno a capo. Questo dettaglio va impostato nell'editor di testo che avrete scelto per scrivere in Tagged Text.</p>
+
+    <h3>1.4. Editor di testo supportati</h3>
+
+    <p>Per quanto in linea di massima qualsiasi editor di testo può andar bene, è raccomandabile non solo poter settare i parametri sopra presentati, ma anche avere una colorazione della sintassi che ne faciliti la lettura. Non tutti gli editor di testo permettono di avere una colorazione della sintassi personalizzata e per ciascuno di coloro che la supportano va creato un file per estendere appunto i formati supportati. Di seguito ci sono gli editor di testo per cui è stato realizzato questo file di regole per la colorazione corretta della sintassi Tagged Text. Il numero di editor supportati dovrebbe crescere col tempo.</p>
+
+    <h4>1.4.1. Kate</h4>
+
+	<p>Kate è un editor di testo che cerca di mantenersi minimale, ma altamente personalizzabile e con tutte le funzionalità tipiche degli editor più avanzati. È nato in ambiente KDE, uno degli ambienti GNU-Linux basato sulle librerie Qt. Però è possibile installarlo sull'ambiente Gnome di GNU-Linux, su Windows e su MacOS. Qui potete scaricare la versione adatta al vostro sistema operativo: <a href="https://kate-editor.org/it/get-it/" tager="_blank">Ottieni Kate</a>.</p>
+
+	<p>Per aggiungere la colorazione Tagged Text a Kate, dovete usare il file 'tagged-text.xml' che si trova in questo progetto nel percorso 'syntax-files/org.kde.syntax-highlighting/syntax' e copiarlo nella cartella dell'applicazione dove è possibile estendere le sintassi supportate.</p>
+
+	<p>Questa cartella varia da un sistema operativo all'altro e persino da una distribuzione GNU-Linux all'altra. In linea di massima, dovreste raggiungere la vostra cartella utente, entrare in una cartella dedicata ai "dati locali" ed esplorarla fino a trovare 'org.kde.syntax-highlighting' che coincide con la sotto cartella presente in questo progetto. Poi entrerete su 'syntax' e potrete finalmente copiare il file 'tagged-text.xml'. Un esempio su GNU-Linux del percorso della cartella dell'applicazione è: '/home/utente/.local/share/org.kde.syntax-highlighting/syntax'.</p>
+
+</body>
+</html>

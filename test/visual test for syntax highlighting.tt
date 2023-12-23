@@ -1,0 +1,117 @@
+The first line not introduced by a tag is normal text.
+It's possible to use \many #special -characters part of the normal text.
+
+#siple-tag Value in-line
+
+#siple-tag@with a char that cannot be part of the tag name, adjacent to the tag name, so from there starts the tagged value.
+Even this normal text in a new line is part of the previous tagged value.
+
+#simple-tag
+Value on the next text line.
+
+      #simple-tag used after some white chars.
+
+#first-level-tag A test with /*inline-tag*/sub part of it*/ tagged.
+An /*inline-tag*/*/ with an empty value.
+
+A text line with /*bold*/multiple*/ inline /*bold*/tags*/.
+
+A text line with /*first-level*/an inline tag /*second-level*/inside*/ another one*/.
+
+A text line with /*first-level*/an inline tag /*second-level*/inside another one*/*/ and they end in the same point.
+
+An /*first-level*/inline /*piece*/tag*/ that contains /*piece*/two*/ tagged piece of text*/.
+
+/*an-inline-tag*/In the first*/ position
+
+An inline tag in the last /*inline-tag*/position*/
+
+#tag-without-value#
+
+    #tag-without-value# used after some white chars and in the first position.
+
+This is an example with an#inline-tag-without-value# inside a line text.
+
+    Three consecutive tags #tag-A##tag-B##tag-C# which they are standalone tags.
+
+In the last position a #tag-without-value#
+
+#parent-tag
+##child-tag value of child 1
+##child-tag value of child 2
+
+#parent-tag
+## child-tag the child tag has a space between hashes and its name.
+    ### third-level-tag followed by a text value.
+    ###third-level-tag can be with or without space in any line.
+## child-tag value of child 2.
+
+#parent-tag parent-value
+##child-tag child-value.
+##child-tag#inline-tag-without-value# adjacent to the hash child tag.
+##child-tag/*inline-tag-adjacent*/to*/ the hash child tag.
+
+#parent-tag|with-id And some normal text.
+
+#parent-tag|with-id|second-id-that-should-be-normal-text And some normal text.
+
+#parent-tag
+##child-tag|with-id And some normal text
+##child-tag|with-id|second-id-that-should-be-normal-text And some normal text.
+##child-tag|with-id#adjacent-inline-tag-without-value#
+##child-tag|with-id/*adjacent-inline-tag*/with value for the inline tag*/ and some normal text.
+An id applied to a #standalone-tag#|id and other normal text.
+
+#parent-tag\|with-escaped-id And some normal text.
+#parent-tag\The first escape char is normal text since nothing of special follows it.
+##child-tag|with-id\The first escape char should be normal text again.
+
+\#escaped-parent-tag that is only normal text.
+\#escaped-tag-without-value# in first position that is only normal text.
+Only normal text with an \#escaped-inline-tag-without-value# and other text after it.
+A tag without value escaped in the last position\#tag-without-value#
+
+\ Escape char to include an initial white char.
+\ Escape char to include an initial white char and one /*tagged*/word*/ on the same line.
+An \/*inline-tag*/escaped*/ that is all normal text.
+
+An escape char \with no effect.
+An escape char \#with special char in a position where it is not special and so everything is just normal text.
+
+#parent-tag\|with-escaped-id/*inline-tag*/And some inline-tagged text*/
+##child-tag\|with-escaped-id and some normal text, actually the whole line is normal text
+##child-tag\|with-escaped-id\The second escape char must be normal text
+##child-tag\|with-escaped-id#inline-tag-without-value# adjacent to the escaped tag id
+
+If we don't have a \/*full inline tag, but only the beginning, the escape char is considered normal text as everything else in this line.
+
+# Inline comment
+\# This inline comment is escaped
+
+    # Inline comment with white spaces before it.
+#     Inline comment with more white spaces after the hash.
+
+A line of normal text.
+
+#
+    A multi-line comment that remains comment
+    until a new standalone series of hashes
+#
+
+A line of normal text.
+
+##
+    The multi-line comment can have a different number
+    of standalone hashes among the begenning and the end
+####
+
+A line of normal text.
+
+####
+    A comment can color #tags to have a way to highlight something
+    #second-tag in this comment
+    ##second-level-tag in this comment
+    /*inline-tag*/is not highlight*/
+##
+
+A line of normal text.

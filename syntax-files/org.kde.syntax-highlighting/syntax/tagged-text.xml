@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<language name="Tagged Text" version="1" kateversion="5.0" section="Markup" extensions="*.tt;" author="Silvan" priority="10">
+<highlighting>
+    <contexts>
+        <context name="normalText" attribute="normal" lineEndContext="#stay">
+            <RegExpr attribute="extension" context="afterTag" String="[\s]*#[A-Za-z0-9-]+#" />
+            <RegExpr attribute="tag" context="afterTag" String="^[\s]*#[A-Za-z0-9-]+(?=\s*)" />
+            <RegExpr attribute="attribute" context="afterTag" String="^[\s]*#{2,} ?[A-Za-z0-9-]+(?=\s*)" />
+            <RegExpr attribute="inlineTag" context="taggedText" String="/\*[A-Za-z0-9-]+\*/" />
+            <RegExpr attribute="escape" context="ignoreTag" String="\\(?=/\*[A-Za-z0-9-]+\*/)" />
+            <RegExpr attribute="escape" context="ignoreTag" String="\\(?=\*/)" />
+            <RegExpr attribute="escape" context="ignoreTag" String="\\(?=#[A-Za-z0-9-]+#)" />
+            <RegExpr attribute="escape" context="ignoreChar" String="^[\s]*\\(?=.)" />
+            <RegExpr attribute="escape" context="#stay" String="\\$" />
+            <RegExpr attribute="comment" context="comment" String="^[\s]*#+$" />
+            <RegExpr attribute="comment" context="#stay" String="^[\s]*#[\s].*$" />
+        </context>
+        <context name="afterTag" attribute="normal" lineEndContext="#pop" fallthroughContext="normalText">
+            <RegExpr attribute="tagId" context="#pop" String="\|[A-Za-z0-9-]+" />
+            <RegExpr attribute="escape" context="ignoreTagAfterTag" String="\\(?=\|[A-Za-z0-9-]+)" />
+        </context>
+        <context name="ignoreTagAfterTag" attribute="normal" lineEndContext="#pop">
+            <RegExpr attribute="normal" context="normalText" String="\|[A-Za-z0-9-]+" />
+        </context>
+        <context name="ignoreTag" attribute="normal" lineEndContext="#pop">
+            <RegExpr attribute="normal" context="#pop" String="#[A-Za-z0-9-]+#" />
+            <RegExpr attribute="normal" context="#pop" String="/\*[A-Za-z0-9-]+\*/" />
+            <RegExpr attribute="normal" context="#pop" String="\|[A-Za-z0-9-]+" />
+            <StringDetect attribute="normal" context="#pop" String="*/" />
+        </context>
+        <context name="ignoreChar" attribute="normal" lineEndContext="#pop">
+            <RegExpr attribute="normal" context="#pop" String="." />
+        </context>
+        <context name="taggedText" attribute="normal" lineEndContext="#pop">
+            <RegExpr attribute="inlineTag" context="taggedText" String="/\*[A-Za-z0-9-]+\*/" />
+            <RegExpr attribute="escape" context="ignoreTag" String="\\(?=/\*)" />
+            <RegExpr attribute="escape" context="ignoreTag" String="\\(?=\*/)" />
+            <StringDetect attribute="inlineTag" context="#pop" String="*/" />
+        </context>
+        <context name="comment" attribute="comment" lineEndContext="#stay">
+            <RegExpr attribute="comment" context="#pop" String="^[\s]*#+$" />
+            <RegExpr attribute="string" context="#stay" String="#+[A-Za-z0-9-]+(?=\s*)" />
+        </context>
+    </contexts>
+    <itemDatas>
+        <itemData name="normal" defStyleNum="dsNormal" />
+        <itemData name="tag" defStyleNum="dsKeyword" />
+        <itemData name="tagId" defStyleNum="dsOperator" />
+        <itemData name="attribute" defStyleNum="dsAttribute" />
+        <itemData name="inlineTag" defStyleNum="dsComment" />
+        <itemData name="extension" defStyleNum="dsExtension" />
+        <itemData name="escape" defStyleNum="dsControlFlow" />
+        <itemData name="comment" defStyleNum="dsDocumentation" />
+        <itemData name="string" defStyleNum="dsString" />
+    </itemDatas>
+</highlighting>
+</language>

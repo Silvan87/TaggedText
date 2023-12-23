@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="../_style/documentation.css">
+	<title>User Manual</title>
+</head>
+<body>
+    <h1>User Manual</h1>
+
+    <nav>
+	<ol type="1">
+		<li>Preparing the text editor
+			<ol type="1">
+				<li>The file format .tt (Tagged Text)</li>
+				<li>Use UTF-8 encoding</li>
+				<li>Use the character New Line</li>
+				<li>Supported text editors</li>
+				<ol type="1">
+					<li>Kate</li>
+				</ol>
+			</ol>
+		</li>
+	</ol>
+    </nav>
+
+    <h2>1. Preparing the text editor <span class="badge">User story 3</span></h2>
+
+	<h3>1.1 The format .tt (Tagged Text)</h3>
+
+	<p>Tagged Text syntax is designed to focus on content and provide the possibility, at a later stage, to generate formatted text files with a layout of elements, graphic styles, and potentially multiple versions depending on the desired final formats or languages to be supported.</p>
+
+	<p>To write in Tagged Text, simply use any text editor and save the file not as a txt format but as 'my_file.tt' instead of 'my_file.txt'. In the textual content, you can use tabulations made with the special tabulation character or with simple spaces, it doesn't make a difference.</p>
+
+    <h3>1.2. Use UTF-8 encoding</h3>
+
+	<p>It is necessary to set the text encoding to UTF-8 through your preferred text editor. In the future, other encodings may be supported, but UTF-8 allows encoding almost all languages worldwide and is the preferred standard in many applications.</p>
+
+    <h3>1.3. Use the character New Line</h3>
+
+	<p>Finally, the line break should be set to the ASCII character 10, also represented by the symbol \n (New Line). In fact, there is also a line break with ASCII character 13 represented by \r (Carriage Return). On Windows, sometimes a double line break \n\r is used, which the text editor displays as a single line break. This detail needs to be configured in the text editor you have chosen for writing in Tagged Text.</p>
+
+    <h3>1.4. Supported text editors</h3>
+
+    <p>While, in general, any text editor may work, it is advisable not only to be able to set the parameters mentioned above but also to have syntax highlighting for easier readability. Not all text editors allow custom syntax highlighting, and for each that does, a file needs to be created to extend the supported formats. Below are text editors for which this rule file has been created for the correct syntax highlighting of Tagged Text. The number of supported editors should increase over time.</p>
+
+    <h4>1.4.1. Kate</h4>
+
+    <p>Kate is a text editor that aims to remain minimal but highly customizable, with all the typical features of more advanced editors. It originated in the KDE environment, one of the GNU-Linux distribution based on the Qt libraries. However, it can be installed on the Gnome environment of GNU-Linux, as well as on Windows and MacOS. You can download the version suitable for your operating system here: <a href="https://kate-editor.org/it/get-it/" tager="_blank">Get Kate</a>.</p>
+
+    <p>To add Tagged Text syntax highlighting to Kate, you need to use the 'tagged-text.xml' file found in this project at the path 'syntax-files/org.kde.syntax-highlighting/syntax' and copy it to the application folder where you can extend the supported syntaxes.</p>
+
+    <p>This folder varies from one operating system to another and even from one GNU-Linux distribution to another. In general, you should navigate to your user folder, enter a folder dedicated to "local data", and explore it until you find 'org.kde.syntax-highlighting', which corresponds to the subfolder in this project. Then, enter 'syntax' subfolder and you can finally copy the 'tagged-text.xml' file. An example path on GNU-Linux for the application folder is: '/home/user/.local/share/org.kde.syntax-highlighting/syntax'.</p>
+
+</body>
+</html>
