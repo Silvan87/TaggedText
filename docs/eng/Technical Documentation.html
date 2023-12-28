@@ -270,7 +270,7 @@
 
     <p>In this section, we will see how to write rules within a template file. Generally, we will have tags with content in the content file, and these tags can correspond to rules in the template file. This allows applying additional content from the rules, either before or after the tagged content. There are some exceptions to this general possibility.</p>
 
-    <p>If a content tagged with a first-level tag has that tag not associated to any rule, it is ignored by the processor. However, if the tag without rules is a second-level or subsequent level, the "raw" content is used.</p>
+    <p>If a content tagged with a first-level tag has that tag not associated to any rule, it is ignored by the processor. However, if the tag without rules is a second-level or subsequent level, the "raw" content is used. There is an additional rare case. If we start writing without a tag, that content will be at the top level and without a tag. In this case, again, the "raw" content will be used, meaning as it is.</p>
 
     <h4>2.2.1. Rule for content at the beginning of a file</h4>
 
