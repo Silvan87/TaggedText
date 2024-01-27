@@ -278,13 +278,13 @@
 
     <code><b class="tag1">#file-opening</b><br />&lt;!DOCTYPE html&gt;<br />&lt;html&gt;<br />&lt;head&gt;&lt;title&gt;My page&lt;/title&gt;&lt;/head&gt;<br />&lt;body&gt;</code>
 
-    <p>It is possible to introduce plain text with the subtag <b>##text</b>, which is convenient to use when employing multiple types of subtags, available for almost all rules, as we will see later. Example with the <b>##text</b> sub-tag.</p>
+    <p>It is possible to introduce plain text with the subtag <b>##text</b>, which is convenient to use when employing multiple types of subtags. The available subtags for the rule of the content at the beginning of a file are: text, space, new-line, from-next-tag, from-var, from-file, and they will be examined later. Example with the <b>##text</b> sub-tag.</p>
 
     <code><b class="tag1">#file-opening</b><br /><b class="tag2">##text</b><br />&lt;!DOCTYPE html&gt;<br />&lt;html&gt;<br />&lt;head&gt;&lt;title&gt;My page&lt;/title&gt;&lt;/head&gt;<br />&lt;body&gt;</code>
 
     <h4>2.2.2. Rule for content at the end of a file</h4>
 
-    <p>Of course, a rule is also needed to include fixed content at the end of the publication file. The <b>#file-ending</b> tag will be used and normal text will be specified as the closing text for the file to be published. In the example, we have a minimal closing for an HTML file. It should be noted that the <b>##text</b> subtag can also be used in this case.</p>
+    <p>Of course, a rule is also needed to include fixed content at the end of the publication file. The <b>#file-ending</b> tag will be used and normal text will be specified as the closing text for the file to be published. In the example, we have a minimal closing for an HTML file. It should be noted that the <b>##text</b> subtag and the subtags listed in the previous rule can also be used in this case.</p>
 
     <code><b class="tag1">#file-ending</b><br />&lt;/body&gt;<br />&lt;/html&gt;</code>
 

@@ -280,13 +280,13 @@
 
     <code><b class="tag1">#file-opening</b><br />&lt;!DOCTYPE html&gt;<br />&lt;html&gt;<br />&lt;head&gt;&lt;title&gt;La mia pagina&lt;/title&gt;&lt;/head&gt;<br />&lt;body&gt;</code>
 
-    <p>È possibile introdurre il testo semplice con il sotto tag <b>##text</b> che conviene usarlo quando ci si serve di più tipi di sotto tag, i quali sono disponibili per quasi tutte le regole e li vedremo più avanti. Esempio con sotto tag <b>##text</b>.</p>
+    <p>È possibile introdurre il testo semplice con il sotto tag <b>##text</b> che conviene usarlo quando ci si serve di più tipi di sotto tag. I sotto tag disponibili per la regola di contenuto ad inizio file sono: text, space, new-line, from-next-tag, from-var, from-file, e saranno esaminati più avanti. Esempio con sotto tag <b>##text</b>.</p>
 
     <code><b class="tag1">#file-opening</b><br /><b class="tag2">##text</b><br />&lt;!DOCTYPE html&gt;<br />&lt;html&gt;<br />&lt;head&gt;&lt;title&gt;La mia pagina&lt;/title&gt;&lt;/head&gt;<br />&lt;body&gt;</code>
 
     <h4>2.2.2. Regola per il contenuto a fine file</h4>
 
-    <p>Ovviamente serve anche una regola per inserire del contenuto fisso alla fine del file di pubblicazione. Si userà il tag <b>#file-ending</b> e si andrà a specificare del normale testo che sarà il testo di chiusura del file da pubblicare. Nell'esempio abbiamo una chiusura minimale di un file html. Si tenga presente che il sotto tag <b>##text</b> è possibile utilizzarlo anche in questo caso.</p>
+    <p>Ovviamente serve anche una regola per inserire del contenuto fisso alla fine del file di pubblicazione. Si userà il tag <b>#file-ending</b> e si andrà a specificare del normale testo che sarà il testo di chiusura del file da pubblicare. Nell'esempio abbiamo una chiusura minimale di un file html. Si tenga presente che il sotto tag <b>##text</b> e i sotto tag elencati nella precedente regola è possibile utilizzarli anche in questo caso.</p>
 
     <code><b class="tag1">#file-ending</b><br />&lt;/body&gt;<br />&lt;/html&gt;</code>
 
