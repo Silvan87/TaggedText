@@ -52,7 +52,7 @@ aside li:hover {
     padding:1em 1em 0 1em;
     border-radius:0 0 0 1em;
     width:calc(100vw - 15.4em);
-    min-height:10em;
+    min-height:13em;
 }
 #content section article {
     padding:1em;
@@ -80,7 +80,7 @@ aside li:hover {
 }
 #content header .priority.high { background:#c00; color:#fff; }
 #content header .priority.medium { background:#fc0; }
-#content header .priority.low { background:#be0; }
+#content header .priority.low { background:#70cc00; }
 
 #content .us-id {
     font-size:16px;
@@ -95,6 +95,9 @@ aside li:hover {
 }
 #content .us-id::before {
     content:"US ";
+}
+#content .us-id.defect {
+    background:#e6b2b2;
 }
 #content h2 {
     font-size:16px;

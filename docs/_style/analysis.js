@@ -1,6 +1,13 @@
-var sectionColors = ['#37c', '#aa0', '#c50']
-var borderColors = ['#008', '#660', '#820']
-var textColors = ['#ccf', '#330', '#500']
+var sectionColors = ['#37c', '#27bc23', '#aa0', '#c50']
+var borderColors = ['#008', '#1b760d', '#660', '#820']
+var textColors = ['#ccf', '#145e09', '#330', '#500']
+
+function composeBacklogs() {
+    colorSections()
+    orderProductBacklog()
+    composeDoneBacklog()
+    composeSprintBacklog()
+}
 
 function colorSections() {
     let menuItems = document.getElementById('menu').firstChild.children
@@ -16,6 +23,39 @@ function colorSections() {
         menuItems[n].style.border = '.2em solid ' + sectionColors[n]
     }
 }
+function orderProductBacklog() {
+    let productBacklog = document.getElementById('product-backlog')
+    let USNum = productBacklog.children.length
+    let toBeRemovedNodes = []
+
+    let priorityOrder = ['medium', 'low']
+    for (let o = 0; o < priorityOrder.length; o++) {
+        for (let n = 0; n < USNum; n++) {
+            let USNode = productBacklog.children[n]
+            let priority = USNode.getElementsByTagName('header')[0].children[2].classList[1]
+            if (priority === priorityOrder[o]) {
+                productBacklog.appendChild(USNode.cloneNode(true))
+                toBeRemovedNodes.push(n)
+            }
+        }
+    }
+    removeNodesFromBacklog(toBeRemovedNodes, productBacklog)
+}
+function composeDoneBacklog() {
+    let productBacklog = document.getElementById('product-backlog')
+    let productUSs = productBacklog.children
+    let doneBacklog = document.getElementById('done-backlog')
+    let toBeRemovedNodes = []
+
+    for (let n = 0; n < productUSs.length; n++) {
+        let assignmentNode = productUSs[n].getElementsByClassName('assignment')[0]
+        if (assignmentNode.getElementsByClassName('state-8').length > 0) {
+            doneBacklog.appendChild(productUSs[n].cloneNode(true))
+            toBeRemovedNodes.push(n)
+        }
+    }
+    removeNodesFromBacklog(toBeRemovedNodes, productBacklog)
+}
 function composeSprintBacklog() {
     let productBacklog = document.getElementById('product-backlog')
     let productUSs = productBacklog.children
@@ -29,6 +69,13 @@ function composeSprintBacklog() {
                 break
             }
         }
+    }
+}
+function removeNodesFromBacklog(toBeRemovedNodes, backlogElement) {
+    let toBeRemovedNodesNum = toBeRemovedNodes.length
+    toBeRemovedNodes = toBeRemovedNodes.sort()
+    for (let n = toBeRemovedNodesNum - 1; n >= 0; n--) {
+        backlogElement.children[toBeRemovedNodes[n]].remove()
     }
 }
 function showSection(sectionNumber) {
