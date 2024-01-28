@@ -21,12 +21,13 @@
 .state-10::before { content:"Bloccata"; }
 </style>
 </head>
-<body onload="colorSections(); composeSprintBacklog(); showSection(2)">
+<body onload="composeBacklogs(); showSection(3)">
     <aside>
         <nav id="menu"><ul>
             <li onclick="showSection(0)">Vision</li>
-            <li onclick="showSection(1)">Product backlog</li>
-            <li onclick="showSection(2)">Sprint backlog</li>
+            <li onclick="showSection(1)">Done backlog</li>
+            <li onclick="showSection(2)">Product backlog</li>
+            <li onclick="showSection(3)">Sprint backlog</li>
         </ul></nav>
     </aside>
     <div id="content">
@@ -34,6 +35,8 @@
             <article>
                 <p>Avere una <b>sintassi semplice, minimale ed espressiva</b> per descrivere principalmente <b>contenuti testuali</b>, ma in futuro anche <b>dati binari</b> (es. byte, integer 16 bit, integer 32 bit, con o senza segno...), e per descrivere dei <b>modelli di presentazione</b> che applicati ai file di contenuto possano produrre <b>file distribuibili</b> (es. pagine html, libri elettronici, siti web vetrina o qualsiasi file di tipo testuale, in futuro anche file binari).</p>
             </article>
+        </section>
+        <section id="done-backlog">
         </section>
         <section id="product-backlog">
             <!-- Put the <article> elements in the order according to the product priority -->
@@ -135,15 +138,18 @@
             <article>
                 <header>
                     <div class="us-id">4</div>
-                    <h2>Come creatore di contenuti, vorrei poter scrivere un file spina minimale con qualche file di contenuto e un file modello minimale per eseguire una prima pubblicazione minimale</h2>
+                    <h2>Come creatore di contenuti, vorrei poter scrivere un file spina minimale con qualche file di contenuto e un file modello per eseguire qualche pubblicazione con i principali e basilari meccanismi di TT funzionanti</h2>
                     <div class="priority high"></div>
                 </header>
                 <div class="description">
                     <p>Si deve fornire un comando per usare un file spina che dirigerà e scriverà la pubblicazione.</p>
                     <p>Si deve stabilire il linguaggio di programmazione che sarà usato.</p>
-                    <p>Si deve adottare il metodo Test-Driven Development per programmare comandi e librerie annesse.</p>
-                    <p>Si deve usare ogni pattern architetturale che possa evitare ripetizioni di codice, facilitare l'estendibilità delle funzioni e la manutenzione del codice nel lungo periodo. Codice e sua documentazione devono procedere di pari passo.</p>
-                    <p>Infine, si deve poter lanciare il comando su un esempio minimale, usando la sintassi Tagged Text finora documentata e producendo una pubblicazione secondo le aspettative documentate.</p>
+                    <p>Per i primi sviluppi, per i quali il refactoring del codice potrebbe essere frequente e di ampio impatto, si userà l'approccio di testing E2E. Non essendoci una UI per le librerie TT, il metodo chiamato per soddisfare il comando iniziale dell'utente sarà il punto di partenza dei test E2E ed i file prodotti da quel metodo saranno il punto finale di cui occorre verificare se quanto è stato prodotto corrisponde a quanto atteso.</p>
+                    <p>Una volta che l'organizzazione del codice sarà più matura, si adotterà anche il metodo Test-Driven Development per coprire circa l'80% dei metodi sviluppati o comunque quei metodi di cui è più significativo testare input ed output.</p>
+                    <p>Si deve usare ogni pattern architetturale che possa evitare ripetizioni di codice, facilitare l'estendibilità delle funzioni e la manutenzione del codice nel lungo periodo. Il codice e la sua documentazione devono procedere di pari passo.</p>
+                    <p>Gli esempi funzionanti attesi, in accordo con la documentazione prodotta, devono riguardare: normale testo, testo taggato di primo e secondo livello, testo taggato in linea, tag senza contenuto, regola file-opening e file-ending (con sotto regole: text, space, new-line, from-next-tag, from-var, from-file), regola per un tag (con sotto regole: content, text, space, new-line, from-subtag, from-next-tag, from-var, from-file).</p>
+                    <p>Viene esclusa l'implementazione di caratteristiche secondarie come i commenti e il carattere di escape e caratteristiche particolarmente complesse come il lavoro con le liste.</p>
+                    <p><b>N.B.</b> Questa US andrebbe scomposta in molte US, ma esistendo una base di codice precedente parzialmente funzionante, si intende incorporare il lavoro precedente, correggerne i difetti, testarlo e documentarlo.</p>
                 </div>
                 <div class="assignment">
                     <p><b>Epica</b>: Elaboratore</p>
@@ -158,11 +164,37 @@
                 </div>
                 <ul class="subtasks">
                     <li><span class="state-8"></span> Definizione del linguaggio di programmazione da usare</li>
-                    <li><span class="state-2"></span> Il progetto minimale strutturato in cartelle e file, funzionante</li>
-                    <li><span class="state-2"></span> I test funzionali per il progetto minimale</li>
-                    <li><span class="state-10"></span> L'esito positivo dei primi test funzionali</li>
+                    <li><span class="state-8"></span> Il progetto minimale strutturato in cartelle e file, funzionante</li>
+                    <li><span class="state-2"></span> I test E2E per il progetto minimale</li>
+                    <li><span class="state-2"></span> L'esito positivo dei primi test E2E</li>
                     <li><span class="state-1"></span> La documentazione della struttura del progetto in italiano</li>
                     <li><span class="state-1"></span> La documentazione della struttura del progetto in inglese</li>
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <div class="us-id defect">5</div>
+                    <h2>Come creatore di contenuti, vorrei poter usare la sotto regola from-next-tag in modo che recuperi tag di medesimo livello e si risolva il difetto per cui recupera un valore dal tag successivo ma ignorando i livelli</h2>
+                    <div class="priority low"></div>
+                </header>
+                <div class="description">
+                    <p>La sotto regola from-next-tag è gestita e può essere utilizzata con le regole file-opening, file-ending e la regola per un tag. Attualmente è implementata per recuperare il valore del successivo tag con il nome indicato che si trova. Però, stando alla documentazione, dovrebbe cercare solo nello stesso livello del tag a cui si applica la regola, invece attualmente i livelli di tag vengono ignorati.</p>
+                </div>
+                <div class="assignment">
+                    <p><b>Epica</b>: Elaboratore</p>
+                    <p><b>Stato</b>: <span class="state-1"></span></p>
+                    <p><b>Assegnatario</b>: Silvan</p>
+                </div>
+                <div class="duration">
+                    <p><b>Creatore</b>: Silvan</p>
+                    <p><b>Data creazione</b>: 18 Gen 2024</p>
+                    <p><b>Data inizio</b>: ?</p>
+                    <p><b>Data fine</b>: ?</p>
+                </div>
+                <ul class="subtasks">
+                    <li><span class="state-1"></span> Creazione di un metodo per determinare il livello di un tag</li>
+                    <li><span class="state-10"></span> Correzione del difetto usando il metodo sopra</li>
+                    <li><span class="state-10"></span> Esito positivo del test tt_object_rule_from_next_tag_not_usable</li>
                 </ul>
             </article>
         </section>

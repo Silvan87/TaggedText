@@ -21,12 +21,13 @@
 .state-10::before { content:"Blocked"; }
 </style>
 </head>
-<body onload="colorSections(); composeSprintBacklog(); showSection(2)">
+<body onload="composeBacklogs(); showSection(3)">
     <aside>
         <nav id="menu"><ul>
             <li onclick="showSection(0)">Vision</li>
-            <li onclick="showSection(1)">Product backlog</li>
-            <li onclick="showSection(2)">Sprint backlog</li>
+            <li onclick="showSection(1)">Done backlog</li>
+            <li onclick="showSection(2)">Product backlog</li>
+            <li onclick="showSection(3)">Sprint backlog</li>
         </ul></nav>
     </aside>
     <div id="content">
@@ -34,6 +35,8 @@
             <article>
                 <p>To have a <b>simple, minimal and expressive syntax</b> to describe mainly <b>textual contents</b>, but in the future also <b>binary data</b> (e.g. byte, 16 bit integer, 32 bit integer, signed or not...), and to describe <b>presentation templates</b> that if they are applied to content files, they can produce <b>distributable files</b> (e.g. html pages, ebooks, showcase websites or any textual type file, in the future also binary files).</p>
             </article>
+        </section>
+        <section id="done-backlog">
         </section>
         <section id="product-backlog">
             <!-- Put the <article> elements in the order according to the product priority -->
@@ -91,8 +94,8 @@
                 <div class="duration">
                     <p><b>Creator</b>: Silvan</p>
                     <p><b>Creation date</b>: 2018</p>
-                    <p><b>Start Date</b>: Nov 2018</p>
-                    <p><b>End date</b>: Gen 2023</p>
+                    <p><b>Start date</b>: Nov 2018</p>
+                    <p><b>End date</b>: Jan 2023</p>
                 </div>
                 <ul class="subtasks">
                     <li><span class="state-8"></span> Definition of the template file composition in TT for creating a publication.</li>
@@ -114,15 +117,15 @@
                     <p>In the <b>user manual</b>, create a dedicated section for using syntax files for all supported text editors (initially only one). The documentation will include a reference to instructions for creating custom syntaxes with the respective text editor and guidelines for adding the new syntax to the corresponding text editor.</p>
                 </div>
                 <div class="assignment">
-                    <p><b>Epica</b>: Syntax definition</p>
-                    <p><b>Stato</b>: <span class="state-8"></span></p>
-                    <p><b>Assegnatario</b>: Silvan</p>
+                    <p><b>Epic</b>: Syntax definition</p>
+                    <p><b>State</b>: <span class="state-8"></span></p>
+                    <p><b>Assignee</b>: Silvan</p>
                 </div>
                 <div class="duration">
-                    <p><b>Creatore</b>: Silvan</p>
-                    <p><b>Data creazione</b>: 2018</p>
-                    <p><b>Data inizio</b>: Nov 2018</p>
-                    <p><b>Data fine</b>: Ott 2023</p>
+                    <p><b>Creator</b>: Silvan</p>
+                    <p><b>Creation date</b>: 2018</p>
+                    <p><b>Start date</b>: Nov 2018</p>
+                    <p><b>End date</b>: Oct 2023</p>
                 </div>
                 <ul class="subtasks">
                     <li><span class="state-8"></span> Selection of the first text editor to work with.</li>
@@ -135,15 +138,18 @@
             <article>
                 <header>
                     <div class="us-id">4</div>
-                    <h2>As a content creator, I would like to be able to write a minimal spine file with some content files and a minimal template file to do a minimal first publish</h2>
+                    <h2>As a content creator, I would like to be able to write a minimal spine file with a few content files and a template file to make some publications with the main and basic TT mechanisms working</h2>
                     <div class="priority high"></div>
                 </header>
                 <div class="description">
                     <p>A command must be provided to use a spine file that will direct and write the publication.</p>
                     <p>The programming language to be used must be determined.</p>
-                    <p>The Test-Driven Development method must be adopted for programming commands and related libraries.</p>
-                    <p>Every architectural pattern that can avoid code repetition, facilitate function extensibility, and maintain code in the long term must be used. Code and its documentation must progress hand in hand.</p>
-                    <p>Finally, the command must be able to be executed on a minimal example, using the Tagged Text syntax documented so far and producing a publication according to the documented expectations.</p>
+                    <p>For the initial developments, where code refactoring may be frequent and have a significant impact, the E2E testing approach will be used. Since there is no UI for the TT libraries, the method called to fulfill the user's initial command will be the starting point for E2E tests, and the files produced by that method will be the endpoint to verify if what has been produced corresponds to the expected output.</p>
+                    <p>Once the code organization becomes more mature, the Test-Driven Development method will also be adopted to cover approximately 80% of the developed methods or those methods for which testing input and output is most significant.</p>
+                    <p>Every architectural pattern that can avoid code repetitions, facilitate function extensibility, and ensure long-term code maintenance must be used. Code and its documentation must progress hand in hand.</p>
+                    <p>The expected working examples, in accordance with the produced documentation, should cover: normal text, first and second level tagged text, in-line tagged text, tags without content, file-opening and file-ending rules (with sub rules: text, space, new-line, from-next-tag, from-var, from-file), rules for a tag (with sub rules: content, text, space, new-line, from-subtag, from-next-tag, from-var, from-file).</p>
+                    <p>The implementation of secondary features such as comments and the escape character, as well as particularly complex features like working with lists, is excluded.</p>
+                    <p><b>Note:</b> This user story should be broken down into multiple user stories. However, considering the existence of a partially functional previous codebase, the intention is to incorporate the previous work, fix its defects, test it, and document it.</p>
                 </div>
                 <div class="assignment">
                     <p><b>Epic</b>: Processor</p>
@@ -153,16 +159,42 @@
                 <div class="duration">
                     <p><b>Creator</b>: Silvan</p>
                     <p><b>Creation date</b>: 2018</p>
-                    <p><b>Start Date</b>: Nov 2018</p>
-                    <p><b>End date</b>: Ott 2023</p>
+                    <p><b>Start date</b>: Nov 2018</p>
+                    <p><b>End date</b>: Oct 2023</p>
                 </div>
                 <ul class="subtasks">
                     <li><span class="state-8"></span> Definition of the programming language to be used.</li>
-                    <li><span class="state-2"></span> Minimal project structured in folders and files, working.</li>
-                    <li><span class="state-2"></span> Functional tests for the minimal project.</li>
-                    <li><span class="state-10"></span> Successful outcome of the initial functional tests.</li>
+                    <li><span class="state-8"></span> Minimal project structured in folders and files, working.</li>
+                    <li><span class="state-2"></span> E2E tests for the minimal project.</li>
+                    <li><span class="state-2"></span> Successful outcome of the initial E2E tests.</li>
                     <li><span class="state-1"></span> Documentation of the project structure in Italian.</li>
                     <li><span class="state-1"></span> Documentation of the project structure in English.</li>
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <div class="us-id defect">5</div>
+                    <h2>As a content creator, I would like to be able to use the from-next-tag subrule so that it retrieves tags of the same level and fixes the defect where it retrieves a value from the next tag but ignores the levels</h2>
+                    <div class="priority low"></div>
+                </header>
+                <div class="description">
+                    <p>The from-next-tag subrule is managed and can be used with the file-opening, file-ending rules, and the rule for a tag. It is currently implemented to retrieve the value of the next tag with the given name that is found. However, according to the documentation, it should only search in the same level as the tag to which the rule applies, but currently tag levels are ignored.</p>
+                </div>
+                <div class="assignment">
+                    <p><b>Epic</b>: Processor</p>
+                    <p><b>State</b>: <span class="state-1"></span></p>
+                    <p><b>Assignee</b>: Silvan</p>
+                </div>
+                <div class="duration">
+                    <p><b>Creator</b>: Silvan</p>
+                    <p><b>Creation date</b>: 18 Jan 2024</p>
+                    <p><b>Start date</b>: ?</p>
+                    <p><b>End date</b>: ?</p>
+                </div>
+                <ul class="subtasks">
+                    <li><span class="state-1"></span> Creating a method to determine the level of a tag</li>
+                    <li><span class="state-10"></span> Fix the defect using the above method</li>
+                    <li><span class="state-10"></span> Positive test result of tt_object_rule_from_next_tag_not_usable</li>
                 </ul>
             </article>
         </section>
