@@ -1,3 +1,7 @@
 .idea
 __pycache__
 *.pyc
+*.egg-info
+tests/*/json/*
+tests/*/pub/*
+build/*
