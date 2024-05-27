@@ -12,7 +12,7 @@
 
     <nav>
     <ol type="1">
-        <li>Tagged Text Syntax
+        <li>The Tagged Text syntax
             <ol type="1">
                 <li>Requirements</li>
                 <li>Analysis of existing similar languages</li>
@@ -52,10 +52,20 @@
                 </ol>
             </ol>
         </li>
+        <li>The Tagged Text library
+            <ol type="1">
+                <li>The languages and tools chosen</li>
+                <li>The structure in folders and files</li>
+                <li>The documentation</li>
+                <li>The custom syntax definitions</li>
+                <li>The test collection</li>
+                <li>The code of the library</li>
+            </ol>
+        </li>
     </ol>
     </nav>
 
-    <h2>1. Syntax design <span class="badge">User story 1</span></h2>
+    <h2>1. The Tagged Text syntax <span class="badge">User story 1</span></h2>
 
     <h3>1.1. Requirements</h3>
 
@@ -367,6 +377,87 @@
     <code><b class="tag1">#counter</b> note-num<br /><b class="tag2">##scope</b> publication-file|publication-spine<br /><b class="tag2">##start</b> 1<br /><b class="tag2">##step</b> 1</code>
 
     <p>The name of the counter is specified as the first value after the main tag. Then, the secondary tag 'scope' can take two values: <b>publication-file</b> and <b>publication-spine</b>. The first depends on the 'publish' instruction inside the 'spine.tt' file, and every time you move on to the next publishing file, the counter resets to zero. Otherwise, the second value never resets the counter throughout the entire process of an entire publication defined by a 'spine.tt' file.</p>
+
+    <h2>3. The Tagged Text library <span class="badge">User story 4</span></h2>
+
+    <h3>3.1. The languages and tools chosen</h3>
+
+    <ul>
+    <li><b>Python</b>: it is the programming language chosen for its simplicity, for its expressiveness in processing contents of various kinds, for its portability between operating systems, and we will try to make use of only the standard libraries.</li>
+    <li><b>Html and JavaScript</b>: they are the preferred format for documentation files.</li>
+    <li><b>Git</b>: to manage software versioning throughout its development and potential collaboration between multiple developers.</li>
+    <li><b>Text editor</b>: the writing of content and templates in Tagged Text is left to existing text editors, so you will create a custom syntax file for each text editor you want to support.</li>
+    </ul>
+
+    <h3>3.2. The structure in folders and files</h3>
+
+    <p>The structure of the Tagged Text project is structured as follows:</p>
+    <ul>
+    <li><b class="light">[Folder]</b> <b>docs</b>: it contains subfolders for each language offered and within them 3 files: Software Analysis, Technical Documentation and User Manual.</li>
+    <li><b class="light">[Folder]</b> <b>syntax-files</b>: it contains files that define custom Tagged Text syntax for each supported text editor. The syntax file is possibly inserted into a series of folders that show the path where the file is usually placed.</li>
+    <li><b class="light">[Folder]</b> <b>tests</b>: it contains the collection of tests that the developer needs to ensure that the library works correctly. This collection has been separated from the library, which can be included in various user projects, to reduce the amount of unnecessary files to be included in projects that intend to make use of the tt syntax.</li>
+    <li><b class="light">[Folder]</b> <b>tt</b>: the library that allows the make.py command to produce publications using tt files and tt templates.</li>
+    <li><b class="light">[File]</b> <b>LICENSE</b>: the license under which the project is released.</li>
+    <li><b class="light">[File]</b> <b>make.py</b>: once you have set the instructions inside for a specific project, it is a convenient script to create or update the publication after the development of the user's content.</li>
+    <li><b class="light">[File]</b> <b>test.py</b>: it is the script that has the task of launching all the tests produced for the Tagged Text library so as to identify regressions or validate the consistency of the code produced so far.</li>
+    </ul>
+
+    <h3>3.3. The documentation</h3>
+
+    <p>The documentation, in addition to being collected in a single <b>docs</b> folder, is made up of 3 files:</p>
+    <ul>
+    <li><b>Software analysis</b>: it is the document that traces the development of the software using the Scrum Agile method. It collects all the user stories that expose specific requests for development, release after release. It is not possible to confine a series of user stories in a 1 or 2 week sprint due to the free nature of the project, but the user stories are still sorted into tabs.<br />Within each tab, the user stories are sorted based on their priority indicated by a dot at the top right (red: high, yellow: medium, green: low). User stories are numbered and their id can be in a gray box indicating new development or in a pink box indicating defects to be fixed.
+        <ul>
+        <li><b>Done backlog</b>: all fully developed USs, whose list of sub-activities is fully carried out.</li>
+        <li><b>Product backlog</b>: all the USs not yet fully developed, whether assignable or in progress are still collected here.</li>
+        <li><b>Sprint backlog</b>: the USs that are actively being worked on to complete including the completion of all sub-tasks.</li>
+        <li><b>Vision</b>: it exposes the general objective of the project trying to communicate a vision that includes a future state towards which the project is aiming.</li>
+        </ul>
+    </li>
+    <li><b>Technical documentation</b>: it describes all the details of the project in a single document rather than through a series of user stories. The document is aimed primarily at future developers who will be able to learn about the Tagged Text syntax, the choices made to define it, the rules of the models for creating publications, the structure of the project and the code to orient themselves in it and possibly extend or restructure it.<br / >Tentatively, every user story that brings something new to the project should involve a sub-activity that integrates the documentation with the new feature introduced.</li>
+    <li><b>User's manual</b>: it is the document dedicated to the end user who is not interested in development, but simply in using this syntax and its rules to create models and ultimately publications.</li>
+    </ul>
+
+    <h3>3.4. The custom syntax definitions</h3>
+
+    <p>For each text editor that you want to use with Tagged Text you will need to have support for custom syntaxes and create a specific definition for each of them. These custom syntaxes are collected in the <b>syntax-files</b> folder.</p>
+
+    <p>To verify that the syntax is highlighted correctly you can visually test the coloring with the <b>syntax highlighting.tt</b> file inside the <b>tests</b> folder.</p>
+
+    <h3>3.5. The test collection</h3>
+
+    <p>The <b>tests</b> folder contains all the tests that can be run on the Tagged Text library. Each folder is named with the test ID itself and it is as descriptive as possible. It is also present the <b>_tester</b> subfolder which is a Python module from which to import structures and methods to facilitate the writing of tests.</p>
+
+    <p>Outside the <b>tests</b> folder, therefore in the main project folder, we find the <b>test.py</b> script which has the task of easily launching the entire collection of tests. It uses <b>unittest</b> and imports structures and methods contained in <b>_tester</b>.</p>
+
+    <p>For the moment there are only E2E tests that perform small publications to test more or less specific functionality. Each spine.tt file of each publication contains a first line of comment where it is described the purpose of the test in more detail.</p>
+
+    <h3>3.6. The code of the library</h3>
+
+    <p>The <b>tt</b> folder is the Python module that contains all the essential code to process .tt files, content or templates, and to apply template rules and therefore produce distributable files.</p>
+
+    <p>The tt module can be installed in the system, so as to import it into any script and have the write_publication_with_spine() method available which is the main and only method exposed by the module <b>__init__.py</b>.</p>
+
+    <p>The tt folder and module contains 3 subfolders that organize the code according to the MVC model (model, view, controller). Below is an introduction to the purpose of each file and the main classes contained in them. For further details, follow the documentation directly in the source code.</p><p>In the <b>controller</b> we find:</p>
+    <ul>
+    <li><b>main.py</b>: it is dedicated to collecting the entry and exit points of the library. By following the methods called starting from the entry points it is possible to follow all the software flows.</li>
+    <li><b>parser.py</b>: it deals with reading the tt files, translating them into easily processable json format and analyzing their structure to have a data model that can be used by the composer.<br /><i>Classes</i>: the <b>_Reader</b> class performs a more syntactic reading transformation from tt syntax to json syntax. The <b>Parsing</b> class with the support of the <b>Text</b> subclass performs a more semantic job in which we will have lines of text or substrings tagged according to the choices of the writer user.</b> li>
+    <li><b>compositor.py</b>: mainly it applies the rules read in the tt template files to the tt content files and produces text organized into files in volatile memory.<br /><i>Classes</i >: the <b>Compositor</b> class essentially establishes which rules must be applied for each tag and arranges the content produced in a tree which, through branches, allows you to develop content that will be ready when all the internal sub-contents have been processed. It uses the <b>ContentPiece</b> class which for each piece of content provides contextual information and the rules to apply. In turn, this class uses the <b>TemplateRule</b> class which offers a series of methods to obtain all the useful information on the rule to be applied.</li>
+    <li><b>publisher.py</b>: it deals with writing the text produced by the composer into a final medium that the user can consult, essentially writing the publication files into permanent memory.</li>
+    <li><b>exceptions.py</b>: it collects all exceptions that concern both the process of reading tt files and the application of template rules. They can be errors that interrupt the process or deviations from the ordinary flow.</li>
+    </ul>
+    <p>In the <b>model</b> we find:</p>
+    <ul>
+    <li><b>spine.py</b>: it collects the information described by the spine.tt file and since it defines how the publication will be developed, also all the general information regarding the publication during its processing.<br /><i>Classes</i>: The <b>Spine</b> class is also instantiated here and the instance is shared because there should be only one <b>spine</b> object for each publication. Its methods are used to collect all the information for each file to be composed for the entire publication. It uses the <b>Definition</b> class that defines some characteristic of the publication and the <b>PubInfoItem</b> class for each item that has to be published. The <b>Paths</b> and <b>Counters</b> classes are also collected in the file. The first manages all the paths relating to the publication, providing them absolute or relative depending on the needs. The second keeps track of the counters that increment, when called, during the content processing process.</li>
+    <li><b>regex.py</b>: it collects the regex description of the tt syntax markers and also some useful methods for working with them.</li>
+    <li><b>parsingtree.py</b>: it collects the segments interpreted from the tagged text files written by the user in a json file structured as a list of lists. Each list is made up of 2 elements: the tagged text segment or the list of IDs of other text segments, and the tag. This object only collects the content and not the rules, nor their application. Furthermore, it is only used when producing this structured content. The result is collected by the next module.</li>
+    <li><b>taggedtexts.py</b>: it collects interpreted and ready-to-use tagged text files offering a series of methods to query them according to various needs.<br /><i>Classes</i>: the <b>TaggedTexts</b> class receives the product of the previous module but is specialized to retrieve information on the content now structured. The <b>Type</b> class defines the possible types of existing tt files.</li>
+    <li><b>templates.py</b>: it collects interpreted and ready-to-use template files offering a series of methods to query them according to various needs.<br /><i>Classes:</i> the <b>Templates</b> class which contains the <b>_Template</b> class which instantiates each template file.</li>
+    </ul>
+    <p>In the <b>view</b> we find:</p>
+    <ul>
+    <li><b>publications.py</b>: it collects all the files that will be published, that means written on the permanent memory, and it offers methods for collecting the final text segments that are progressively produced by applying the template rules to the contents.<br /><i>Classes:</i> the <b>Publications</b> class that contains the <b>_Publication</b> class that instantiates each file to publish.</li>
+    </ul>
 
 </body>
 </html>

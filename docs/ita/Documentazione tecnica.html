@@ -52,6 +52,16 @@
                 </ol>
             </ol>
         </li>
+        <li>La libreria Tagged Text
+            <ol type="1">
+                <li>I linguaggi e gli strumenti scelti</li>
+                <li>La struttura in cartelle e file</li>
+                <li>La documentazione</li>
+                <li>Le definizioni personalizzate della sintassi</li>
+                <li>La collezione dei test</li>
+                <li>Il codice della libreria</li>
+            </ol>
+        </li>
     </ol>
     </nav>
 
@@ -369,6 +379,87 @@
     <code><b class="tag1">#counter</b> num-nota<br /><b class="tag2">##scope</b> publication-file|publication-spine<br /><b class="tag2">##start</b> 1<br /><b class="tag2">##step</b> 1</code>
 
     <p>Il nome del contatore viene specificato come primo valore dopo il tag principale. Poi il tag secondario 'scope' può assumere due valori: <b>publication-file</b> e <b>publication-spine</b>. Il primo dipende dall'istruzione 'publish' dentro il file 'spine.tt' ed ogni volta che si passa al successivo file di pubblicazione, il contatore riparte da zero. Altrimenti, il secondo valore non resetta mai il contatore durante tutto il processo di una intera pubblicazione definita da un file 'spine.tt'.</p>
+
+    <h2>3. La libreria Tagged Text <span class="badge">User story 4</span></h2>
+
+    <h3>3.1. I linguaggi e gli strumenti scelti</h3>
+
+    <ul>
+    <li><b>Python</b>: è il linguaggio di programmazione scelto per la sua semplicità, per l'espressività nell'elaborare contenuti di varia natura, per la portabilità tra sistemi operativi, e si cercherà di avvalersi solo delle librerie standard.</li>
+    <li><b>Html e JavaScript</b>: sono il formato preferito per i file di documentazione.</li>
+    <li><b>Git</b>: per gestire il versionamento del software lungo il suo sviluppo e la potenziale collaborazione tra più sviluppatori.</li>
+    <li><b>Editor di testo</b>: la scrittura di contenuti e modelli in Tagged Text è affidata agli editor di testo esistenti, quindi si creerà un file di sintassi personalizzata per ogni editor di testo che si vorrà supportare.</li>
+    </ul>
+
+    <h3>3.2. La struttura in cartelle e file</h3>
+
+    <p>La struttura del progetto Tagged Text si articola come segue:</p>
+    <ul>
+    <li><b class="light">[Cartella]</b> <b>docs</b>: contiene delle sottocartelle per ciascuna lingua offerta e dentro di esse 3 file: Analisi del software, Documentazione tecnica e Manuale utente.</li>
+    <li><b class="light">[Cartella]</b> <b>syntax-files</b>: contiene i file che definiscono la sintassi personalizzata Tagged Text per ciascun editor di testo supportato. Il file della sintassi viene possibilmente inserito in una serie di cartelle che ripropongono il percorso dove solitamente il file va collocato.</li>
+    <li><b class="light">[Cartella]</b> <b>tests</b>: contiene la collezione di test che serve allo sviluppatore per assicurarsi che la libreria funzioni correttamente. Questa collezione è stata separata dalla libreria, che può essere inclusa nei vari progetti utente, per diminuire la quantità di file non necessaria da includere nei progetti che intendono far uso della sintassi tt.</li>
+    <li><b class="light">[Cartella]</b> <b>tt</b>: la libreria che permette al comando make.py di produrre pubblicazioni usando file tt e template tt.</li>
+    <li><b class="light">[File]</b> <b>LICENSE</b>: la licenza con cui il progetto è rilasciato.</li>
+    <li><b class="light">[File]</b> <b>make.py</b>: una volta settate le istruzioni al suo interno per uno specifico progetto, è un comodo script per creare o aggiornare la pubblicazione a seguito dello sviluppo dei contenuti dell'utente.</li>
+    <li><b class="light">[File]</b> <b>test.py</b>: è lo script che ha il compito di lanciare tutti i test prodotti per la libreria Tagged Text così da individuare regressioni o validare la consistenza del codice prodotto fino ad ora.</li>
+    </ul>
+
+    <h3>3.3. La documentazione</h3>
+
+    <p>La documentazione oltre ad essere raccolta in un'unica cartella <b>docs</b> si compone di 3 file:</p>
+    <ul>
+    <li><b>Analisi del software</b>: è il documento che traccia lo sviluppo del software tramite il metodo Scrum Agile. Esso colleziona tutte le user story che espongono specifiche richieste per lo sviluppo, rilascio dopo rilascio. Non è possibile confinare una serie di user story in uno sprint di 1 o 2 settimane per la natura gratuita del progetto, però le user story sono comunque ordinate in schede.<br />All'interno di ciascuna scheda, le user story sono ordinate in base alla loro priorità indicata da un pallino in alto a destra (rosso: alta, giallo: media, verde: bassa). Le user story sono numerate e il loro id è in un riquadro grigio che indica un nuovo sviluppo o un riquadro rosa che indica difetti da correggere.
+        <ul>
+        <li><b>Done backlog</b>: tutte le US completamente sviluppate, la cui lista delle sotto attività è completamente svolta.</li>
+        <li><b>Product backlog</b>: tutte le US non ancora completamente sviluppate, che siano assegnabili o in progresso vengono comunque raccolte qui.</li>
+        <li><b>Sprint backlog</b>: le US su cui si sta attivamente lavorando per completarle includendo il completamento di tutte le sotto attività.</li>
+        <li><b>Vision</b>: espone l'obiettivo generale del progetto cercando di comunicare una visione che includa uno stato futuro verso cui tende il progetto.</li>
+        </ul>
+    </li>
+    <li><b>Documentazione tecnica</b>: descrive tutti i dettagli del progetto in un unico documento anziché attraverso una serie di user story. Il documento è rivolto principalmente ai futuri sviluppatori che potranno conoscere la sintassi Tagged Text, le scelte compiute per definirla, le regole dei modelli per creare pubblicazioni, la struttura del progetto e del codice per orientarsi in esso ed eventualmente estenderlo o ristrutturarlo.<br />Tendenzialente ogni user story che apporta una novità al progetto dovrebbe comportare una sotto attività che integri la documentazione con la novità introdotta.</li>
+    <li><b>Manuale utente</b>: è il documento dedicato all'utilizzatore finale che non è interessato allo sviluppo, ma semplicemente all'utilizzo di questa sintassi e delle sue regole per creare modelli e infine pubblicazioni.</li>
+    </ul>
+
+    <h3>3.4. Le definizioni personalizzate della sintassi</h3>
+
+    <p>Per ogni editor di testo che si vorrà usare con Tagged Text bisognerà avere il supporto per le sintassi personalizzate e creare una definizione specifica per ciascuno di essi. Queste sintassi personalizzate sono raccolte nella cartella <b>syntax-files</b>.</p>
+
+    <p>Per verificare che la sintassi è evidenziata correttamente è possibile testare visivamente la colorazione con il file <b>syntax highlighting.tt</b> dentro la cartella <b>tests</b>.</p>
+
+    <h3>3.5. La collezione dei test</h3>
+
+    <p>La cartella <b>tests</b> contiene tutti i test eseguibili sulla libreria Tagged Text. Ogni cartella è chiamata con l'ID del test stesso ed è per quanto possibile descrittivo. Si aggiunge la sotto cartella <b>_tester</b> che è un modulo python da cui importare strutture e metodi che facilitano la scrittura dei test.</p>
+
+    <p>All'esterno della cartella <b>tests</b>, quindi nella cartella principale del progetto troviamo lo script <b>test.py</b> che ha il compito di lanciare facilmente tutta la collezione dei test. Esso utilizza <b>unittest</b> ed importa strutture e metodi contenuti in <b>_tester</b>.</p>
+
+    <p>Per il momento ci sono solo test E2E che eseguono piccole pubblicazioni per testare funzionalità più o meno specifiche. Ogni file spine.tt di ciascuna pubblicazione contiene una prima riga di commento dove si descrive in modo più esteso lo scopo del test.</p>
+
+    <h3>3.6. Il codice della libreria</h3>
+
+    <p>La cartella <b>tt</b> è il modulo python che contiene tutto il codice essenziale per processare i file .tt, siano essi contenuti o modelli, e per applicare le regole dei modelli e dunque produrre i file distribuibili.</p>
+
+    <p>Il modulo tt si potrà installare nel sistema, così da importarlo in qualsiasi script e avere a disposizione il metodo write_publication_with_spine() che è il principale ed unico metodo esposto dall'<b>__init__.py</b> del modulo.</p>
+
+    <p>La cartella e modulo tt contiene 3 sotto cartelle che organizzano il codice secondo il modello MVC (model, view, controller). Segue un'introduzione allo scopo di ciascun file ed alle principali classi in essi contenute, per ulteriori dettagli seguire direttamente la documentazione presente sul codice sorgente.</p><p>Nel <b>controller</b> troviamo:</p>
+    <ul>
+    <li><b>main.py</b>: è dedicato a raccogliere i punti di ingresso e di uscita della libreria. Seguendo i metodi chiamati a partire dai punti di ingresso è possibile percorrere tutti i flussi del software.</li>
+    <li><b>parser.py</b>: si occupa di leggere i file tt, tradurli in formato json facilmente processabile ed analizzarne la struttura per avere un modello dati utilizzabile dal compositore.<br /><i>Classi</i>: la classe <b>_Reader</b> esegue una lettura più sintattica di trasformazione dalla sintassi tt alla sintassi json. La classe <b>Parsing</b> con l'appoggio della sotto classe <b>Text</b> esegue un lavoro più semantico in cui avremo linee di testo o sotto stringhe taggate secondo le scelte dell'utente scrittore.</li>
+    <li><b>compositor.py</b>: principalmente applica le regole lette nei file template tt ai file di contenuto tt e produce del testo organizzato in file nella memoria volatile.<br /><i>Classi</i>: la classe <b>Compositor</b> essenzialmente stabilisce quali regole devono essere applicate per ciascun tag e dispone il contenuto prodotto in un albero che attraverso ramificazioni permette di sviluppare contenuti che saranno pronti quando tutti i sotto contenuti interni saranno stati elaborati. Si serve della classe <b>ContentPiece</b> che per ogni pezzo di contenuto fornisce informazioni contestuali e sulle regole da applicare. A sua volta, questa classe si serve della classe <b>TemplateRule</b> che offre una serie di metodi per ottenere tutte le informazioni utili sulla regola da applicare.</li>
+    <li><b>publisher.py</b>: si occupa di scrivere il testo prodotto dal compositore in un supporto finale che l'utente può consultare, essenzialmente scrive i file della pubblicazione nella memoria permanente.</li>
+    <li><b>exceptions.py</b>: colleziona tutte le eccezioni che riguardano sia il processo di lettura dei file tt sia dell'applicazione delle regole dei template. Possono essere errori che interrompono il processo o deviazioni dal flusso ordinario.</li>
+    </ul>
+    <p>Nel <b>model</b> troviamo:</p>
+    <ul>
+    <li><b>spine.py</b>: raccoglie le informazioni descritte dal file spine.tt e siccome esso definisce come verrà sviluppata la pubblicazione, anche tutte le informazioni generali riguardo la pubblicazione durante la sua elaborazione.<br /><i>Classi</i>: la classe <b>Spine</b> è qui anche istanziata e l'istanza viene condivisa perché dovrebbe esserci un solo oggetto <b>spine</b> per ciascuna pubblicazione. I suoi metodi servono a collezionare tutte le informazioni per ciascun file da comporre per l'intera pubblicazione. Si serve della classe <b>Definition</b> che definisce una qualche caratteristica della pubblicazione e della classe <b>PubInfoItem</b> per ciascun elemento che deve essere pubblicato. Nel file sono raccolte anche le classi <b>Paths</b> e <b>Counters</b>. La prima gestisce tutti i percorsi relativi alla pubblicazione fornendoli assoluti o relativi a seconda delle necessità. La seconda tiene traccia dei contatori che si incrementano, quando vengono chiamati, durante il processo di elaborazione dei contenuti.</li>
+    <li><b>regex.py</b>: raccoglie la descrizione tramite regex dei marcatori della sitassi tt ed anche alcuni utili metodi per lavorare con essi.</li>
+    <li><b>parsingtree.py</b>: raccoglie i segmenti interpretati dai file tagged text scritti dall'utente in un file json strutturato come una lista di liste. Ciascuna lista è composta di 2 elementi: il segmento di testo taggato o l'elenco degli id di altri segmenti di testo, e il tag. Questo oggetto raccoglie solo il contenuto e non le regole, né la loro applicazione. Inoltre, viene usato solo durante la produzione di questo contenuto strutturato. Il risultato viene collezionato dal prossimo modulo.</li>
+    <li><b>taggedtexts.py</b>: colleziona i file tagged text interpretati e pronti all'uso offrendo una serie di metodi per interrogarli secondo le varie necessità.<br /><i>Classi</i>: la classe <b>TaggedTexts</b> riceve il prodotto del modulo precedente ma è specializzato per recuperare informazioni sul contenuto ormai strutturato. La classe <b>Type</b> definisce i possibili tipi di file tt esistenti.</li>
+    <li><b>templates.py</b>: colleziona i file template interpretati e pronti all'uso offrendo una serie di metodi per interrogarli secondo le varie necessità.<br /><i>Classi:</i> la classe <b>Templates</b> che contiene la classe <b>_Template</b> che istanzia ciascun file di template.</li>
+    </ul>
+    <p>Nella <b>view</b> troviamo:</p>
+    <ul>
+    <li><b>publications.py</b>: colleziona tutti i file che verranno pubblicati, ovvero scritti su memoria permanente, ed offre metodi per raccogliere i segmenti di testo finali che vengono progressivamente prodotti applicando le regole dei template ai contenuti.<br /><i>Classi:</i> la classe <b>Publications</b> che contiene la classe <b>_Publication</b> che istanzia ciascun file da pubblicare.</li>
+    </ul>
 
 </body>
 </html>
