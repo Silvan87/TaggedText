@@ -52,7 +52,7 @@ aside li:hover {
     padding:1em 1em 0 1em;
     border-radius:0 0 0 1em;
     width:calc(100vw - 15.4em);
-    min-height:13em;
+    min-height:13.4em;
 }
 #content section article {
     padding:1em;
@@ -77,6 +77,7 @@ aside li:hover {
     min-height:2em;
     max-height:2em;
     border-radius:1em;
+    margin-left:.5em;
 }
 #content header .priority.high { background:#c00; color:#fff; }
 #content header .priority.medium { background:#fc0; }
