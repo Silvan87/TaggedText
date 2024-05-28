@@ -1,0 +1,19 @@
+#file-opening
+<!DOCTYPE html>
+<html>
+<head><title>Minimal publication</title></head>
+<body>
+
+#file-ending
+</body>
+</html>
+
+#tag paragraph
+##text <p>
+##content
+##text </p>
+
+#tag bold
+##text <b>
+##content
+##text </b>

@@ -1,0 +1,8 @@
+# A tt object used with text, content, from-subtag subrules
+
+#template-path template
+#publication-path pub
+
+#publish publication.html
+##content sample
+##template style

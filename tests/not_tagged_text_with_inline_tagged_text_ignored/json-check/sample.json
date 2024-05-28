@@ -1,0 +1,7 @@
+[
+[[1], ""],
+[[2, 3, 4], ""],
+["This is a text line with only ", ""],
+["inline tagged text", "bold"],
+[" but the tag will be ignored since there is no first-level tag and the full value is used \"raw\", as it is.", ""]
+]

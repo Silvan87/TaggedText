@@ -1,0 +1,21 @@
+[
+[[1, 3, 5, 7, 9, 11], "file-opening"],
+[[2], "text"],
+["<!DOCTYPE html>\n<html>\n<head>", ""],
+[[4], "text"],
+["<title>", ""],
+[[6], "from-var"],
+["my-title", ""],
+[[8], "text"],
+["</title>", ""],
+[[10], "text"],
+["</head>\n<body>", ""],
+["", "new-line"],
+[[13, 14, 16, 17], "file-ending"],
+["", "new-line"],
+[[15], "text"],
+["</body>", ""],
+["", "new-line"],
+[[18], "text"],
+["</html>", ""]
+]

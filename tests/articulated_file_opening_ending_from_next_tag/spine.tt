@@ -1,0 +1,8 @@
+# A not tagged text with articulated file-opening and file-ending rules (from-next-tag subrule)
+
+#template-path template
+#publication-path pub
+
+#publish publication.html
+##content sample
+##template style

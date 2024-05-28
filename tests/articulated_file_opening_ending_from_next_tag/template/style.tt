@@ -1,0 +1,26 @@
+#file-opening
+##text
+<!DOCTYPE html>
+<html>
+<head>
+##text <title>
+##from-next-tag my-title
+##text </title>
+##text
+</head>
+<body>
+##new-line
+
+#file-ending
+##new-line
+##text </body>
+##new-line
+##text </html>
+
+#tag my-title
+##new-line
+##text <h2>
+##content
+##text </h2>
+##new-line
+##text <p>This title is also used as a page title with a template rule.</p>

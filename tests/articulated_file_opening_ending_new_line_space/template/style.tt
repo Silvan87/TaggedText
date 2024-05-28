@@ -1,0 +1,15 @@
+#file-opening
+##text <!DOCTYPE html>
+##new-line
+##text <html>
+##new-line
+##text <head><title>Minimal
+##space
+##text publication</title></head>
+##new-line
+##text <body><p>
+
+#file-ending
+##text </p></body>
+##new-line
+##text </html>

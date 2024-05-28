@@ -1,0 +1,16 @@
+[
+[[1], "template-path"],
+["template", ""],
+[[3], "publication-path"],
+["pub", ""],
+[[5, 6], "var"],
+["my-value", ""],
+[[7], "text"],
+["Value from variable", ""],
+[[9, 10, 12], "publish"],
+["publication.html", ""],
+[[11], "content"],
+["sample", ""],
+[[13], "template"],
+["style", ""]
+]

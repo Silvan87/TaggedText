@@ -1,0 +1,39 @@
+#file-opening
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal publication</title>
+    <style>.note {font-size:75%;}</style>
+</head>
+<body>
+
+#file-ending
+</body>
+</html>
+
+#tag title
+##text <h1>
+##content
+##text </h1>
+##new-line
+
+#tag paragraph
+##text <p>
+##content
+##text </p>
+##new-line
+
+#tag bold
+##text <b>
+##content
+##text </b>
+
+#tag N
+##text <b>*</b>
+
+#tag note
+##text <p class="note"><b>*</b>
+##space
+##content
+##text </p>
+##new-line

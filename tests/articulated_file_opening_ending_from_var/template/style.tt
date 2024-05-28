@@ -1,0 +1,18 @@
+#file-opening
+##text
+<!DOCTYPE html>
+<html>
+<head>
+##text <title>
+##from-var my-title
+##text </title>
+##text
+</head>
+<body>
+##new-line
+
+#file-ending
+##new-line
+##text </body>
+##new-line
+##text </html>

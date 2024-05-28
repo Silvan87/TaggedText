@@ -1,0 +1,11 @@
+# A not tagged text with articulated file-opening and file-ending rules (from-var subrule)
+
+#var my-title
+##text Title from variable
+
+#template-path template
+#publication-path pub
+
+#publish publication.html
+##content sample
+##template style

@@ -1,0 +1,36 @@
+#file-opening
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal publication</title>
+</head>
+<body>
+
+#file-ending
+</body>
+</html>
+
+#tag title
+## text <h1>
+## content
+## text </h1>
+## new-line
+
+#tag song
+## text <table>
+## text <tr><td>
+## from-subtag title
+## text </td><td>
+## from-var my-value
+## text </td></tr>
+## text <tr><td>
+## from-subtag album
+## text </td><td>
+## from-var my-value
+## text </td></tr>
+## text <tr><td>
+## from-subtag artist
+## text </td><td>
+## from-var my-value
+## text </td></tr>
+## text </table>

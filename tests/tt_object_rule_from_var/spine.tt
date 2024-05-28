@@ -1,0 +1,11 @@
+# A tt object rule with from-var subrule
+
+#template-path template
+#publication-path pub
+
+#var my-value
+##text Value from variable
+
+#publish publication.html
+##content sample
+##template style

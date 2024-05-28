@@ -1,0 +1,14 @@
+#file-opening
+<!DOCTYPE html>
+<html>
+<head><title>Minimal publication</title></head>
+<body><p>
+
+#file-ending
+</p></body>
+</html>
+
+#tag bold
+##text <b>
+##content
+##text </b>

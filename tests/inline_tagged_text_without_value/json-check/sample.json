@@ -1,0 +1,11 @@
+[
+[[1], "title"],
+["A new beautiful page", ""],
+[[3], "paragraph"],
+[[4, 5, 6], ""],
+["This is a text to test the inline tag without value", ""],
+["", "N"],
+[".", ""],
+[[8], "note"],
+["This is a simple note.", ""]
+]

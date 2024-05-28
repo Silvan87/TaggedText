@@ -1,0 +1,8 @@
+# Some tagged text and an inside inline tagged text without value
+
+#template-path template
+#publication-path pub
+
+#publish publication.html
+##content sample
+##template style

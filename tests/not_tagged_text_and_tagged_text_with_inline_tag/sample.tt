@@ -1,0 +1,4 @@
+<p>This is a simple text line.</p>
+
+#paragraph
+This is a tagged text with an /*bold*/inline tagged text*/ to show the bold style.
