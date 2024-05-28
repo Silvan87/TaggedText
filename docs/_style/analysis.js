@@ -4,8 +4,8 @@ var textColors = ['#ccf', '#145e09', '#330', '#500']
 
 function composeBacklogs() {
     colorSections()
-    orderProductBacklog()
     composeDoneBacklog()
+    orderProductBacklog()
     composeSprintBacklog()
 }
 
@@ -50,7 +50,7 @@ function composeDoneBacklog() {
     for (let n = 0; n < productUSs.length; n++) {
         let assignmentNode = productUSs[n].getElementsByClassName('assignment')[0]
         if (assignmentNode.getElementsByClassName('state-8').length > 0) {
-            doneBacklog.appendChild(productUSs[n].cloneNode(true))
+            doneBacklog.prepend(productUSs[n].cloneNode(true))
             toBeRemovedNodes.push(n)
         }
     }
@@ -60,6 +60,7 @@ function composeSprintBacklog() {
     let productBacklog = document.getElementById('product-backlog')
     let productUSs = productBacklog.children
     let sprintBacklog = document.getElementById('sprint-backlog')
+    let toBeRemovedNodes = []
 
     for (let n = 0; n < productUSs.length; n++) {
         let assignmentNode = productUSs[n].getElementsByClassName('assignment')[0]
@@ -70,6 +71,13 @@ function composeSprintBacklog() {
             }
         }
     }
+    for (let n = 0; n < productUSs.length; n++) {
+        let state = productUSs[n].getElementsByClassName('assignment')[0].getElementsByTagName('span')[0].classList[0]
+        if (state === 'state-2' || state === 'state-4' || state === 'state-6') {
+            toBeRemovedNodes.push(n)
+        }
+    }
+    removeNodesFromBacklog(toBeRemovedNodes, productBacklog)
 }
 function removeNodesFromBacklog(toBeRemovedNodes, backlogElement) {
     let toBeRemovedNodesNum = toBeRemovedNodes.length
@@ -88,7 +96,22 @@ function showSection(sectionNumber) {
         menuItems[n].style.borderLeft = '.5em solid ' + ((n == sectionNumber) ? borderColors[n] : sectionColors[n])
         menuItems[n].style.borderRight = '.2em solid ' + sectionColors[n]
         menuItems[n].style.marginLeft = (n == sectionNumber) ? '-1em' : '0'
-        menuItems[n].style.marginRight = (n == sectionNumber) ? '-.5em' : '0'
+        menuItems[n].style.marginRight = (n == sectionNumber) ? '-.8em' : '0'
         menuItems[n].style.borderRadius = (n == sectionNumber) ? '0' : '2em 0 0 2em'
+    }
+}
+function showLastSectionNotEmpty() {
+    let sprintBacklog = document.getElementById('sprint-backlog')
+    let productBacklog = document.getElementById('product-backlog')
+    let doneBacklog = document.getElementById('done-backlog')
+
+    if (sprintBacklog.children.length > 0) {
+        showSection(3)
+    } else if (productBacklog.children.length > 0) {
+        showSection(2)
+    } else if (doneBacklog.children.length > 0) {
+        showSection(1)
+    } else {
+        showSection(0)
     }
 }
