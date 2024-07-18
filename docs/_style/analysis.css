@@ -93,6 +93,7 @@ aside li:hover {
     padding:.25em .25em .25em .25em;
     margin:0 .5em 0 0;
     border-radius:.5em;
+    max-width:2em;
 }
 #content .us-id::before {
     content:"US ";
@@ -104,6 +105,7 @@ aside li:hover {
     font-size:16px;
     color:#444;
     margin-bottom:.5em;
+    min-height: 2.75em;
 }
 #content p, #content ul {
     font-size:14px;
