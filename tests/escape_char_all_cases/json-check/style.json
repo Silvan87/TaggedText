@@ -1,0 +1,22 @@
+[
+[[1, 2], "file-opening"],
+["<!DOCTYPE html>\n<html>\n<head>\n    <title>Minimal publication</title>\n</head>\n<body>\n<p>To check this publication, you need to check the source code or else the white characters will be not visible in html format.</p>", ""],
+["", "new-line"],
+[[4], "file-ending"],
+["</body>\n</html>", ""],
+[[6, 7, 9, 10, 12], "tag"],
+["paragraph", ""],
+[[8], "text"],
+["<p>", ""],
+["", "content"],
+[[11], "text"],
+["</p>", ""],
+["", "new-line"],
+[[14, 15, 17, 18], "tag"],
+["bold", ""],
+[[16], "text"],
+["<b>", ""],
+["", "content"],
+[[19], "text"],
+["</b>", ""]
+]

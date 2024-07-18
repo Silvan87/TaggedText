@@ -91,14 +91,18 @@ class Parser:
             return bool(cls._current_line)
 
         @classmethod
-        def strip_first_position_escape_from_line(cls, line: str):
-            """Remove the escape char in the beginning of a line if present.
+        def strip_escape_char_from_beginning_and_end_of_line(cls, line: str):
+            """Remove the escape char in the beginning and in the end of the line.
 
-            :param line: the line to check and eventually to edit.
-            :return: the line eventually edited.
+            :param line: the line where to check the escape chars.
+            :return: the line edited.
             """
             if len(line) > 0 and line[0] == '\\':
                 line = line[1:]
+
+            if len(line) > 0 and line[-1] == '\\':
+                line = line[:-1]
+
             return line
 
         @classmethod
@@ -128,7 +132,6 @@ class Parser:
 
             :return: True or False if a hashtag is found or not.
             """
-
             try:
                 return cls.try_to_look_for_hashtag()
 
@@ -141,14 +144,12 @@ class Parser:
 
             :return: True or False if a hashtag is found or not.
             """
-
             search_start = cls._current_line_index
             search_steps = 0
 
             while search_start + search_steps < len(cls._lines):
                 cls._current_text_value = ''
                 forward_line = cls._lines[search_start + search_steps].strip()
-                forward_line = cls.strip_first_position_escape_from_line(forward_line)  # TODO BUG escape to be managed
 
                 match_hashtag = re.search('^' + Regex.hashtag, forward_line)
                 if match_hashtag:
@@ -181,8 +182,8 @@ class Parser:
 
                     cls._after_tag_line = forward_line[len(tag_name) + tag_level:].strip()
 
-                    # between the hashes ## and the tag name there could be a space
-                    # but I can remove it after the calculation for the _after_tag_line
+                    # between the hashes ## and the tag name there could be a space,
+                    # but you can remove it after the calculation for the _after_tag_line
                     tag_name = tag_name.lstrip()
 
                     if cls._after_tag_line:
@@ -238,6 +239,13 @@ class Parser:
             """
 
             match = re.search(Regex.hashtag_id, cls._after_tag_line)
+
+            # If there is an escape \ before the special chars, ignore them
+            if match:
+                if match.start() - 1 >= 0:
+                    if cls._after_tag_line[match.start() - 1] == '\\':
+                        match = None
+
             if match:
                 cls._hashtag_id_name_to_apply = match.group(0)[1:]
                 cls._after_tag_line = cls._after_tag_line[len(cls._hashtag_id_name_to_apply) + 1:].strip()
@@ -295,7 +303,6 @@ class Parser:
             search_steps = 1
             while search_start + search_steps < len(cls._lines):
                 forward_line = cls._lines[search_start + search_steps]
-                forward_line = cls.strip_first_position_escape_from_line(forward_line)  # TODO BUG escape to be managed
                 match = re.search('^' + Regex.hashtag, forward_line)
                 # TODO BUG currently this cycle that picks lines it is not ready to skip the comments
                 if match:
@@ -320,7 +327,6 @@ class Parser:
                 return
 
             cls._current_text_value = cls._lines[cls._current_line_index].strip()
-            cls._current_text_value = cls.strip_first_position_escape_from_line(cls._current_text_value)  # TODO BUG escape!
             match = re.search(Regex.not_normal_text, cls._current_text_value)
             if match:
                 parsing_tree.append_tagged_piece('', tag_name)
@@ -331,7 +337,6 @@ class Parser:
 
             while search_start + search_steps < len(cls._lines):
                 forward_line = cls._lines[search_start + search_steps].strip()
-                forward_line = cls.strip_first_position_escape_from_line(forward_line)  # TODO BUG l'escape va gestito
                 match = re.search(Regex.not_normal_text, forward_line)
                 if match:
                     break
@@ -346,7 +351,7 @@ class Parser:
             cls.evaluate_presence_of_inline_tags(cls._current_text_value, tag_name)
 
         @classmethod
-        def evaluate_presence_of_inline_tags(cls, line: str, tag_name: str=''):
+        def evaluate_presence_of_inline_tags(cls, line: str, tag_name: str = ''):
             """Evaluate if a line is divided by inline tags and use a list of child indexes to refer to the line pieces
             or else use the plain line.
 
@@ -420,6 +425,13 @@ class Parser:
                 number_of_nested_open_tags = 0
                 closed_tag_match = False
                 main_open_tag_match = re.search(regex.open_inline_tag, line[parsing_progression_index:])
+
+                # If there is an escape \ before the special chars, ignore them
+                if main_open_tag_match:
+                    if main_open_tag_match.start() - 1 >= 0:
+                        if line[main_open_tag_match.start() - 1] == '\\':
+                            main_open_tag_match = None
+
                 if main_open_tag_match:
                     open_tag_start_index = parsing_progression_index + main_open_tag_match.start()
                     if closed_tag_end_index != open_tag_start_index:
@@ -467,6 +479,13 @@ class Parser:
             :param line: the text line where to look for.
             """
             match_hashtag_no_value = re.search(Regex.hashtag_no_value, line)
+
+            # If there is an escape \ before the special chars, ignore them
+            if match_hashtag_no_value:
+                if match_hashtag_no_value.start() - 1 >= 0:
+                    if line[match_hashtag_no_value.start() - 1] == '\\':
+                        match_hashtag_no_value = None
+
             if match_hashtag_no_value:
                 if match_hashtag_no_value.start() > 0:
                     cls._chunks.append(line[0:match_hashtag_no_value.start()])
@@ -476,7 +495,6 @@ class Parser:
                 if line != '':
                     cls._chunks.append(line)
 
-
     @classmethod
     def parse_spine_and_all_required_files(cls, tt_spine_rel_path: str):
         """Parse every required files (tt contents and templates) starting from spine file.
@@ -485,6 +503,7 @@ class Parser:
         """
         _Reader.parse_spine(tt_spine_rel_path)
         _Reader.parse_required_tagged_texts()
+
 
 class _Reader:
     """It collects methods to open the tt files and to read the raw text in order to produce a machine-readable
@@ -752,9 +771,9 @@ class _Reader:
         while Parser.Text.is_there_a_current_line():
             if Parser.Text.is_current_line_not_empty():
                 Parser.Text.look_for_hashtag_without_value() or \
-                Parser.Text.look_for_hashtag() or \
-                Parser.Text.look_for_comment() or \
-                Parser.Text.look_for_text_without_tag()
+                    Parser.Text.look_for_hashtag() or \
+                    Parser.Text.look_for_comment() or \
+                    Parser.Text.look_for_text_without_tag()
                 Parser.Text.reset_tag_context()
             Parser.Text.next_line()
 
@@ -782,7 +801,12 @@ class _Reader:
             if isinstance(item[0], str):
                 if len(item[0]) > 0 and item[0][-1] == '/':
                     item[0] = item[0][:-1]
-                f.write('"' + item[0].replace('"', '\\"') + '"')
+                line_with_managed_escapes = (
+                    item[0].replace('\\n', '\n')
+                    .replace('\\', '\\\\').replace('"', '\\"')
+                    .replace('\n', '\\n')
+                )
+                f.write('"' + line_with_managed_escapes + '"')
             else:
                 if len(item[0]) == 0:
                     f.write('""')

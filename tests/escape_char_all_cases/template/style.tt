@@ -1,0 +1,24 @@
+#file-opening
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal publication</title>
+</head>
+<body>
+<p>To check this publication, you need to check the source code or else the white characters will be not visible in html format.</p>
+##new-line
+
+#file-ending
+</body>
+</html>
+
+#tag paragraph
+##text <p>
+##content
+##text </p>
+##new-line
+
+#tag bold
+##text <b>
+##content
+##text </b>

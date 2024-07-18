@@ -1,0 +1,8 @@
+# Escape character for starting and ending spaces and special chars
+
+#template-path template
+#publication-path pub
+
+#publish publication.html
+##content sample
+##template style

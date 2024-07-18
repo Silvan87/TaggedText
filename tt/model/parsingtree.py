@@ -1,6 +1,9 @@
 """Parsing Tree is a list of tagged pieces to store the result of the process that converts a tagged text file in a JSON
 tagged tree structure. It is specialized to assist the process along its elaboration."""
 
+import re
+from tt.model.regex import Regex
+
 
 class ParsingTree:
     """A list of tagged pieces with a hierarchical structure like a tree. It offers the entire structured data in JSON
@@ -36,8 +39,12 @@ class ParsingTree:
         parameter.
         """
         if tag_name is None:
+            tagged_piece[0] = self.strip_escape_char_from_beginning_and_end_of_piece(tagged_piece[0])
+            tagged_piece[0] = self.strip_escape_char_from_special_chars(tagged_piece[0])
             self._parsed_data.append(tagged_piece)
         else:
+            tagged_piece = self.strip_escape_char_from_beginning_and_end_of_piece(tagged_piece)
+            tagged_piece = self.strip_escape_char_from_special_chars(tagged_piece)
             self._parsed_data.append([tagged_piece, tag_name])
 
     def insert_parsed_piece(self, piece_position: int, tagged_piece, tag_name: str=None):
@@ -51,9 +58,45 @@ class ParsingTree:
         parameter.
         """
         if tag_name is None:
+            tagged_piece[0] = self.strip_escape_char_from_beginning_and_end_of_piece(tagged_piece[0])
             self._parsed_data.insert(piece_position, tagged_piece)
         else:
+            tagged_piece = self.strip_escape_char_from_beginning_and_end_of_piece(tagged_piece)
             self._parsed_data.insert(piece_position, [tagged_piece, tag_name])
+
+    def strip_escape_char_from_beginning_and_end_of_piece(self, piece: str):
+        """Remove the escape char in the beginning and in the end of the piece.
+
+        :param piece: the piece where to check the escape chars.
+        :return: the piece edited.
+        """
+        if type(piece) is list:
+            return piece
+
+        if len(piece) > 0 and piece[0] == '\\':
+            piece = piece[1:]
+
+        if len(piece) > 0 and piece[-1] == '\\':
+            piece = piece[:-1]
+
+        piece = piece.replace('\\n\\', '\\n')
+        piece = piece.replace('\\\\n', '\\n')
+
+        return piece
+
+    def strip_escape_char_from_special_chars(self, piece: str):
+        """Remove the escape char from the beginning of the special chars.
+
+        :param piece: the piece where to check the escape chars.
+        :return: the piece edited.
+        """
+        if type(piece) is list:
+            return piece
+
+        piece = re.sub(r'\\(?=' + Regex.open_inline_tag + ')', '', piece)
+        piece = re.sub(r'\\(?=' + Regex.hashtag_no_value + ')', '', piece)
+        piece = re.sub(r'\\(?=' + Regex.hashtag_id + ')', '', piece)
+        return piece
 
     def remove_first_piece_id_from_piece_value(self, piece_id: int):
         """Remove the first piece ID from the value of a specified piece.

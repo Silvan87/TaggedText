@@ -82,6 +82,9 @@ class E2E(unittest.TestCase):
     def test_tt_object_rule_from_file(self):
         self._launch_standard_e2e_test()
 
+    def test_escape_char_all_cases(self):
+        self._launch_standard_e2e_test()
+
 #class Functional(unittest.TestCase):
 
 #    def run(self, result=None):

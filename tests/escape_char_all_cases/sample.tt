@@ -1,0 +1,34 @@
+#paragraph
+\    This is a line with 4 spaces in the beginning.
+
+#paragraph
+\
+\  This is a line with a new line and 2 spaces in the beginning.
+
+#paragraph
+This is a line with 4 spaces in the end.    \
+
+#paragraph
+This is a line with 2 spaces and a new line in the end.  \
+\
+
+#paragraph
+\  This is a line with 2 spaces in the beginning and in the end.  \
+
+#paragraph
+This is a line with \/*bold*/special chars*/ escaped.
+
+#paragraph
+\  This is a line with \/*bold*/special chars*/ escaped and spaces in the beginning and in the end.  \
+
+#paragraph
+This is a line with \#tag# special chars escaped.
+
+#paragraph\|ignored-id
+This is a line with a tag with an escaped id.
+
+#paragraph
+This is a line with \/*bold* no need to escape anything.
+
+#paragraph
+This is a line with \#tag no need to escape anything.
