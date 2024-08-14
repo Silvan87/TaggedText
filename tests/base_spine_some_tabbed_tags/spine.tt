@@ -1,0 +1,8 @@
+# A tagged text with some tags with white spaces at the beginning of the text lines
+
+    #template-path template
+#publication-path pub
+
+#publish publication.html
+    ##content sample
+    ##template style

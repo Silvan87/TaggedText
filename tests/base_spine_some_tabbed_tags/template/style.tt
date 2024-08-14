@@ -1,0 +1,25 @@
+#file-opening
+<!DOCTYPE html>
+<html>
+<head><title>Minimal publication</title></head>
+<body>
+
+#file-ending
+    ## new-line
+    ## text
+        </body>
+        </html>
+
+#tag animal
+    ## new-line
+    ## text <p>The
+        ## space
+            ## content
+    ## text 's sound is
+        ## space
+        ## from-subtag sound
+        ## space
+    ## text and its color is
+        ## space
+        ## from-subtag color
+    ## text .</p>

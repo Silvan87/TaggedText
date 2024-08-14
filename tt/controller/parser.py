@@ -165,7 +165,7 @@ class Parser:
                         cls._previous_level = 0
                         break
 
-                    # it checks that a next level is introduced with graduality (#, ##, ###, etc.)
+                    # it checks the next level is introduced gradually (#, ##, ###, etc.)
                     if tag_level - cls._previous_level > 1:
                         raise ParserError.SkippedDeeperTagLevelError(
                             spine.paths.get_current_tt_file_abs_path(),
@@ -293,7 +293,7 @@ class Parser:
             return True
 
         @classmethod
-        def pick_multi_text_lines(cls, text_to_prepend: str=''):
+        def pick_multi_text_lines(cls, text_to_prepend: str = ''):
             """Pick multi text lines until to find a new tag.
 
             :param text_to_prepend: if a previous line started with a tag and there is some text after the tag, this
@@ -302,7 +302,7 @@ class Parser:
             search_start = cls._current_line_index
             search_steps = 1
             while search_start + search_steps < len(cls._lines):
-                forward_line = cls._lines[search_start + search_steps]
+                forward_line = cls._lines[search_start + search_steps].lstrip()
                 match = re.search('^' + Regex.hashtag, forward_line)
                 # TODO BUG currently this cycle that picks lines it is not ready to skip the comments
                 if match:
@@ -702,7 +702,7 @@ class _Reader:
         cls._prepare_trigger_tags_and_rules_from_templates()
 
     @classmethod
-    def _parse_tt_file(cls, tt_file_name: str, tt_type: TtType=TtType.CONTENT):
+    def _parse_tt_file(cls, tt_file_name: str, tt_type: TtType = TtType.CONTENT):
         """Parse a tt file to obtain a json. But first, check if an up-to-date version of that json is available and
         also save the elaborated json for the next time.
 
@@ -719,7 +719,7 @@ class _Reader:
             spine.append_unchanged_json_file(tt_file_name)
 
     @classmethod
-    def _is_last_read_version_of_json_usable(cls, tt_file_name: str, tt_type: TtType==TtType.CONTENT):
+    def _is_last_read_version_of_json_usable(cls, tt_file_name: str, tt_type: TtType = TtType.CONTENT):
         """Check if the last read json file is still a usable version, or it has to be generated again from the tt
         content file.
 

@@ -37,6 +37,9 @@ class E2E(unittest.TestCase):
     def test_base_spine_file_opening_ending(self):
         self._launch_standard_e2e_test()
 
+    def test_base_spine_some_tabbed_tags(self):
+        self._launch_standard_e2e_test()
+
     def test_articulated_file_opening_ending_text(self):
         self._launch_standard_e2e_test()
 
@@ -83,6 +86,9 @@ class E2E(unittest.TestCase):
         self._launch_standard_e2e_test()
 
     def test_escape_char_all_cases(self):
+        self._launch_standard_e2e_test()
+
+    def test_minimal_tag_list(self):
         self._launch_standard_e2e_test()
 
 #class Functional(unittest.TestCase):
