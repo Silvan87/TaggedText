@@ -228,6 +228,92 @@
                     <li><span class="state-8"></span> Successful outcome of the escape character E2E tests</li>
                 </ul>
             </article>
+            <article>
+                <header>
+                    <div class="us-id">7</div>
+                    <h2>As a content creator, I would like to be able to use the rule for the content of a tag list and define the start and end of the list, the element separator, and define the start and end of the element</h2>
+                    <div class="priority high"></div>
+                </header>
+                <div class="description">
+                    <p>It has to be possible to use the rule for the content of a tag list in a simple and also articulated way.</p>
+                    <ul>
+                    <li>Within an element of a tag list it shall be possible to have another tag list and apply another rule for the contents of that tag list.</li>
+                    <li>The separator can be used or omitted.</li>
+                    <li>If the subtag ###content is used twice in the subtag ##list, an exception has to be raised e the publication has not to be generated.</li>
+                    <li>If the subtag ###content is used twice or more times in the subtag ##item the content has to be repeated many times as requested.</li>
+                    </ul>
+                </div>
+                <div class="assignment">
+                    <p><b>Epica</b>: Processor</p>
+                    <p><b>State</b>: <span class="state-2"></span></p>
+                    <p><b>Assignee</b>: Silvan</p>
+                </div>
+                <div class="duration">
+                    <p><b>Creator</b>: Silvan</p>
+                    <p><b>Creation date</b>: 18 Jul 2024</p>
+                    <p><b>Start date</b>: ?</p>
+                    <p><b>End date</b>: ?</p>
+                </div>
+                <ul class="subtasks">
+                    <li><span class="state-2"></span> E2E tests for all cases of the rule for content of a list of tags</li>
+                    <li><span class="state-10"></span> SWriting functionality to handle the rule for content of a list of tags</li>
+                    <li><span class="state-10"></span> Successful outcome of the E2E tests of the rule for content of a list of tags</li>
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <div class="us-id">8</div>
+                    <h2>As a content creator, I would like to be able to extend the rule for the content of a tag list and be able to use the ##item subtag multiple times so that it applies respectively to the first, second and so on item, the last available subtag ##item will be applied to the remaining items</h2>
+                    <div class="priority low"></div>
+                </header>
+                <div class="description">
+                    <p>Currently the default behavior when the ##item subtag in a tag list rule is used multiple times is that the last ##item subtag overrides the previous statements. Instead, to have more flexibility in a tag list rule, listing multiple ##item subtags allows these templates to be applied to their respective elements: the first ##item subtag to the first element (e.g. defining a table header), the second ##item subtag to the second element, and so on, the last ##item subtag applies to all remaining elements. If there are more ##item subtags than actual elements to handle, this should not be a problem, we stop when the elements run out and it doesn't matter if some ##item subtags are actually left unused.</p>
+                </div>
+                <div class="assignment">
+                    <p><b>Epic</b>: Processor</p>
+                    <p><b>State</b>: <span class="state-1"></span></p>
+                    <p><b>Assignee</b>: Silvan</p>
+                </div>
+                <div class="duration">
+                    <p><b>Creator</b>: Silvan</p>
+                    <p><b>Creation date</b>: 18 Jul 2024</p>
+                    <p><b>Start date</b>: ?</p>
+                    <p><b>End date</b>: ?</p>
+                </div>
+                <ul class="subtasks">
+                    <li><span class="state-1"></span> Integrate the technical documentation with this specification for the subtag ##item</li>
+                    <li><span class="state-1"></span> Integrate the user manual with this specification for the subtag ##item</li>
+                    <li><span class="state-1"></span> E2E tests for multiple subtags ##item used in the rule for a tag list</li>
+                    <li><span class="state-10"></span> Writing functionality to handle multiple subtags ##item in rule for a tag list</li>
+                    <li><span class="state-10"></span> Test passed for multiple subtags ##item in rule for tag list</li>
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <div class="us-id defect">9</div>
+                    <h2>As a content creator, I would like to be able to use tabs for first and second level tags and have them interpreted as tags, fixing the defect where they are interpreted as plain text.</h2>
+                    <div class="priority high"></div>
+                </header>
+                <div class="description">
+                    <p>If a tt content file uses tabs specifically in second- and subsequent-level tags, instead of being interpreted as second- or subsequent-level tags, the initial tab forces those lines of text to be read as normal text. The defect has to be fixed.</p>
+                </div>
+                <div class="assignment">
+                    <p><b>Epic</b>: Processor</p>
+                    <p><b>State</b>: <span class="state-8"></span></p>
+                    <p><b>Assignee</b>: Silvan</p>
+                </div>
+                <div class="duration">
+                    <p><b>Creator</b>: Silvan</p>
+                    <p><b>Creation date</b>: 14 Aug 2024</p>
+                    <p><b>Start date</b>: 14 Aug 2024</p>
+                    <p><b>End date</b>: 15 Aug 2024</p>
+                </div>
+                <ul class="subtasks">
+                    <li><span class="state-8"></span> Creating E2E tests with tt content files that have various whitespace before various tags</li>
+                    <li><span class="state-8"></span> Fix to handle whitespace at the beginning of a line without losing the interpretation of tabbed tags</li>
+                    <li><span class="state-8"></span> Positive outcome of the test described in the first sub-activity</li>
+                </ul>
+            </article>
         </section>
         <section id="sprint-backlog">
         </section>

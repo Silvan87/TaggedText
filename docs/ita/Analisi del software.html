@@ -228,6 +228,92 @@
                     <li><span class="state-8"></span> Esito positivo dei test del carattere di escape</li>
                 </ul>
             </article>
+            <article>
+                <header>
+                    <div class="us-id">7</div>
+                    <h2>Come creatore di contenuti, vorrei poter usare la regola per il contenuto di una lista di tag e definire inizio e fine lista, il separatore degli elementi, e definire inizio e fine elemento</h2>
+                    <div class="priority high"></div>
+                </header>
+                <div class="description">
+                    <p>Si deve poter usare la regola per il contenuto di una lista di tag in modo semplice ed anche articolato.</p>
+                    <ul>
+                    <li>Dentro un elemento di una lista di tag deve essere possibile avere un'altra lista di tag e applicare un'altra regola per il contenuto di una lista di tag.</li>
+                    <li>Il separatore si deve poter usare o omettere.</li>
+                    <li>Se il sotto tag ###content è usato due volte nel sotto tag ##list deve sollevare un'eccezione e non creare la pubblicazione.</li>
+                    <li>Se il sotto tag ###content è usato due o più volte nel sotto tag ##item deve produrre il contenuto tante volte quanto richiesto.</li>
+                    </ul>
+                </div>
+                <div class="assignment">
+                    <p><b>Epica</b>: Elaboratore</p>
+                    <p><b>Stato</b>: <span class="state-2"></span></p>
+                    <p><b>Assegnatario</b>: Silvan</p>
+                </div>
+                <div class="duration">
+                    <p><b>Creatore</b>: Silvan</p>
+                    <p><b>Data creazione</b>: 18 Lug 2024</p>
+                    <p><b>Data inizio</b>: ?</p>
+                    <p><b>Data fine</b>: ?</p>
+                </div>
+                <ul class="subtasks">
+                    <li><span class="state-2"></span> Test E2E per tutte le casistiche della regola per il contenuto di una lista di tag</li>
+                    <li><span class="state-10"></span> Scrittura funzionalità per gestire la regola per il contenuto di una lista di tag</li>
+                    <li><span class="state-10"></span> Esito positivo dei test della regola per il contenuto di una lista di tag</li>
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <div class="us-id">8</div>
+                    <h2>Come creatore di contenuti, vorrei poter ampliare la regola per il contenuto di una lista di tag e poter usare il sotto tag ##item più volte così da applicarlo rispettivamente al primo, al secondo e così via elemento, l'ultimo sub tag ##item disponibile verrà applicato ai rimanenti elementi</h2>
+                    <div class="priority low"></div>
+                </header>
+                <div class="description">
+                    <p>Attualmente il comportamento predefinito in caso il sotto tag ##item in una regola per una lista di tag sia usato più volte è che l'ultimo sotto tag ##item sovrascrive le istruzioni precedenti. Invece, per avere più flessibilità nella regola per una lista di tag, elencare più sotto tag ##item permette di applicare questi modelli ai rispettivi elementi: il primo sotto tag ##item al primo elemento (es. definire un'intestazione di una tabella), il secondo sotto tag ##item al secondo elemento e così via, l'ultimo sotto tag ##item si applica a tutti gli elementi rimanenti. Se ci sono più sotto tag ##item degli effettivi elementi da gestire, questo non deve essere un problema, ci si ferma quando gli elementi finiscono e non ha importanza se alcuni sotto tag ##item restano di fatto non utilizzati.</p>
+                </div>
+                <div class="assignment">
+                    <p><b>Epica</b>: Elaboratore</p>
+                    <p><b>Stato</b>: <span class="state-1"></span></p>
+                    <p><b>Assegnatario</b>: Silvan</p>
+                </div>
+                <div class="duration">
+                    <p><b>Creatore</b>: Silvan</p>
+                    <p><b>Data creazione</b>: 18 Lug 2024</p>
+                    <p><b>Data inizio</b>: ?</p>
+                    <p><b>Data fine</b>: ?</p>
+                </div>
+                <ul class="subtasks">
+                    <li><span class="state-1"></span> Integrare la documentazione tecnica con questa specifica per il sottotag ##item</li>
+                    <li><span class="state-1"></span> Integrare il manuale utente con questa specifica per il sottotag ##item</li>
+                    <li><span class="state-1"></span> Test E2E per più sotto tag ##item usati nella regola per una lista di tag</li>
+                    <li><span class="state-10"></span> Scrittura funzionalità per gestire sotto tag ##item multipli nella regola per una lista di tag</li>
+                    <li><span class="state-10"></span> Esito positivo del test per sotto tag ##item multipli nella regola per una lista di tag</li>
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <div class="us-id defect">9</div>
+                    <h2>Come creatore di contenuti, vorrei poter usare le tabulazioni per i tag di primo e secondo livello ed averli interpretati come tag risolvendo il difetto per cui vengono interpretati come testo normale</h2>
+                    <div class="priority high"></div>
+                </header>
+                <div class="description">
+                    <p>Se un file di contenuto tt utilizza tabulazioni in particolare nei tag di secondo e successivo livello, anziché essere interpretati come tag di secondo o successivo livello, la tabulazione iniziale forza quelle linee di testo ad essere lette come normale testo. Questo difetto deve essere corretto.</p>
+                </div>
+                <div class="assignment">
+                    <p><b>Epica</b>: Elaboratore</p>
+                    <p><b>Stato</b>: <span class="state-8"></span></p>
+                    <p><b>Assegnatario</b>: Silvan</p>
+                </div>
+                <div class="duration">
+                    <p><b>Creatore</b>: Silvan</p>
+                    <p><b>Data creazione</b>: 14 Ago 2024</p>
+                    <p><b>Data inizio</b>: 14 Ago 2024</p>
+                    <p><b>Data fine</b>: 15 Ago 2024</p>
+                </div>
+                <ul class="subtasks">
+                    <li><span class="state-8"></span> Creazione test E2E con file di contenuto tt che presentano vari spazi bianchi prima di vari tag</li>
+                    <li><span class="state-8"></span> Fix per gestire gli spazi bianchi ad inizio riga senza perdere l'interpretazione dei tag tabulati</li>
+                    <li><span class="state-8"></span> Esito positivo del test descritto nella prima sotto attività</li>
+                </ul>
+            </article>
         </section>
         <section id="sprint-backlog">
         </section>
