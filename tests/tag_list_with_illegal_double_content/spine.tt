@@ -1,0 +1,8 @@
+# A tag list rule with double subtag content inside list section
+
+#template-path template
+#publication-path pub
+
+#publish publication.html
+##content sample
+##template style

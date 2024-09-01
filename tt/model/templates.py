@@ -65,12 +65,16 @@ class Templates:
             self._rules = rules
 
         def get_rule_index(self, tag_name: str):
-            """Get the index of a rule associated to a specified tag name.
+            """Get the index of the rule associated to a specified tag name.
 
-            :param tag_name: the tag name associated to a rule.
+            :param tag_name: the tag name associated to the rule.
             :return: the rule index.
             """
-            return self._triggers[tag_name]
+            index = -1
+            if tag_name in self._triggers.keys():
+                index = self._triggers[tag_name]
+
+            return index
 
     @classmethod
     def initialize(cls, template_name: str):
@@ -124,13 +128,30 @@ class Templates:
 
     @classmethod
     def get_rule_index(cls, template_name: str, tag_name: str):
-        """Get the index of a rule associated to a specified tag name.
+        """Get the index of the rule associated to a specified tag name.
 
         :param template_name: tt template file name without extension, the key of the dictionary.
         :param tag_name: the tag name associated to a rule.
         :return: the rule index.
         """
         return cls._templates[template_name].get_rule_index(tag_name)
+
+    @classmethod
+    def get_template_name(cls, tag_name: str, template_names: list):
+        """Get the template name of a rule with a specified tag name.
+
+        :param tag_name: the tag name of the rule.
+        :param template_names: the names of the templates where to search the rule.
+        :return: the template name.
+        """
+        if len(template_names) == 1:
+            return template_names[0]
+
+        for template_name in template_names:
+            rules = Templates.get_rules(template_name)
+            for rule in rules:
+                if rule[1] == tag_name:
+                    return template_name
 
     @classmethod
     def set_trigger(cls, tag_name: str, rule_index: int, template_name: str):
@@ -143,7 +164,7 @@ class Templates:
         cls._templates[template_name].set_trigger(tag_name, rule_index)
 
     @classmethod
-    def get_latest_modification_date_from_template_name_list(cls, template_name_list: list=None):
+    def get_latest_modification_date_from_template_name_list(cls, template_name_list: list = None):
         """Get the latest modification date checking the intermediate json of a list of template names.
 
         :param template_name_list: the list of template names to check.

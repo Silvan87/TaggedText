@@ -1,0 +1,20 @@
+#title
+Table created with tag list inside a tag list
+
+#row
+## cell A
+## cell B
+## cell C
+
+#row
+## cell D
+## cell E
+## cell F
+
+#row
+## cell G
+## cell H
+## cell I
+
+#paragraph
+A final paragraph after the table.

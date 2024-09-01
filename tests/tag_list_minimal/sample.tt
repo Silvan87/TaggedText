@@ -1,0 +1,8 @@
+#title
+Example of minimal list of notes
+
+#paragraph
+This is a paragraph with some notes#A##B##C#.
+
+#paragraph
+This is a paragraph with other notes/*note*/X*//*note*/Y*//*note*/Z*/.

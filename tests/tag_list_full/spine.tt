@@ -1,0 +1,8 @@
+# A list of tag with tag list rule that uses all the subtags
+
+#template-path template
+#publication-path pub
+
+#publish publication.html
+##content sample
+##template style

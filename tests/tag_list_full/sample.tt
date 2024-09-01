@@ -1,0 +1,15 @@
+#title
+Example of minimal list of notes
+
+#paragraph
+This is a paragraph with some notes#A##B##C#.
+
+#paragraph
+This is a paragraph with other notes/*note*/X*//*note*/Y*//*note*/Z*/.
+
+#item Apple
+#hidden-item Pineapple /*color*/yellow*/
+#item Pear
+#item Orange
+#hidden-item Banana
+#item Peach

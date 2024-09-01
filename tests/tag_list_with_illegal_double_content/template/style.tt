@@ -1,0 +1,23 @@
+#file-opening
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal publication</title>
+</head>
+<body>
+
+#file-ending
+</body>
+</html>
+
+#tag-list item
+##list
+    ###text List start
+    ###content
+    ###text List end
+    ###content
+    ###text Previous content not allowed
+##item
+    ###text <p>
+    ###content
+    ###text </p>

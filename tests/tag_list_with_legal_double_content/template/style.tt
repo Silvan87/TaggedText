@@ -1,0 +1,45 @@
+#file-opening
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal publication</title>
+</head>
+<body>
+
+#file-ending
+</body>
+</html>
+
+#tag-list item
+##list
+    ###text <table>
+    ###new-line
+    ###content
+    ###text </table>
+    ###new-line
+##item
+    ###text <tr><td>
+    ###content
+    ###text </td><td>
+    ###content
+    ###text </td></tr>
+    ###new-line
+
+#tag item
+##content
+
+#tag-list url
+##list
+    ###content
+##item
+    ###text <a href="http://miosito.com/
+    ###content
+    ###text ">
+    ###content
+    ###text \ (
+    ###content
+    ###text )</a>
+    ###new-line
+
+#tag url
+##content

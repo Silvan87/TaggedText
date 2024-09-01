@@ -1,0 +1,61 @@
+#file-opening
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal publication</title>
+</head>
+<body>
+
+#file-ending
+</body>
+</html>
+
+#tag-list A B C note
+##list
+    ###text <sup>[
+    ###content
+    ###text ]</sup>
+##item-separator
+    |
+##item
+    ###text <b>
+    ###content
+    ###text </b>
+
+#tag A
+##text 1
+
+#tag B
+##text 2
+
+#tag C
+##text 3
+
+#tag note
+##content
+
+#tag paragraph
+##text <p>
+##content
+##text </p>
+##new-line
+
+#tag-list item hidden-item
+##list
+    ###text <ul>
+    ###content
+    ###text </ul>
+##item-separator
+    ###new-line
+##item
+    ###text <li>
+    ###content
+    ###text </li>
+
+#tag color
+##text <b>
+##content
+##text </b>
+
+#tag item
+##content

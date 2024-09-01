@@ -1,0 +1,37 @@
+#file-opening
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal publication</title>
+</head>
+<body>
+
+#file-ending
+</body>
+</html>
+
+#tag-list A B C note
+##list
+    ###content
+##item
+    ###text <sup>[
+    ###content
+    ###text ]</sup>
+
+#tag A
+##text 1
+
+#tag B
+##text 2
+
+#tag C
+##text 3
+
+#tag note
+##content
+
+#tag paragraph
+##text <p>
+##content
+##text </p>
+##new-line
