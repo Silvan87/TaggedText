@@ -1,7 +1,7 @@
 import unittest
 import tt
 from tests._tester import *
-
+from tt.controller.exceptions import *
 
 class E2E(unittest.TestCase):
 
@@ -23,6 +23,16 @@ class E2E(unittest.TestCase):
     def _launch_standard_e2e_test(self):
         self._when_write_publication_with_spine()
         self._then_check_generated_json_and_pub_files()
+
+    def _launch_expected_exception_test(self, exception):
+        try:
+            self._when_write_publication_with_spine()
+
+        except Exception as e:
+            if type(e) == type(exception):
+                print(f"The expected exception has been raised {type(e)}")
+            else:
+                self.fail(f"The expected exception is {type(exception)}, but the exception {type(e)} has been raised.")
 
     def _when_write_publication_with_spine(self):
         tt.write_publication_with_spine(Paths.get_spine_rel_path())
@@ -88,8 +98,21 @@ class E2E(unittest.TestCase):
     def test_escape_char_all_cases(self):
         self._launch_standard_e2e_test()
 
-    def test_minimal_tag_list(self):
+    def test_tag_list_minimal(self):
         self._launch_standard_e2e_test()
+
+    def test_tag_list_full(self):
+        self._launch_standard_e2e_test()
+
+    def test_tag_list_inside_tag_list(self):
+        self._launch_standard_e2e_test()
+
+    def test_tag_list_with_illegal_double_content(self):
+        self._launch_expected_exception_test(CompositorError.RepeatedContentSubtagError())
+
+    def test_tag_list_with_legal_double_content(self):
+        self._launch_standard_e2e_test()
+
 
 #class Functional(unittest.TestCase):
 
