@@ -112,14 +112,14 @@ class Parser:
             :return: True or False if a hashtag without value is found or not.
             """
 
-            # Case 1: only a double hash tag
+            # Case 1: only a double hashtag
             match = re.search('^' + Regex.hashtag_no_value + '$', cls._current_line)
             if match:
                 tag_name = match.group(0)[1:-1]
                 parsing_tree.append_tagged_piece('', tag_name)
                 return True
 
-            # Case 2: full line that starts with double hash tag
+            # Case 2: full line that starts with double hashtag
             match = re.search('^' + Regex.hashtag_no_value, cls._current_line)
             if match:
                 cls.pick_multi_text_lines(text_to_prepend=cls._current_line)
@@ -135,8 +135,8 @@ class Parser:
             try:
                 return cls.try_to_look_for_hashtag()
 
-            except ParserError.SkippedDeeperTagLevelError as error:
-                error.stop_parsing_with_error_message()
+            except Exception as e:
+                raise e
 
         @classmethod
         def try_to_look_for_hashtag(cls):
@@ -521,10 +521,9 @@ class _Reader:
 
         try:
             cls._try_to_parse_spine()
-        except (
-                ReaderError.TtNameUsedAsTemplateNameError,
-                ReaderError.PublicationFileWithoutContentFile
-            ) as error:
+
+        except (ReaderError.TtNameUsedAsTemplateNameError,
+                ReaderError.PublicationFileWithoutContentFile) as error:
             error.stop_process_with_error_message()
 
     @classmethod
@@ -552,7 +551,6 @@ class _Reader:
                 """
 
                 return tag_name.replace('-', '_')
-
 
             class Tag:
                 """All the managed special tags in the spine file. You can create a new class method with the name in
@@ -799,7 +797,7 @@ class _Reader:
                 f.write(',\n')
             f.write('[')
             if isinstance(item[0], str):
-                if len(item[0]) > 0 and item[0][-1] == '/':
+                if len(item[0]) > 0 and item[0][-1] == '\\':
                     item[0] = item[0][:-1]
                 line_with_managed_escapes = (
                     item[0].replace('\\n', '\n')
