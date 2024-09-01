@@ -83,6 +83,11 @@ An escape char \#with special char in a position where it is not special and so 
 ##child-tag\|with-escaped-id\The second escape char must be normal text
 ##child-tag\|with-escaped-id#inline-tag-without-value# adjacent to the escaped tag id
 
+#tag \  The initial escape char is useful to include whitespaces otherwise excluded.
+#tag|with-id \  The initial escape char is useful to include whitespaces otherwise excluded.
+#tag The final escape char is useful to include whitespaces otherwise excluded.  \
+#tag \  Initial and final whitespaces included using the escape char.  \
+
 If we don't have a \/*full inline tag, but only the beginning, the escape char is considered normal text as everything else in this line.
 
 # Inline comment

@@ -16,8 +16,12 @@
             <RegExpr attribute="comment" context="#stay" String="^[\s]*#[\s].*$" />
         </context>
         <context name="afterTag" attribute="normal" lineEndContext="#pop" fallthroughContext="normalText">
-            <RegExpr attribute="tagId" context="#pop" String="\|[A-Za-z0-9-]+" />
+            <RegExpr attribute="tagId" context="escapeAfterTag" String="\|[A-Za-z0-9-]+" />
+            <RegExpr attribute="escape" context="#pop" String=" *\\ *" />
             <RegExpr attribute="escape" context="ignoreTagAfterTag" String="\\(?=\|[A-Za-z0-9-]+)" />
+        </context>
+        <context name="escapeAfterTag" attribute="normal" lineEndContext="#pop" fallthroughContext="normalText">
+            <RegExpr attribute="escape" context="normalText" String=" *\\ *" />
         </context>
         <context name="ignoreTagAfterTag" attribute="normal" lineEndContext="#pop">
             <RegExpr attribute="normal" context="normalText" String="\|[A-Za-z0-9-]+" />
