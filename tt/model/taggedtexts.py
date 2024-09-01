@@ -135,6 +135,40 @@ class TaggedTexts:
         return cls._tagged_texts[actual_name][line_index]
 
     @classmethod
+    def get_depth_level(cls, tt_file: str | list, index_to_check: int):
+        """Get the level of the piece (tagged or not) in its content.
+
+        :param tt_file: the tt file name or the tt file content. It will be used to have tt file content.
+        :param index_to_check: the index of the tagged or not text piece to know the level in the structured text.
+        :return: the level of the text piece.
+        """
+        content_data = tt_file
+        if type(tt_file) is str:
+            content_data = cls.get(tt_file)
+
+        current_previous_index = 0
+        level = 1
+        new_level = True
+
+        while new_level:
+            new_level = False
+
+            for piece in content_data:
+                if current_previous_index >= index_to_check:
+                    break
+                if type(piece[0]) is list:
+                    for sub_piece_index in piece[0]:
+                        if index_to_check == sub_piece_index:
+                            level += 1
+                            index_to_check = current_previous_index
+                            new_level = True
+                            break
+
+                current_previous_index += 1
+
+        return level
+
+    @classmethod
     def get_current_tt_type(cls):
         """Get the current tagged text type."""
 
@@ -149,7 +183,7 @@ class TaggedTexts:
         cls._current_tt_type = tt_type
 
     @classmethod
-    def set_current_tt_file(cls, tt_file_name: str, tt_type: Type=None):
+    def set_current_tt_file(cls, tt_file_name: str, tt_type: Type = None):
         """Set the current tagged text file path and the type for the current process on spine.Paths.
 
         :param tt_file_name: the name of the tagged text file without extension or folder.
