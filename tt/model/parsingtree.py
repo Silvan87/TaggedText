@@ -29,7 +29,7 @@ class ParsingTree:
 
         self._parsed_data.clear()
 
-    def append_tagged_piece(self, tagged_piece, tag_name: str=None):
+    def append_tagged_piece(self, tagged_piece, tag_name: str = None):
         """Append a tagged piece to the current parsed data. This piece is a list with two elements, the 1st is the
         tagged value and the 2nd is the tag name. The value can be a string or a list of tagged piece IDs.
 
@@ -47,7 +47,7 @@ class ParsingTree:
             tagged_piece = self.strip_escape_char_from_special_chars(tagged_piece)
             self._parsed_data.append([tagged_piece, tag_name])
 
-    def insert_parsed_piece(self, piece_position: int, tagged_piece, tag_name: str=None):
+    def insert_parsed_piece(self, piece_position: int, tagged_piece, tag_name: str = None):
         """Insert a tagged piece in a specific position. This piece is a list with two elements, the 1st is the tagged
         value and the 2nd is the tag name. The value can be a string or a list of tagged piece IDs.
 

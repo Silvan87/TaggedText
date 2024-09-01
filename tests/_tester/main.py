@@ -51,9 +51,11 @@ def print_first_line_of_spine():
         f.close()
     print(lines[0].lstrip('#').lstrip())
 
+
 def check_test_assets_existence(test_case):
     check_test_folder_existence(test_case)
     check_test_files_existence(test_case)
+
 
 def check_test_folder_existence(test_case):
     case_folder = Paths.get_test_rel_folder()
@@ -64,6 +66,7 @@ def check_test_folder_existence(test_case):
             'publication test is wrong.'
         )
     return True
+
 
 def check_test_files_existence(test_case):
     case_folder = Paths.get_test_rel_folder()
@@ -79,15 +82,19 @@ def check_test_files_existence(test_case):
 
     return True
 
+
 def empty_json_and_pub_folders():
     empty_json_folder()
     empty_pub_folder()
 
+
 def empty_json_folder():
     _empty_folder('json', ['json'])
 
+
 def empty_pub_folder():
     _empty_folder('pub', ['txt', 'html', 'xhtml', 'htm'])
+
 
 def _empty_folder(folder_name, file_format_list):
     """Delete all files inside a folder with the file format specified.
@@ -105,10 +112,10 @@ def _empty_folder(folder_name, file_format_list):
         print('The parameter file_format_list is not a list.')
         aborted = True
 
-    for format in file_format_list:
+    for file_format in file_format_list:
         # If the format is not a string or the string is not from 2 to 5 chars,
         # the operation is aborted.
-        if type(format) is not str or len(format) < 2 or len(format) > 5:
+        if type(file_format) is not str or len(file_format) < 2 or len(file_format) > 5:
             aborted = True
 
     if aborted:
@@ -130,15 +137,18 @@ def _empty_folder(folder_name, file_format_list):
             file_path = os.path.join(json_file_rel_folder, file_name)
             os.remove(file_path)
 
+
 def check_json_files_are_equal_to_expected_json_files(test_case):
     _check_filtered_files_in_a_folder_with_checking_files(
         test_case, ['json'], 'json', 'json-check'
     )
 
+
 def check_pub_files_are_equal_to_expected_pub_files(test_case):
     _check_filtered_files_in_a_folder_with_checking_files(
         test_case, ['html'], 'pub', 'pub-check'
     )
+
 
 def _check_filtered_files_in_a_folder_with_checking_files(
         test_case, file_format_list, file_folder,checking_file_folder
@@ -157,12 +167,14 @@ def _check_filtered_files_in_a_folder_with_checking_files(
     file_format_regex = ''
     if len(file_format_list) == 1:
         file_format_regex = file_format_list[0]
+
     elif len(file_format_list) > 1:
         file_format_regex = '(' + '|'.join(file_format_list) + ')'
 
     if file_format_regex:
-        file_list = [f for f in os.listdir(file_rel_folder)
-                     if re.match(r'.*\.' + file_format_regex + '$', f)]
+        file_list = [
+            f for f in os.listdir(file_rel_folder) if re.match(r'.*\.' + file_format_regex + '$', f)
+        ]
         for file_name in file_list:
             file_path = os.path.join(file_rel_folder, file_name)
             checking_file_path = file_path.replace('/' + file_folder + '/', '/' + checking_file_folder + '/')
@@ -177,9 +189,9 @@ def _check_filtered_files_in_a_folder_with_checking_files(
             n = 0
             while n < len(lines):
                 if not lines[n] == checking_lines[n]:
-                    test_case.fail("The file '" + file_name + "' has the line n. " + str(n)
-                                   + " different from what is expected.")
+                    test_case.fail(f"The file '{file_name}' has the line n. {str(n)} different from what is expected.")
                 n += 1
+
 
 def _read_text_file_as_line_list(file_path):
     with open(file_path) as json_file_stream:

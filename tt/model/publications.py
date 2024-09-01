@@ -38,7 +38,7 @@ class Publications:
 
             return self._path
 
-        def get_text(self, branch_list: list=None):
+        def get_text(self, branch_list: list = None):
             """Get the final text of the publication file."""
 
             text = ''
@@ -47,9 +47,9 @@ class Publications:
                 branch_list = self._developing_tree
 
             for branch in branch_list:
-                if type(branch) == str:
+                if type(branch) is str:
                     text += branch
-                else:
+                elif type(branch) is list:
                     text += self.get_text(branch)
 
             return text
