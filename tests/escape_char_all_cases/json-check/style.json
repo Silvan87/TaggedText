@@ -1,6 +1,6 @@
 [
 [[1, 2], "file-opening"],
-["<!DOCTYPE html>\n<html>\n<head>\n    <title>Minimal publication</title>\n</head>\n<body>\n<p>To check this publication, you need to check the source code or else the white characters will be not visible in html format.</p>", ""],
+["<!DOCTYPE html>\n<html>\n<head>\n<title>Minimal publication</title>\n</head>\n<body>\n<p>To check this publication, you need to check the source code or else the white characters will be not visible in html format.</p>", ""],
 ["", "new-line"],
 [[4], "file-ending"],
 ["</body>\n</html>", ""],

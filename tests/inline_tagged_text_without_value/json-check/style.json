@@ -1,6 +1,6 @@
 [
 [[1], "file-opening"],
-["<!DOCTYPE html>\n<html>\n<head>\n    <title>Minimal publication</title>\n    <style>.note {font-size:75%;}</style>\n</head>\n<body>", ""],
+["<!DOCTYPE html>\n<html>\n<head>\n<title>Minimal publication</title>\n<style>.note {font-size:75%;}</style>\n</head>\n<body>", ""],
 [[3], "file-ending"],
 ["</body>\n</html>", ""],
 [[5, 6, 8, 9, 11], "tag"],
