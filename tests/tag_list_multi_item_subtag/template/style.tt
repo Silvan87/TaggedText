@@ -1,0 +1,54 @@
+#file-opening
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal publication</title>
+</head>
+<body>
+\
+
+#file-ending
+</body>
+</html>
+
+#tag-list item
+##list
+    ###new-line
+    ###content
+##item
+    ###text <h3>
+    ###content
+    ###text </h3>
+    ###new-line
+##item
+    ###text <p>
+    ###content
+    ###text </p>
+    ###new-line
+
+#tag item
+##content
+
+#tag-list section
+##list
+    ###new-line
+    ###content
+##item
+    ###text <h2>
+    ###content
+    ###text </h2>
+    ###new-line
+##item
+    ###text <h3>
+    ###content
+    ###text </h3>
+    ###new-line
+##item
+    ###text <h4>
+    ###content
+    ###text </h4>
+    ###new-line
+    ###new-line
+
+#tag section
+##content

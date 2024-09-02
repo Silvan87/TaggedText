@@ -3,6 +3,7 @@ import tt
 from tests._tester import *
 from tt.controller.exceptions import *
 
+
 class E2E(unittest.TestCase):
 
     @classmethod
@@ -111,6 +112,9 @@ class E2E(unittest.TestCase):
         self._launch_expected_exception_test(CompositorError.RepeatedContentSubtagError())
 
     def test_tag_list_with_legal_double_content(self):
+        self._launch_standard_e2e_test()
+
+    def test_tag_list_multi_item_subtag(self):
         self._launch_standard_e2e_test()
 
 

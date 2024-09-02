@@ -1,0 +1,11 @@
+#title
+Example of multi style for subtag item
+
+#item Fruit
+#item Apple
+#item Pear
+#item Orange
+
+#section Title 2
+#section Title 3
+#section Title 4

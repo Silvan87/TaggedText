@@ -600,11 +600,13 @@ class Compositor:
         list_text = [[], []]
         item_separator = ''
 
-        # list of lists of couples: {key: type of text piece; value: value of text piece}
+        # list of item_text subrules, each list is a list of 3 lists of couples.
+        # Lists of couple: {key: type of text piece; value: value of text piece}
         # 1° list: the beginning of the item
         # 2° list: the content and the things between contents of the item
         # 3° list: the end of the item
-        item_text = [[], [], []]
+        items_text = []
+        item_text_index = -1
 
         template_rule = content_piece.get_found_list_rule()
         template_data = template_rule.get_template_data()
@@ -663,6 +665,8 @@ class Compositor:
                         item_separator = sub_rule_piece[0]
 
             elif rule_piece[1] == 'item':
+                item_text_index += 1
+                items_text.append([[], [], []])
                 item_part_index = 0
                 item_last_content_index = -1
 
@@ -674,17 +678,17 @@ class Compositor:
                             item_part_index += 1
 
                     if sub_rule_piece[1] == 'text':
-                        item_text[item_part_index].append({
+                        items_text[item_text_index][item_part_index].append({
                             "type": "dynamic-text",
                             "value": [cls.look_for_rules_for_each_items, sub_rule_piece[0], template_data]
                         })
                     elif sub_rule_piece[1] == 'space':
-                        item_text[item_part_index].append({
+                        items_text[item_text_index][item_part_index].append({
                             "type": "space",
                             "value": " "
                         })
                     elif sub_rule_piece[1] == 'new-line':
-                        item_text[item_part_index].append({
+                        items_text[item_text_index][item_part_index].append({
                             "type": "new-line",
                             "value": "\n"
                         })
@@ -703,12 +707,12 @@ class Compositor:
                                     break
                                 exploring_index -= 1
 
-                        item_text[item_part_index].append({
+                        items_text[item_text_index][item_part_index].append({
                             "type": "content",
                             "value": ""
                         })
                     elif sub_rule_piece[1] == 'caught-tag-file-name':
-                        item_text[item_part_index].append({
+                        items_text[item_text_index][item_part_index].append({
                             "type": "caught-tag-file-name",
                             "value": ""
                         })
@@ -730,6 +734,7 @@ class Compositor:
 
         starting_index = index
         starting_level = content_piece.get_depth_level()
+        item_text_index = -1
 
         # List body (items)
         while index < len(content_data):
@@ -756,15 +761,17 @@ class Compositor:
                                 rule
                             )
                             if content_piece.get_found_rule():
+                                if item_text_index + 1 < len(items_text):
+                                    item_text_index += 1
 
                                 if item_separator and index > starting_index and sub_item_index == tagged_line[0][0]:
                                     Publications.add_branch(item_separator)
 
                                 # Initial part of an item of the list
                                 if sub_item_index == tagged_line[0][0]:
-                                    cls._add_text_pieces_to_publication(item_text[0])
+                                    cls._add_text_pieces_to_publication(items_text[item_text_index][0])
 
-                                for item_text_piece in item_text[1]:
+                                for item_text_piece in items_text[item_text_index][1]:
                                     if item_text_piece['type'] == 'content':
                                         cls.arrange_value(content_piece)
 
@@ -775,13 +782,16 @@ class Compositor:
 
                                 # Final part of an item of the list
                                 if sub_item_index == tagged_line[0][-1]:
-                                    cls._add_text_pieces_to_publication(item_text[2])
+                                    cls._add_text_pieces_to_publication(items_text[item_text_index][2])
 
                     else:
                         index += 1
                         continue
 
                 elif rule[1] == 'tag':
+                    if item_text_index + 1 < len(items_text):
+                        item_text_index += 1
+
                     content_piece = ContentPiece(
                         content_data, index,
                         cls._current_template_name_list
@@ -790,9 +800,9 @@ class Compositor:
                         Publications.add_branch(item_separator)
 
                     # Initial part of an item of the list
-                    cls._add_text_pieces_to_publication(item_text[0])
+                    cls._add_text_pieces_to_publication(items_text[item_text_index][0])
 
-                    for item_text_piece in item_text[1]:
+                    for item_text_piece in items_text[item_text_index][1]:
                         if item_text_piece['type'] == 'content':
                             cls.arrange_value(content_piece)
 
@@ -802,7 +812,7 @@ class Compositor:
                             Publications.add_branch(item_text_piece['value'])
 
                     # Final part of an item of the list
-                    cls._add_text_pieces_to_publication(item_text[2])
+                    cls._add_text_pieces_to_publication(items_text[item_text_index][2])
 
                 elif rule[1] == 'tag-list':
                     exit("A tag-list overlapped to a tag-list is not supported.")

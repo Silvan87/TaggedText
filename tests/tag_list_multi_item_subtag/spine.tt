@@ -1,0 +1,8 @@
+# Tag list with multi item subtags to give different style to the items
+
+#template-path template
+#publication-path pub
+
+#publish publication.html
+##content sample
+##template style
