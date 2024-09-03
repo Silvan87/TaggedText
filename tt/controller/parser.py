@@ -846,7 +846,7 @@ class _Reader:
                 if item[1] in ['file-opening', 'file-ending']:
                     Templates.set_trigger(tag_name=item[1], rule_index=index, template_name=template_name)
 
-                elif item[1] in ['catching-tag', 'tag']:
+                elif item[1] in ['tag', 'content-list', 'catching-tag']:
                     trigger_tag = Compositor.get_raw_first_value_of_item(item)
                     Templates.set_trigger(tag_name=trigger_tag, rule_index=index, template_name=template_name)
 

@@ -1,0 +1,22 @@
+#file-opening
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal publication</title>
+</head>
+<body>
+
+#file-ending
+</body>
+</html>
+
+#content-list section
+##list
+    ###content
+##item-separator
+    ###new-line
+##item
+    ###text <p>
+    ###content
+    ###text </p>
+    ###new-line

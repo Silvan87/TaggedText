@@ -117,6 +117,12 @@ class E2E(unittest.TestCase):
     def test_tag_list_multi_item_subtag(self):
         self._launch_standard_e2e_test()
 
+    def test_content_list_minimal(self):
+        self._launch_standard_e2e_test()
+
+    def test_content_list_full(self):
+        self._launch_standard_e2e_test()
+
 
 #class Functional(unittest.TestCase):
 

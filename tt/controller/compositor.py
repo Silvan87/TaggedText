@@ -1,7 +1,7 @@
 """The Compositor of tagged texts that applies template rules to the tagged content."""
 
 import os
-from enum import Enum
+
 from tt.controller.exceptions import *
 from tt.model.regex import Regex
 from tt.model.spine import spine
@@ -227,6 +227,9 @@ class ContentPiece:
             if rule_tag == 'tag':
                 Compositor.arrange_value(self)
 
+            elif rule_tag == 'content-list':
+                Compositor.arrange_content_list(self)
+
             elif rule_tag == 'catching-tag':
                 Compositor.arrange_catching_tag_value(self._template_names, self.get_found_rule().get_rule())
             else:
@@ -359,7 +362,12 @@ class Compositor:
 
         if content_data is None:
             content_data = cls.get_current_content_data()
-        value = content_data[item[0][0]][0]
+
+        piece_index = item[0]
+        if type(piece_index) is list:
+            piece_index = item[0][0]
+
+        value = content_data[piece_index][0]
 
         # If the first child is a list, there is no simple string value
         while type(value) is list:
@@ -478,18 +486,6 @@ class Compositor:
 
     @classmethod
     def arrange_value(cls, content_piece: ContentPiece):
-        """Try to arrange the value on the content developing tree managing exceptions and errors.
-
-        :param content_piece: the piece of content whose value to process and arrange in the publication.
-        """
-        try:
-            cls.try_to_arrange_value(content_piece)
-
-        except Exception as e:
-            raise e
-
-    @classmethod
-    def try_to_arrange_value(cls, content_piece: ContentPiece):
         """Arrange the value on the content developing tree by applying a template rule to an indexed content.
 
         :param content_piece: the piece of content whose value to process and arrange in the publication.
@@ -576,19 +572,187 @@ class Compositor:
                     print("rule_piece[1] not managed:", rule_piece[1])
 
     @classmethod
-    def arrange_tag_list_value(cls, content_piece: ContentPiece):
-        """Try to arrange the value of a tag list rule on the content developing tree.
+    def arrange_content_list(cls, content_piece: ContentPiece):
+        """Arrange the value of a content split into pieces and composed in a list in the publication.
 
         :param content_piece: the piece of content whose value to process and arrange in the publication.
         """
-        try:
-            return cls.try_to_arrange_tag_list_value(content_piece)
+        # lists of couples: {key: type of text piece; value: value of text piece}
+        # 1° list: the beginning of the list
+        # 2° list: the end of the list
+        # In the middle can be present only 1 content (the list of items)
+        list_text = [[], []]
+        item_separator = ''
 
-        except Exception as e:
-            raise e
+        # list of item_text subrules, each list is a list of 3 lists of couples.
+        # Lists of couple: {key: type of text piece; value: value of text piece}
+        # 1° list: the beginning of the item
+        # 2° list: the content and the things between contents of the item
+        # 3° list: the end of the item
+        items_text = []
+        item_text_index = -1
+
+        template_rule = content_piece.get_found_rule()
+        template_data = template_rule.get_template_data()
+
+        rule_piece_number = 0
+        max_piece_number = len(template_rule.get_sub_pieces())
+        while rule_piece_number < max_piece_number:
+            rule_piece_index = template_rule.get_sub_pieces()[rule_piece_number]
+            rule_piece = template_data[rule_piece_index]
+
+            if rule_piece[1] == 'list':
+                part = 0
+                for sub_rule_index in rule_piece[0]:
+                    sub_rule_piece = template_data[sub_rule_index]
+
+                    if sub_rule_piece[1] == 'text':
+                        list_text[part].append({
+                            "type": "dynamic-text",
+                            "value": [cls.look_for_rules_for_each_items, sub_rule_piece[0], template_data]
+                        })
+                    elif sub_rule_piece[1] == 'space':
+                        list_text[part].append({
+                            "type": "space",
+                            "value": " "
+                        })
+                    elif sub_rule_piece[1] == 'new-line':
+                        list_text[part].append({
+                            "type": "new-line",
+                            "value": "\n"
+                        })
+                    elif sub_rule_piece[1] == 'content':
+                        if part > 0:
+                            raise CompositorError.RepeatedContentSubtagError
+                        part += 1
+
+            elif rule_piece[1] == 'item-separator':
+                for sub_rule_index in rule_piece[0]:
+                    sub_rule_piece = template_data[sub_rule_index]
+
+                    if sub_rule_piece[1] == 'text':
+                        item_separator += Compositor.get_raw_first_value_of_item(
+                            sub_rule_piece, content_piece.get_found_rule().get_template_data()
+                        )
+
+                    elif sub_rule_piece[1] == 'space':
+                        item_separator += " "
+
+                    elif sub_rule_piece[1] == 'new-line':
+                        item_separator += "\n"
+
+                    elif sub_rule_piece[1] == '':
+                        item_separator += sub_rule_piece[0]
+
+            elif rule_piece[1] == 'item':
+                item_text_index += 1
+                items_text.append([[], [], []])
+                item_part_index = 0
+                item_last_content_index = -1
+
+                for sub_rule_index in rule_piece[0]:
+                    sub_rule_piece = template_data[sub_rule_index]
+
+                    if item_part_index == 1 and item_last_content_index != -1:
+                        if sub_rule_index > item_last_content_index:
+                            item_part_index += 1
+
+                    if sub_rule_piece[1] == 'text':
+                        items_text[item_text_index][item_part_index].append({
+                            "type": "dynamic-text",
+                            "value": [cls.look_for_rules_for_each_items, sub_rule_piece[0], template_data]
+                        })
+                    elif sub_rule_piece[1] == 'space':
+                        items_text[item_text_index][item_part_index].append({
+                            "type": "space",
+                            "value": " "
+                        })
+                    elif sub_rule_piece[1] == 'new-line':
+                        items_text[item_text_index][item_part_index].append({
+                            "type": "new-line",
+                            "value": "\n"
+                        })
+                    elif sub_rule_piece[1] == 'content':
+                        if item_part_index == 0:
+                            item_part_index += 1
+
+                        if item_last_content_index == -1:
+                            # Until there is a content subtag to be processed, the item part has to be the middle part
+                            # So it needs to find the last occurrence of content subtag.
+                            exploring_index = len(rule_piece[0]) - 1
+                            while exploring_index >= 0:
+                                exploring_rule_piece_index = rule_piece[0][exploring_index]
+                                if template_data[exploring_rule_piece_index][1] == 'content':
+                                    item_last_content_index = exploring_rule_piece_index
+                                    break
+                                exploring_index -= 1
+
+                        items_text[item_text_index][item_part_index].append({
+                            "type": "content",
+                            "value": ""
+                        })
+                    elif sub_rule_piece[1] == 'caught-tag-file-name':
+                        items_text[item_text_index][item_part_index].append({
+                            "type": "caught-tag-file-name",
+                            "value": ""
+                        })
+                    else:
+                        raise CompositorError.NotSupportedSubtagRuleError(
+                            template_rule.get_template_name(), sub_rule_piece[1]
+                        )
+            rule_piece_number += 1
+
+        # List opening
+        for list_text_piece in list_text[0]:
+            if list_text_piece['type'] == 'dynamic-text':
+                list_text_piece['value'][0](*list_text_piece['value'][1:])
+            else:
+                Publications.add_branch(list_text_piece['value'])
+
+        index = 0
+        item_text_index = -1
+
+        # Split content into items
+        contents = Compositor.get_raw_first_value_of_item(
+            content_piece.get_sub_pieces(), content_piece.get_content_data()
+        )
+        contents = contents.strip(item_separator).split(item_separator)
+
+        # List body (items from split contents)
+        while index < len(contents):
+            content = contents[index]
+
+            if item_text_index + 1 < len(items_text):
+                item_text_index += 1
+
+            # Initial part of an item of the list
+            cls._add_text_pieces_to_publication(items_text[item_text_index][0])
+
+            for item_text_piece in items_text[item_text_index][1]:
+                if item_text_piece['type'] == 'content':
+                    Publications.add_branch(content)
+
+                elif item_text_piece['type'] == 'dynamic-text':
+                    item_text_piece['value'][0](*item_text_piece['value'][1:])
+                else:
+                    Publications.add_branch(item_text_piece['value'])
+
+            # Final part of an item of the list
+            cls._add_text_pieces_to_publication(items_text[item_text_index][2])
+
+            index += 1
+
+        # List ending
+        for list_text_piece in list_text[1]:
+            if list_text_piece['type'] == 'dynamic-text':
+                list_text_piece['value'][0](*list_text_piece['value'][1:])
+            else:
+                Publications.add_branch(list_text_piece['value'])
+
+        return 1
 
     @classmethod
-    def try_to_arrange_tag_list_value(cls, content_piece: ContentPiece):
+    def arrange_tag_list_value(cls, content_piece: ContentPiece):
         """Arrange the value of a tag list rule on the content developing tree.
 
         :param content_piece: the piece of content whose value to process and arrange in the publication.
@@ -651,18 +815,18 @@ class Compositor:
                     sub_rule_piece = template_data[sub_rule_index]
 
                     if sub_rule_piece[1] == 'text':
-                        exit(  # TODO
-                            "TODO occorre trovare il modo di gestire le sottoregole condivise da più tag con un metodo "
-                            "generale"
+                        item_separator += Compositor.get_raw_first_value_of_item(
+                            sub_rule_piece, content_piece.get_found_rule().get_template_data()
                         )
+
                     elif sub_rule_piece[1] == 'space':
-                        item_separator = " "
+                        item_separator += " "
 
                     elif sub_rule_piece[1] == 'new-line':
-                        item_separator = "\n"
+                        item_separator += "\n"
 
                     elif sub_rule_piece[1] == '':
-                        item_separator = sub_rule_piece[0]
+                        item_separator += sub_rule_piece[0]
 
             elif rule_piece[1] == 'item':
                 item_text_index += 1

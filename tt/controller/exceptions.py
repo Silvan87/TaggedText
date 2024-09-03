@@ -56,7 +56,7 @@ class CompositorError:
         """A context for a text piece has the piece index without the content data."""
 
         def __init__(self):
-            self.args += ("A content index was indicated but without the content data",)
+            self.args += ("A content index was indicated but without the content data.",)
 
     class MissingExpectedTagError(SyntaxError):
         """An expected tag is missing respect to a defined tag or to a rule."""

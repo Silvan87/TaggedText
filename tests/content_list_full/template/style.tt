@@ -1,0 +1,47 @@
+#file-opening
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal publication</title>
+</head>
+<body>
+
+#file-ending
+</body>
+</html>
+
+#content-list section
+##list
+    ###new-line
+    ###text <div class="section">
+    ###content
+    ###text </div>
+    ###new-line
+##item-separator
+    ###new-line
+    ###text -
+    ###space
+##item
+    ###text <h2>
+    ###content
+    ###text </h2>
+    ###new-line
+##item
+    ###text <p>
+    ###content
+    ###text </p>
+    ###new-line
+
+#content-list footer
+##list
+    ###text <div class="footer">
+    ###content
+    ###text </div>
+    ###new-line
+##item-separator
+    ###new-line
+##item
+    ###text <p>
+    ###content
+    ###text </p>
+    ###new-line
