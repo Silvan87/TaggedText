@@ -81,7 +81,7 @@ function composeSprintBacklog() {
 }
 function removeNodesFromBacklog(toBeRemovedNodes, backlogElement) {
     let toBeRemovedNodesNum = toBeRemovedNodes.length
-    toBeRemovedNodes = toBeRemovedNodes.sort()
+    toBeRemovedNodes = toBeRemovedNodes.sort(function(a, b) { return a - b; })
     for (let n = toBeRemovedNodesNum - 1; n >= 0; n--) {
         backlogElement.children[toBeRemovedNodes[n]].remove()
     }
