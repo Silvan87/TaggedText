@@ -139,8 +139,13 @@ def _empty_folder(folder_name, file_format_list):
 
 
 def check_json_files_are_equal_to_expected_json_files(test_case):
+    if 'base_spine_custom_paths' in str(test_case):
+        json_rel_path = 'template/json'
+    else:
+        json_rel_path = 'json'
+
     _check_filtered_files_in_a_folder_with_checking_files(
-        test_case, ['json'], 'json', 'json-check'
+        test_case, ['json'], json_rel_path, 'json-check'
     )
 
 
