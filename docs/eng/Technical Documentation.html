@@ -32,6 +32,7 @@
                 <li>Composition of content and template files</li>
                 <ol type="1">
                     <li>The publication file spine</li>
+                    <li>Defining the folder of content files</li>
                     <li>Defining the folder of template files</li>
                     <li>Defining the folder of publication files</li>
                     <li>Defining a general variable</li>
@@ -208,27 +209,35 @@
 
     <p>The spine file is also written in TT. The peculiarity of the spine file (or the template files) is that some tags are special and define rules or directives to follow. The main task of the spine is to indicate the content files that will be used, specify the template files that will be used, establish which template files will be applied to various content files, and define the name and extension of the files produced following the application of the rules. Secondly, it will be possible to define general variables that can be useful to modify in order to have an effect on all points of the publication where they should appear.</p>
 
-    <p>The spine file must be placed alongside the content files, and they all must be in the same folder. Therefore, they must all have unique names. The spine file should be named 'spine.tt'; it may not be strictly necessary, but it is a recommended convention.</p>
+    <p>The spine file is placed by default with the content files and they can all be in the same folder. In any case, the TT files must have unique names. It is suggested to call the spine file 'spine.tt' but it is not necessary, you can customize this convention.</p>
 
-    <h4>2.1.2. Defining the folder of template files</h4>
+    <h4>2.1.2. Defining the folder of content files</h4>
+
+    <p>I file contenuto verranno cercati in via predefinita nella posizione del file spina, però possono essere collocati in una cartella differente. Le cartelle sono definite in modo relativo a partire dalla posizione del file 'spine.tt'. Il tag usato è <b>#content-path</b>, come nell'esempio:</p>
+
+    <code><b class="tag1">#content-path</b> source<br /></code>
+
+    <p>The example instructs to use the 'source' subfolder to find all template files. If multiple <b>#content-path</b> tags are specified, only the last one will be considered the effective one; the previous ones will be overwritten each time a <b>#content-path</b> tag is encountered. This behavior follows the principle of "cascading rules", where in the case of repeated rules or directives, instead of halting the process due to inconsistency, the previous instructions are ignored, and the last encountered one is deemed valid.</p>
+
+    <p>The folder is relative and can use the characters that are used in your operating system to define file paths. For example, if you want to navigate to the parent folder, you can use the familiar symbol <b>. .</b> or to remain in the current folder you can use <b>.</b> ; then, you can reach subfolders using <b>/</b>.</p>
+
+    <code><b class="tag1">#content-path</b> ../source/german<br /></code>
+
+    <h4>2.1.3. Defining the folder of template files</h4>
 
     <p>Template files can be placed in a different folder than the content files. The folders are defined relative to the location of the 'spine.tt' file. The tag used is <b>#template-path</b>, as in the example:</p>
 
     <code><b class="tag1">#template-path</b> template<br /></code>
 
-    <p>The example instructs to use the 'template' subfolder to find all template files. If multiple <b>#template-path</b> tags are specified, only the last one will be considered the effective one; the previous ones will be overwritten each time a <b>#template-path</b> tag is encountered. This behavior follows the principle of "cascading rules", where in the case of repeated rules or directives, instead of halting the process due to inconsistency, the previous instructions are ignored, and the last encountered one is deemed valid.</p>
+    <p>This tag follows the same peculiarities as the previous one: "cascading rules" principle, relative path and support for classic special characters of system folders.</p>
 
-    <p>The folder is relative and can use the characters that are used in your operating system to define file paths. For example, if you want to navigate to the parent folder, you can use the familiar symbol <b>. .</b>; then, you can reach subfolders using <b>/</b>.</p>
+    <h4>2.1.4. Defining the folder of publication files</h4>
 
-    <code><b class="tag1">#template-path</b> ../templates/mybook<br /></code>
-
-    <h4>2.1.3. Defining the folder of publication files</h4>
-
-    <p>The content files and template files will need to generate a publication, also referred to as "distributable files." Therefore, it is necessary to specify a folder where the distributable files (which can be more than one) will be gathered. The tag to use is <b>#publication-path</b>. It follows the principle of "cascading rules" mentioned above, and the value should be a relative folder as in the previous example.</p>
+    <p>The content files and template files will need to generate a publication, also referred to as "distributable files." Therefore, it is necessary to specify a folder where the distributable files (which can be more than one) will be gathered. The tag to use is <b>#publication-path</b>. This one also follows the same peculiarities as the previous tags.</p>
 
     <code><b class="tag1">#publication-path</b> pub<br /><b class="tag1">#publication-path</b> ../publications/mywork<br /></code>
 
-    <h4>2.1.4. Defining a general variable</h4>
+    <h4>2.1.5. Defining a general variable</h4>
 
     <p>It can be useful to define a value that repeats often in the publication, but we are not yet certain if the found value is final or subject to change. For instance, the title of a book, the name of a character, or the name of a location, etc. Therefore, in template files, we have the option to use rules that retrieve the value from a general variable, perhaps applied to an empty-content tag like <b>#hero-name#</b>. To define a general variable in the spine file, the <b>#var</b> tag is used in the following way:</p>
 
@@ -236,7 +245,7 @@
 
     <p>In the example, you can see that the main tag <b>#var</b> defines the name of the variable, while the secondary tag <b>##text</b> defines the textual value of that variable.</p>
 
-    <h4>2.1.5. Defining a list of files</h4>
+    <h4>2.1.6. Defining a list of files</h4>
 
     <p>Since the spine file can apply the same pattern to multiple content files, it is useful to have the name of a list of content files. It will be possible with the tag <b>#file-list</b> followed by the name of the list and the subtag <b>##files</b> which will have as its value the list of files that will be part of that list. File names must be separated by a space. If there are spaces in the file name, you cannot use this tag, but you must specify names containing a space with the subtag <b>##file</b>. Some examples:</p>
 
@@ -244,7 +253,7 @@
 
     <p>The content files are always TT files with the '.tt' extension, but in the 'spine.tt' file, you can omit the extension because it is implied, or you can specify it if desired. A list of files can be either a list of content files or a list of template files. The list of template files can gather many potentially inconsistent rules (especially when using multiple files at once), but the rules will be applied according to the cascade principle. That is, if a rule is repeated and shows a variation from a previous one, the latest version encountered by the software will be applied.</p>
 
-    <h4>2.1.6. Applying templates to a single content file</h4>
+    <h4>2.1.7. Applying templates to a single content file</h4>
 
     <p>The most distinctive tag in the 'spine' file is <b>#publish</b>. In fact, it indicates the name of the file to be published, along with its extension (or file format), which will be generated using a content file following the application of rules from a template file. An example follows.</p>
 
@@ -258,7 +267,7 @@
 
     <p>As you can see, a special chapter called 'epilogue' may need the rules specified for each chapter within 'chapter-style.tt', but also some additional rules present in 'presentation-style.tt'. We could also place a list of template files in a <b>#file-list</b> tag and call this list of templates 'epilogue-style'.</p>
 
-    <h4>2.1.7. Applying templates to a list of content files</h4>
+    <h4>2.1.8. Applying templates to a list of content files</h4>
 
     <p>Just as you can use a list for template files, you can also use a list for content files. We can consider the previous example list 'chapters' containing the files 'chapter1.tt', 'chapter2.tt', 'chapter3.tt' and write this other example:</p>
 
@@ -268,7 +277,7 @@
 
     <p>In the given example, you can imagine a title for the bibliography and a long list of numbered URLs. The 'bibliography.tt' file will contain the title and the definition of this list, but to compile that list, you will need to consult all the chapters of the book where the web addresses appear. For this reason, the <b>#content</b> tag must include the entire list of chapters through the name of the aforementioned list.</p>
 
-    <h4>2.1.8. Publishing a list of files using a list of content files</h4>
+    <h4>2.1.9. Publishing a list of files using a list of content files</h4>
 
     <p>We have seen that, when specifying a list of files, it can be associated with the subtag <b>##template</b>, the subtag <b>##content</b>, and also with the primary tag <b>#publish</b>. In this case, with a single "publish" directive, multiple files will be published simultaneously. The only condition to be met is that the number of files indicated on <b>#publish</b> through the list must be equal to the number of content files indicated on <b>##content</b>. This way, the first "publish" file will be generated with the first file from "content", the second "publish" file will receive the second file from "content," and so on. If the numbers do not match, an error will be generated, and the publishing process will be interrupted.</p>
 

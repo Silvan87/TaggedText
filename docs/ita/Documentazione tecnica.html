@@ -32,6 +32,7 @@
                 <li>Composizione dei file contenuto e modello</li>
                 <ol type="1">
                     <li>Il file spina della pubblicazione</li>
+                    <li>Definire la cartella dei file contenuto</li>
                     <li>Definire la cartella dei file modello</li>
                     <li>Definire la cartella della pubblicazione</li>
                     <li>Definire una variabile generale</li>
@@ -210,27 +211,35 @@
 
     <p>Il file spina è anch'esso scritto in TT, la particolarità del file spina (o dei file modello) è che alcuni tag sono speciali e definiscono regole o direttive da seguire. Il compito principale della spina è indicare i file contenuto che verranno usati, indicare i file modello che verrano usati, stabilire quali file modello verranno applicati ai vari file contenuto, e definire il nome e l'estensione dei file prodotti a seguito dell'applicazione delle regole. Secondariamente, sarà possibile definire delle variabili generali che possono tornare utili da modificare per avere un effetto su tutti i punti della pubblicazione dove esse dovranno comparire.</p>
 
-    <p>Il file spina deve essere collocato insieme ai file contenuto e devono stare tutti insieme nella stessa cartella. Quindi dovranno per forza avere anche tutti nomi unici. Il file spina dovrà chiamarsi 'spine.tt' non sarà strettamente necessario quel nome, ma sarà una convenzione raccomandata.</p>
+    <p>Il file spina in via predefinita viene collocato insieme ai file contenuto e possono stare tutti insieme nella stessa cartella. In ogni caso i file TT dovranno per forza avere tutti nomi unici. Si suggerisce di chiamare il file spina 'spine.tt' ma non è necessario, si può personalizzare questa convenzione.</p>
 
-    <h4>2.1.2. Definire la cartella dei file modello</h4>
+    <h4>2.1.2. Definire la cartella dei file contenuto</h4>
+
+    <p>I file contenuto verranno cercati in via predefinita nella posizione del file spina, però possono essere collocati in una cartella differente. Le cartelle sono definite in modo relativo a partire dalla posizione del file 'spine.tt'. Il tag usato è <b>#content-path</b>, come nell'esempio:</p>
+
+    <code><b class="tag1">#content-path</b> source<br /></code>
+
+    <p>L'esempio dice di usare la sottocartella 'source' per trovare tutti i file contenuto. Se più tag <b>#content-path</b> vengono specificati, solo l'ultimo sarà considerato quello effettivo, i precedenti saranno di volta in volta sovrascritti ad ogni incontro di <b>#content-path</b>. Questo comportamento segue il principio delle "regole a cascata", nel caso di regole o direttive ripetute anziché bloccare il processo per incoerenza, si ignorano le istruzioni precedenti e si ritiene valida l'ultima incontrata.</p>
+
+    <p>La cartella è relativa e può usare i caratteri che nel proprio sistema operativo sono usati per definire i percorsi dei file. Per esempio, se si volesse risalire alla cartella padre si può usare il noto simbolo <b>. .</b> o anche indicare la stessa cartella in cui ci troviamo con <b>.</b> , inoltre possiamo raggiungere sottocartelle con <b>/</b>.</p>
+
+    <code><b class="tag1">#content-path</b> ../source/german<br /></code>
+
+    <h4>2.1.3. Definire la cartella dei file modello</h4>
 
     <p>I file modello possono essere collocati in una cartella differente rispetto ai file di contenuto. Le cartelle sono definite in modo relativo a partire dalla posizione del file 'spine.tt'. Il tag usato è <b>#template-path</b>, come nell'esempio:</p>
 
     <code><b class="tag1">#template-path</b> template<br /></code>
 
-    <p>L'esempio dice di usare la sottocartella 'template' per trovare tutti i file template. Se più tag <b>#template-path</b> vengono specificati, solo l'ultimo sarà considerato quello effettivo, i precedenti saranno di volta in volta sovrascritti ad ogni incontro di <b>#template-path</b>. Questo comportamento segue il principio delle "regole a cascata", nel caso di regole o direttive ripetute anziché bloccare il processo per incoerenza, si ignorano le istruzioni precedenti e si ritiene valida l'ultima incontrata.</p>
+    <p>Questo tag segue le stesse particolarità del precedente: principio delle "regole a cascata", percorso relativo e supporto ai classici caratteri speciali delle cartelle di sistema.</p>
 
-    <p>La cartella è relativa e può usare i caratteri che nel proprio sistema operativo sono usati per definire i percorsi dei file. Per esempio, se si volesse risalire alla cartella padre si può usare il noto simbolo <b>. .</b> , inoltre possiamo raggiungere sottocartelle con <b>/</b>.</p>
+    <h4>2.1.4. Definire la cartella della pubblicazione</h4>
 
-    <code><b class="tag1">#template-path</b> ../templates/mybook<br /></code>
-
-    <h4>2.1.3. Definire la cartella della pubblicazione</h4>
-
-    <p>I file contenuto e i file modello dovranno generare una pubblicazione o anche detti "file distribuibili". Quindi serve specificare una cartella dove i file distribuibili (che possono essere più di uno) verranno raccolti. Il tag da usare è <b>#publication-path</b>. Esso segue il principio delle "regole a cascata" visto sopra, e il valore dovrà essere una cartella relativa come nell'esempio precedente.</p>
+    <p>I file contenuto e i file modello dovranno generare una pubblicazione o anche detti "file distribuibili". Quindi serve specificare una cartella dove i file distribuibili (che possono essere più di uno) verranno raccolti. Il tag da usare è <b>#publication-path</b>. Anch'esso segue le stesse particolarità dei precedenti tag.</p>
 
     <code><b class="tag1">#publication-path</b> pub<br /><b class="tag1">#publication-path</b> ../publications/mywork<br /></code>
 
-    <h4>2.1.4. Definire una variabile generale</h4>
+    <h4>2.1.5. Definire una variabile generale</h4>
 
     <p>Può essere utile definire un valore che si ripete spesso nella pubblicazione, ma non siamo ancora sicuri se il valore che abbiamo trovato è quello definitivo o potremmo cambiarlo. Per esempio, il titolo di un libro o il nome di un personaggio o il nome di una località, ecc. Quindi nei file modello avremo la possibilità di usare regole che recuperano il valore da una variabile generale magari applicata ad un tag senza contenuto tipo <b>#nome-eroe#</b>. Per definire una variabile generale nel file spina si usa il tag <b>#var</b> in questo modo:</p>
 
@@ -238,7 +247,7 @@
 
     <p>Nell'esempio si può vedere che il tag principale <b>#var</b> definisce il nome della variabile, mentre il tag secondario <b>##text</b> definisce il valore testuale di quella variabile.</p>
 
-    <h4>2.1.5. Definire una lista di file</h4>
+    <h4>2.1.6. Definire una lista di file</h4>
 
     <p>Siccome il file spina può applicare lo stesso modello a più file contenuto, è utile avere il nome di una lista di file contenuto. Ciò sarà possibile con il tag <b>#file-list</b> seguito dal nome della lista e il sotto tag <b>##files</b> che avrà come valore l'elenco dei file che faranno parte di quella lista. I nomi dei file devono essere separati da uno spazio. Se ci sono spazi nel nome del file, allora non si può usare questo tag, ma si devono specificare i nomi contenenti uno spazio con il sotto tag <b>##file</b>. Alcuni esempi:</p>
 
@@ -246,7 +255,7 @@
 
     <p>I file contenuto sono sempre file TT con l'estensione '.tt', ma nel file 'spine.tt' si può omettere l'estensione perché è sottointesa, oppure specificarla se lo si desidera. Una lista di file può essere sia una lista di file contenuto che una lista di file modello. La lista di file modello può raccogliere molte regole potenzialmente incoerenti tra loro (soprattutto usando più file per volta), ma le regole verranno applicate secondo il principio a cascata, ovvero se una regola è ripetuta e mostra una variazione rispetto ad una precedente, verrà applicata l'ultima versione incontrata dal software.</p>
 
-    <h4>2.1.6. Applicare dei modelli ad un file contenuto</h4>
+    <h4>2.1.7. Applicare dei modelli ad un file contenuto</h4>
 
     <p>Il tag più caratterizzante del file spina è <b>#publish</b>. Infatti, esso indica il nome del file da pubblicare con la sua estensione (o formato del file) che verrà generato usando un file contenuto a seguito dell'applicazione delle regole di un file modello. Segue un esempio.</p>
 
@@ -260,7 +269,7 @@
 
     <p>Come si vede, un capitolo speciale chiamato 'epilogo' potrebbe aver bisogno delle regole specificate per ogni capitolo dentro 'stile-capitolo.tt', ma anche di alcune regole aggiuntive presenti in 'stile-presentazione.tt'. Potremmo anche mettere un elenco di file modello in un tag <b>#file-list</b> e chiamare questa lista di modelli 'stile-epilogo'.</p>
 
-    <h4>2.1.7. Applicare dei modelli ad una lista di file contenuto</h4>
+    <h4>2.1.8. Applicare dei modelli ad una lista di file contenuto</h4>
 
     <p>Così come si può usare una lista per i file modello, si può usare una lista anche per i file contenuto. Possiamo considerare la precedente lista di esempio 'capitoli' che conteneva i file 'capitolo1.tt', 'capitolo2.tt', 'capitolo3.tt' e scrivere quest'altro esempio:</p>
 
@@ -270,7 +279,7 @@
 
     <p>Nell'esempio dato si può immaginare un titolo per la sitografia e un lungo elenco di URL numerati. Il file 'sitografia.tt' conterrà il titolo e la definizione di questo elenco, però per comporre quell'elenco bisognerà consultare tutti i capitoli del libro dove gli indirizzi dei siti web compaiono, per questo il tag <b>#content</b> deve includere tutta la lista dei capitoli tramite il nome della suddetta lista.</p>
 
-    <h4>2.1.8. Pubblicare una lista di file usando una lista di file contenuto</h4>
+    <h4>2.1.9. Pubblicare una lista di file usando una lista di file contenuto</h4>
 
     <p>Abbiamo visto che specificata una lista di file, questa si può associare al sotto tag <b>##template</b>, al sotto tag <b>##content</b>, ma anche al tag primario <b>#publish</b>. In questo caso, con una sola direttiva "publish" (pubblica) verranno pubblicati più file contemporaneamente. L'unica condizione da rispettare è che il numero di file tramite lista indicati su <b>#publish</b> deve essere uguale al numero di file di contenuto indicati su <b>##content</b>, in questo modo il primo file "publish" verrà generato con il primo file su "content", il secondo file "publish" riceverà il secondo file da "content" e così via. Se i numeri non corrispondono verrà generato un errore e interrotto il processo di pubblicazione.</p>
 
