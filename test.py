@@ -1,6 +1,7 @@
 import unittest
 import tt
 from tests._tester import *
+from tests._tester.main import _empty_folder
 from tt.controller.exceptions import *
 
 
@@ -16,9 +17,15 @@ class E2E(unittest.TestCase):
 
         # given
         Paths.set_test_rel_folder('tests/' + test_id)
-        Paths.set_test_file_list(['spine.tt', 'sample.tt', 'template/style.tt'])
-        check_test_assets_existence(self)
-        empty_json_and_pub_folders()
+        if test_id == "base_spine_custom_paths":
+            Paths.set_test_file_list(['template/spine.tt', 'sample.tt', 'template/style.tt'])
+            check_test_assets_existence(self)
+            _empty_folder('template/json', ['json'])
+        else:
+            Paths.set_test_file_list(['spine.tt', 'sample.tt', 'template/style.tt'])
+            check_test_assets_existence(self)
+            empty_json_and_pub_folders()
+
         print_first_line_of_spine()
 
     def _launch_standard_e2e_test(self):
@@ -30,7 +37,7 @@ class E2E(unittest.TestCase):
             self._when_write_publication_with_spine()
 
         except Exception as e:
-            if type(e) == type(exception):
+            if type(e) is type(exception):
                 print(f"The expected exception has been raised {type(e)}")
             else:
                 self.fail(f"The expected exception is {type(exception)}, but the exception {type(e)} has been raised.")
@@ -43,6 +50,9 @@ class E2E(unittest.TestCase):
         check_pub_files_are_equal_to_expected_pub_files(self)
 
     def test_base_spine_empty_template(self):
+        self._launch_standard_e2e_test()
+
+    def test_base_spine_custom_paths(self):
         self._launch_standard_e2e_test()
 
     def test_base_spine_file_opening_ending(self):
