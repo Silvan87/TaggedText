@@ -501,7 +501,7 @@ class Parser:
 
         :param tt_spine_rel_path: the relative path of tt spine file respect to make.py
         """
-        _Reader.parse_spine(tt_spine_rel_path)
+        _Reader.initialize_and_parse_spine(tt_spine_rel_path)
         _Reader.parse_required_tagged_texts()
 
 
@@ -510,7 +510,7 @@ class _Reader:
     structure in the memory."""
 
     @classmethod
-    def parse_spine(cls, tt_spine_rel_path: str):
+    def initialize_and_parse_spine(cls, tt_spine_rel_path: str):
         """Parse the spine file to prepare the steps of the whole process setting all the needed variables.
 
         :param tt_spine_rel_path: the relative path of tt spine file respect to make.py
@@ -518,16 +518,10 @@ class _Reader:
         spine.initialize()
         spine.paths.prepare_reading_starting_from_spine_path(tt_spine_rel_path)
         cls._parse_tt_file(os.path.basename(tt_spine_rel_path), TtType.SPINE)
-
-        try:
-            cls._try_to_parse_spine()
-
-        except (ReaderError.TtNameUsedAsTemplateNameError,
-                ReaderError.PublicationFileWithoutContentFile) as error:
-            error.stop_process_with_error_message()
+        cls._parse_spine()
 
     @classmethod
-    def _try_to_parse_spine(cls):
+    def _parse_spine(cls):
 
         class _TagManager:
             """To manage the special tags used in the spine file. The subclass Tag allows to extend special tags."""
@@ -556,6 +550,12 @@ class _Reader:
                 """All the managed special tags in the spine file. You can create a new class method with the name in
                 snake_case, then you can use in the spine file the new tag with the same name of the new method but in
                 kebab-case."""
+
+                @classmethod
+                def content_path(cls):
+                    """To define the path where to find the contents."""
+
+                    spine.set_content_path(Compositor.get_raw_first_value_of_item(definition))
 
                 @classmethod
                 def template_path(cls):
@@ -734,6 +734,7 @@ class _Reader:
                 associated_template_list = spine.get_template_list_of_current_pub_item()
                 template_mod_date = Templates.get_latest_modification_date_from_template_name_list(
                     associated_template_list)
+
         json_file_name = spine.paths.put_file_ext(tt_file_name, 'json')
         spine.paths.set_current_json_file_abs_path(json_file_name)
         spine.append_detected_tt_file(tt_file_name)
