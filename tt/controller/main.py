@@ -16,14 +16,6 @@ def write_publication_with_spine(tt_spine_rel_path: str):
 
     :param tt_spine_rel_path: the relative path of tt spine file respect to make.py
     """
-    try:
-        try_write_publication_with_spine(tt_spine_rel_path)
-
-    except Exception as e:
-        raise e
-
-
-def try_write_publication_with_spine(tt_spine_rel_path: str):
     Parser.parse_spine_and_all_required_files(tt_spine_rel_path)
     Compositor.apply_templates()
     Publisher.write_publication()
