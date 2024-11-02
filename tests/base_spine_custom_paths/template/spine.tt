@@ -1,0 +1,9 @@
+# A not tagged text with custom paths
+
+#content-path ..
+#template-path .
+#publication-path ../pub
+
+#publish publication.html
+##content sample
+##template style
