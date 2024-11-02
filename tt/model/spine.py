@@ -128,6 +128,13 @@ class Spine:
         """
         self.__init__()
 
+    def set_content_path(self, rel_folder: str):
+        """Set the path of the folder of the content files.
+
+        :param rel_folder: the relative folder of the content files.
+        """
+        self.paths.set_tt_files_rel_folder(rel_folder)
+
     def set_template_path(self, rel_folder: str):
         """Set the path of the folder of the template files.
 
@@ -398,6 +405,7 @@ class Paths:
         """
         self.spine = spine_instance
         self.make_file_abs_folder = py_path[0]
+        self.spine_rel_folder = ''
         self.tt_files_rel_folder = ''
         self.template_files_rel_folder = ''
         self.publication_files_rel_folder = ''
@@ -418,22 +426,22 @@ class Paths:
     def get_json_files_abs_folder(self):
         """Get the absolute folder of the intermediate json files."""
 
-        return os.path.join(self.make_file_abs_folder, self.tt_files_rel_folder, 'json')
+        return os.path.join(self.make_file_abs_folder, self.spine_rel_folder, 'json')
 
     def get_template_files_abs_folder(self):
         """Get the absolute folder of the template files."""
 
-        return os.path.join(self.make_file_abs_folder, self.tt_files_rel_folder, self.template_files_rel_folder)
+        return os.path.join(self.make_file_abs_folder, self.spine_rel_folder, self.template_files_rel_folder)
 
     def get_template_files_rel_folder(self):
         """Get the relative folder of the template files."""
 
-        return os.path.join(self.tt_files_rel_folder, self.template_files_rel_folder)
+        return os.path.join(self.spine_rel_folder, self.template_files_rel_folder)
 
     def get_publication_files_abs_folder(self):
         """Get the absolute folder of the publication files."""
 
-        return os.path.join(self.make_file_abs_folder, self.tt_files_rel_folder, self.publication_files_rel_folder)
+        return os.path.join(self.make_file_abs_folder, self.spine_rel_folder, self.publication_files_rel_folder)
 
     def get_tt_file_abs_path(self, file_name: str):
         """Get the absolute path of a tt content file.
@@ -458,7 +466,7 @@ class Paths:
         if os.path.isfile(self.current_tt_file_abs_path):
             return self.current_tt_file_abs_path
 
-    def get_current_json_file_abs_path(self, existing_file: bool=True):
+    def get_current_json_file_abs_path(self, existing_file: bool = True):
         """Get the current json file abs path, only if requested it should also exist.
 
         :param existing_file: True or False if the file should also exist, or it is not required.
@@ -491,7 +499,10 @@ class Paths:
 
         :param rel_folder: the relative folder of the tt content files.
         """
-        self.tt_files_rel_folder = rel_folder
+        if not self.tt_files_rel_folder:
+            self.tt_files_rel_folder = rel_folder
+        else:
+            self.tt_files_rel_folder = os.path.join(self.tt_files_rel_folder, rel_folder)
 
     def set_current_tt_file_abs_path(self, abs_path: str):
         """Set the absolute path of the current tt content file.
@@ -520,6 +531,8 @@ class Paths:
         print('Making a publication by reading ' + tt_spine_rel_path)
         if not os.path.isfile(tt_spine_rel_path):
             raise FileNotFoundError(f"The file {tt_spine_rel_path} does not exist.")
+
+        self.spine_rel_folder = os.path.dirname(tt_spine_rel_path)
         self.set_tt_files_rel_folder(os.path.dirname(tt_spine_rel_path))
         self.make_directory(self.get_json_files_abs_folder())
         self.spine.append_json_file_name(os.path.basename(tt_spine_rel_path))
