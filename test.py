@@ -21,6 +21,10 @@ class E2E(unittest.TestCase):
             Paths.set_test_file_list(['template/spine.tt', 'sample.tt', 'template/style.tt'])
             check_test_assets_existence(self)
             _empty_folder('template/json', ['json'])
+        elif test_id == "base_spine_pub_file_with_spaces":
+            Paths.set_test_file_list(['spine.tt', 'sample with spaces.tt', 'template/style with spaces.tt'])
+            check_test_assets_existence(self)
+            _empty_folder('template/json', ['json'])
         else:
             Paths.set_test_file_list(['spine.tt', 'sample.tt', 'template/style.tt'])
             check_test_assets_existence(self)
@@ -53,6 +57,15 @@ class E2E(unittest.TestCase):
         self._launch_standard_e2e_test()
 
     def test_base_spine_custom_paths(self):
+        self._launch_standard_e2e_test()
+
+    def test_base_spine_pub_file_with_spaces(self):
+        self._launch_standard_e2e_test()
+
+    def test_base_spine_multi_content_multi_template(self):
+        self._launch_standard_e2e_test()
+
+    def test_base_spine_subtags_contents_templates(self):
         self._launch_standard_e2e_test()
 
     def test_base_spine_file_opening_ending(self):

@@ -1,0 +1,8 @@
+# A spine with subtag contents and subtag templates
+
+#template-path template
+#publication-path pub
+
+#publish publication.html
+##contents sample additional_content
+##templates style additional_style

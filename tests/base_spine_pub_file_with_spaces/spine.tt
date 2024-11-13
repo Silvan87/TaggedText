@@ -1,0 +1,8 @@
+# A spine with publish, content, template files with spaces in the names
+
+#template-path template
+#publication-path pub
+
+#publish publication with spaces.html
+##content sample with spaces
+##template style with spaces

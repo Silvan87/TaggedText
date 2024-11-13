@@ -1,0 +1,12 @@
+[
+[[1], "template-path"],
+["template", ""],
+[[3], "publication-path"],
+["pub", ""],
+[[5, 6, 8], "publish"],
+["publication.html", ""],
+[[7], "contents"],
+["sample additional_content", ""],
+[[9], "templates"],
+["style additional_style", ""]
+]

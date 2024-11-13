@@ -1,0 +1,12 @@
+[
+[[1], "template-path"],
+["template", ""],
+[[3], "publication-path"],
+["pub", ""],
+[[5, 6, 8], "publish"],
+["publication with spaces.html", ""],
+[[7], "content"],
+["sample with spaces", ""],
+[[9], "template"],
+["style with spaces", ""]
+]
