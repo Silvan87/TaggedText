@@ -592,46 +592,46 @@ class _Reader:
                     """To publish a file or a list of files defining an extension (file format), a content file or a
                     list of content files and a template or a list of templates."""
 
+                    publishing_name = Compositor.get_raw_first_value_of_item(definition)
                     pub_format = Compositor.get_raw_subtag_value_of_tag(definition, 'format')
-
-                    pub_file_and_list_names = Regex.whitespace_split(
-                        Compositor.get_raw_first_value_of_item(definition)
-                    )
                     pub_file_names = []
 
-                    for name in pub_file_and_list_names:
-                        name_with_format = name.split('.')
-                        file_name = name_with_format[0]
+                    name_with_format = publishing_name.split('.', maxsplit=1)
 
-                        if pub_format == '' and len(name_with_format) > 1:
-                            pub_format = name_with_format[1]
+                    if pub_format == '' and len(name_with_format) > 1:
+                        pub_format = name_with_format[1]
 
-                        if spine.has_file_list_named(name):
-                            list_name = name
-                            for name_from_list in spine.get_file_name_list(list_name):
-                                pub_file_names.append(name_from_list)
-                        else:
-                            pub_file_names.append(name)
+                    if spine.has_file_list_named(publishing_name):
+                        pub_file_names += spine.get_file_name_list(publishing_name)
+                    else:
+                        pub_file_names.append(publishing_name)
 
-                    content_file_and_list_names = Regex.whitespace_split(
-                        Compositor.get_raw_subtag_value_of_tag(definition, 'content')
+                    content_file_and_list_names = Compositor.get_raw_subtag_value_of_tag(definition, 'content')
+                    if type(content_file_and_list_names) is not list:
+                        content_file_and_list_names = [content_file_and_list_names]
+
+                    content_file_and_list_names += Regex.whitespace_split(
+                        Compositor.get_raw_subtag_value_of_tag(definition, 'contents')
                     )
+                    content_file_and_list_names = list(filter(bool, content_file_and_list_names))
                     content_file_names = []
 
                     for name in content_file_and_list_names:
-                        name_with_format = name.split('.')
-                        file_name = name_with_format[0]
-
                         if spine.has_file_list_named(name):
-                            list_name = name
-                            for name_from_list in spine.get_file_name_list(list_name):
-                                content_file_names.append(name_from_list)
+                            content_file_names += spine.get_file_name_list(name)
                         else:
                             content_file_names.append(name)
 
-                    template_file_and_list_names = Regex.whitespace_split(
-                        Compositor.get_raw_subtag_value_of_tag(definition, 'template')
+                    content_file_names = list(filter(bool, content_file_names))
+
+                    template_file_and_list_names = Compositor.get_raw_subtag_value_of_tag(definition, 'template')
+                    if type(template_file_and_list_names) is not list:
+                        template_file_and_list_names = [template_file_and_list_names]
+
+                    template_file_and_list_names += Regex.whitespace_split(
+                        Compositor.get_raw_subtag_value_of_tag(definition, 'templates')
                     )
+                    template_file_and_list_names = list(filter(bool, template_file_and_list_names))
                     template_file_names = []
 
                     for name in template_file_and_list_names:
@@ -642,6 +642,8 @@ class _Reader:
                         else:
                             Templates.initialize(name)
                             template_file_names.append(name)
+
+                    template_file_names = list(filter(bool, template_file_names))
 
                     if len(pub_file_names) > 1:
                         if len(pub_file_names) != len(content_file_names):
@@ -677,7 +679,7 @@ class _Reader:
         """Parse all the needed tt files (tt contents and templates) into json files or load them from the previous
         up-to-date json files. Then prepare the triggers tags and the rules from the templates."""
 
-        # Associate each publication file name to a publication info item thru an index and collect each pub file name.
+        # Associate each pub file name to a publication info item through an index and collect each pub file name.
         pub_info_index = 0
         for pub_item in spine.get_pub_info_list():
             spine.associate_pub_file_name_to_info_item_index(pub_item.get_file_name(), pub_info_index)
@@ -686,9 +688,9 @@ class _Reader:
             pub_info_index += 1
 
         # Parse each tt template file.
-        for input_file_name in Templates.get_tt_file_names():
-            input_file_name = spine.paths.put_file_ext(input_file_name, 'tt')
-            cls._parse_tt_file(input_file_name, TtType.TEMPLATE)
+        for tt_file_name in Templates.get_tt_file_names():
+            tt_file_name = spine.paths.put_file_ext(tt_file_name, 'tt')
+            cls._parse_tt_file(tt_file_name, TtType.TEMPLATE)
 
         # Parse each tt content file.
         for tt_file_name in spine.get_tt_content_file_names():
@@ -739,7 +741,7 @@ class _Reader:
         spine.paths.set_current_json_file_abs_path(json_file_name)
         spine.append_detected_tt_file(tt_file_name)
 
-        # Load json file only if the tt source and all of the its templates are older than it
+        # Load json file only if the tt source and all of its templates are older than it
         json_file_exists = spine.paths.get_current_json_file_abs_path()
         is_tt_source_newer = True
         is_one_template_newer = True

@@ -163,7 +163,7 @@ class Spine:
         :param list_name: the name of a list to check.
         :return: True or False according to the existence of a list with the requested name.
         """
-        if list_name in self._file_name_lists:
+        if type(list_name) is str and list_name in self._file_name_lists:
             return True
         else:
             return False

@@ -402,7 +402,8 @@ class Compositor:
     def get_raw_subtag_value_of_tag(
             cls, item: list, subtag: str, default='', content_data: list = None, with_index: bool = False
         ):
-        """Get a simple string from a subtag corresponding to a specified tag.
+        """Get a simple string from a subtag corresponding to a specified tag. If more sub tags are present, a list of
+        simple strings are returned.
 
         :param item: the item where to search for the sub item.
         :param subtag: the tag requested for the sub item.
@@ -410,23 +411,36 @@ class Compositor:
         :param content_data: the content data where to search for the item and its sub items.
         :param with_index: True to get a tuple with the index of the sub item and its value.
         :return: the string value of a sub item tagged as requested. With with_index=True a tuple is returned as defined
-        above.
+        above. If more sub tags are found, a tuple of lists is returned: a list of indexes and a list of strings.
         """
         if content_data is None:
             content_data = cls.get_current_content_data()
 
+        indexes = []
+        strings = []
+
         for child_index in item[0]:
             child = content_data[child_index]
             if child[1] == subtag:
-                if with_index:
-                    return child_index, cls.get_raw_first_value_of_item(child, content_data)
-                else:
-                    return cls.get_raw_first_value_of_item(child, content_data)
+                indexes.append(child_index)
+                strings.append(cls.get_raw_first_value_of_item(child, content_data))
 
-        if default:
-            return default
+        if len(indexes) == 0:
+            if default:
+                return default
+            else:
+                return ''
+
+        elif len(indexes) == 1:
+            if with_index:
+                return indexes[0], strings[0]
+            else:
+                return strings[0]
         else:
-            return ''
+            if with_index:
+                return indexes, strings
+            else:
+                return strings
 
     @classmethod
     def get_raw_next_tag_value(cls, content_data: list, start_index: int, next_tag: str, default: str = ''):
