@@ -263,19 +263,27 @@
 
     <p>We can also specify multiple template files to apply in cascade, for example:</p>
 
-    <code><b class="tag1">#publish</b> epilogue<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> epilogue<br /><b class="tag2">##template</b> chapter-style presentation-style<br /></code>
+    <p>We can also specify multiple template files to apply in cascade, using the plural version of the subtag <b>##templates</b>, for example:</p>
 
-    <p>As you can see, a special chapter called 'epilogue' may need the rules specified for each chapter within 'chapter-style.tt', but also some additional rules present in 'presentation-style.tt'. We could also place a list of template files in a <b>#file-list</b> tag and call this list of templates 'epilogue-style'.</p>
+    <code><b class="tag1">#publish</b> epilogue<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> epilogue<br /><b class="tag2">##templates</b> chapter-style presentation-style<br /></code>
+
+    <p>As you can see, a special chapter called 'epilogue' might need the rules specified for each chapter in 'chapter-style.tt', but also some additional rules in 'presentation-style.tt'. We could also place a list of template files in a <b>#file-list</b> tag and call this list of templates 'epilogue-style'. Another possibility is to use the <b>##template</b> subtag multiple times, which is necessary because if the names contain spaces, since spaces distinguish one file from another in <b>##templates</b>, we also need a way to indicate a name that includes spaces:</p>
+
+    <code><b class="tag1">#publish</b> epilogue<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> epilogue<br /><b class="tag2">##template</b> chapter style<br /><b class="tag2">##template</b> presentation style<br /></code>
 
     <h4>2.1.8. Applying templates to a list of content files</h4>
 
     <p>Just as you can use a list for template files, you can also use a list for content files. We can consider the previous example list 'chapters' containing the files 'chapter1.tt', 'chapter2.tt', 'chapter3.tt' and write this other example:</p>
 
-    <code><b class="tag1">#publish</b> sitography<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> sitography chapters<br /><b class="tag2">##template</b> presentation-style<br /></code>
+    <code><b class="tag1">#publish</b> sitography<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> sitography<br /><b class="tag2">##content</b> chapters<br /><b class="tag2">##template</b> presentation-style<br /></code>
 
     <p>When there are multiple specified content files, the first content file is like the "spine" of the group of files from which to get content. In fact, it serves as a starting point, a sequence of tags to process, and an endpoint; this task always falls to the first content file. The other content files will not be processed like the first one, but they will be available as material if the first file has rules that extract content from the other files. You will see <em>how</em> this happens with template rules.</p>
 
-    <p>In the given example, you can imagine a title for the bibliography and a long list of numbered URLs. The 'bibliography.tt' file will contain the title and the definition of this list, but to compile that list, you will need to consult all the chapters of the book where the web addresses appear. For this reason, the <b>#content</b> tag must include the entire list of chapters through the name of the aforementioned list.</p>
+    <p>When there are multiple specified content files, the first content file is like the "spine" of the group of files from which to get content. In fact, it serves as a starting point, a sequence of tags to process, and an endpoint; this task always falls to the first content file. The other content files will not be processed like the first one, but they will be available as material if the first file has rules that extract content from the other files. We will see <em>how</em> this happens with template rules. Similarly to 'template' and 'templates', we also have <b>##content</b> and <b>##contents</b>, here is the second example:</p>
+
+    <code><b class="tag1">#publish</b> sitography<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> sitography<br /><b class="tag2">##contents</b> chapters presentation-style<br /></code>
+
+    <p>In the given example, you can imagine a title for the bibliography and a long list of numbered URLs. The 'bibliography.tt' file will contain the title and the definition of this list, but to compile that list, you will need to consult all the chapters of the book where the web addresses appear. For this reason, the <b>#contents</b> tag must include the entire list of chapters through the name of the aforementioned list.</p>
 
     <h4>2.1.9. Publishing a list of files using a list of content files</h4>
 

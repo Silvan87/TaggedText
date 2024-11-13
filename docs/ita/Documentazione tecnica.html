@@ -263,21 +263,25 @@
 
     <p>In questo caso abbiamo un file 'indice.html' che verrà pubblicato leggendo il contenuto su 'indice.tt' e applicando le regole del file modello (template) 'stile-presentazione.tt', ricordando gli esempi precedenti possiamo supporre che il modello verrà cercato nella sottocartella 'template' e il file di pubblicazione verrà generato nella sottocartella 'pub'.</p>
 
-    <p>Possiamo anche specificare più file modello da applicare in cascata, per esempio:</p>
+    <p>Possiamo anche specificare più file modello da applicare in cascata, usando la versione plurale del sotto tag <b>##templates</b>, per esempio:</p>
 
-    <code><b class="tag1">#publish</b> epilogo<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> epilogo<br /><b class="tag2">##template</b> stile-capitolo stile-presentazione<br /></code>
+    <code><b class="tag1">#publish</b> epilogo<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> epilogo<br /><b class="tag2">##templates</b> stile-capitolo stile-presentazione<br /></code>
 
-    <p>Come si vede, un capitolo speciale chiamato 'epilogo' potrebbe aver bisogno delle regole specificate per ogni capitolo dentro 'stile-capitolo.tt', ma anche di alcune regole aggiuntive presenti in 'stile-presentazione.tt'. Potremmo anche mettere un elenco di file modello in un tag <b>#file-list</b> e chiamare questa lista di modelli 'stile-epilogo'.</p>
+    <p>Come si vede, un capitolo speciale chiamato 'epilogo' potrebbe aver bisogno delle regole specificate per ogni capitolo dentro 'stile-capitolo.tt', ma anche di alcune regole aggiuntive presenti in 'stile-presentazione.tt'. Potremmo anche mettere un elenco di file modello in un tag <b>#file-list</b> e chiamare questa lista di modelli 'stile-epilogo'. Un'ulteriore possibilità è usare più volte il sotto tag <b>##template</b>, ciò si rende necessario perché se i nomi contengono spazi, visto che gli spazi distinguono un file dall'altro in <b>##templates</b>, serve anche un modo per indicare un nome comprensivo di spazi:</p>
+
+    <code><b class="tag1">#publish</b> epilogo<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> epilogo<br /><b class="tag2">##template</b> stile capitolo<br /><b class="tag2">##template</b> stile presentazione<br /></code>
 
     <h4>2.1.8. Applicare dei modelli ad una lista di file contenuto</h4>
 
     <p>Così come si può usare una lista per i file modello, si può usare una lista anche per i file contenuto. Possiamo considerare la precedente lista di esempio 'capitoli' che conteneva i file 'capitolo1.tt', 'capitolo2.tt', 'capitolo3.tt' e scrivere quest'altro esempio:</p>
 
-    <code><b class="tag1">#publish</b> sitografia<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> sitografia capitoli<br /><b class="tag2">##template</b> stile-presentazione<br /></code>
+    <code><b class="tag1">#publish</b> sitografia<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> sitografia<br /><b class="tag2">##content</b> capitoli<br /><b class="tag2">##template</b> stile-presentazione<br /></code>
 
-    <p>Quando ci sono più file contenuto specificati, il primo file contenuto è come se fosse la "spina" del gruppo di file da cui attingere contenuti. Infatti serve un inizio, una sequenza di tag da processare ed una fine, questo compito spetta sempre al primo file contenuto. Gli altri file contenuto non verranno processati come il primo, ma risulteranno del materiale a disposizione se il primo file avrà regole che andranno a pescare del contenuto dagli altri file. Si vedrà <em>come</em> con le regole dei template.</p>
+    <p>Quando ci sono più file contenuto specificati, il primo file contenuto è come se fosse la "spina" del gruppo di file da cui attingere contenuti. Infatti serve un inizio, una sequenza di tag da processare ed una fine, questo compito spetta sempre al primo file contenuto. Gli altri file contenuto non verranno processati come il primo, ma risulteranno del materiale a disposizione se il primo file avrà regole che andranno a pescare del contenuto dagli altri file. Si vedrà <em>come</em> con le regole dei template. Analogamente a 'template' e 'templates', abbiamo anche <b>##content</b> e <b>##contents</b>, ecco il secondo esempio:</p>
 
-    <p>Nell'esempio dato si può immaginare un titolo per la sitografia e un lungo elenco di URL numerati. Il file 'sitografia.tt' conterrà il titolo e la definizione di questo elenco, però per comporre quell'elenco bisognerà consultare tutti i capitoli del libro dove gli indirizzi dei siti web compaiono, per questo il tag <b>#content</b> deve includere tutta la lista dei capitoli tramite il nome della suddetta lista.</p>
+    <code><b class="tag1">#publish</b> sitografia<br /><b class="tag2">##extension</b> html<br /><b class="tag2">##content</b> sitografia<br /><b class="tag2">##contents</b> capitoli stile-presentazione<br /></code>
+
+    <p>Nell'esempio dato si può immaginare un titolo per la sitografia e un lungo elenco di URL numerati. Il file 'sitografia.tt' conterrà il titolo e la definizione di questo elenco, però per comporre quell'elenco bisognerà consultare tutti i capitoli del libro dove gli indirizzi dei siti web compaiono, per questo il tag <b>##contents</b> deve includere tutta la lista dei capitoli tramite il nome della suddetta lista.</p>
 
     <h4>2.1.9. Pubblicare una lista di file usando una lista di file contenuto</h4>
 
