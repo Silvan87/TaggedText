@@ -20,6 +20,14 @@ class TaggedTexts:
     _current_tt_type = Type.CONTENT
 
     @classmethod
+    def reset(cls):
+        """Reset TaggedTexts removing all the tagged texts."""
+
+        cls._tagged_texts = {}
+        cls._joined_tagged_texts = {}
+        cls._current_tt_type = Type.CONTENT
+
+    @classmethod
     def put(cls, tt_file_name: str, json_file_content: list):
         """Add or rewrite the parsed content of a tagged text.
 

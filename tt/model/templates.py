@@ -77,6 +77,12 @@ class Templates:
             return index
 
     @classmethod
+    def reset(cls):
+        """Reset Templates removing all the existing templates."""
+
+        cls._templates = {}
+
+    @classmethod
     def initialize(cls, template_name: str):
         """Initialize a new or an existing template.
 
