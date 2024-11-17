@@ -1,0 +1,19 @@
+#file-opening
+<!DOCTYPE html>
+<html>
+<head><title>Chapter</title></head>
+<body>
+
+#tag title
+##text <h1>
+##content
+##text </h1>
+
+#tag paragraph
+##text <p>
+##content
+##text </p>
+
+#file-ending
+</body>
+</html>

@@ -1,0 +1,22 @@
+[
+[[1], "template-path"],
+["template", ""],
+[[3], "publication-path"],
+["pub", ""],
+[[5, 6, 8, 10], "file-list"],
+["chapters", ""],
+[[7], "file"],
+["chapter 1", ""],
+[[9], "file"],
+["chapter 2", ""],
+[[11], "file"],
+["chapter 3", ""],
+[[13, 14, 16, 18], "publish"],
+["chapters", ""],
+[[15], "extension"],
+["html", ""],
+[[17], "content"],
+["chapters", ""],
+[[19], "template"],
+["style", ""]
+]

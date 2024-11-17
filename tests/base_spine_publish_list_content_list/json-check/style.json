@@ -1,0 +1,20 @@
+[
+[[1], "file-opening"],
+["<!DOCTYPE html>\n<html>\n<head><title>Chapter</title></head>\n<body>", ""],
+[[3, 4, 6, 7], "tag"],
+["title", ""],
+[[5], "text"],
+["<h1>", ""],
+["", "content"],
+[[8], "text"],
+["</h1>", ""],
+[[10, 11, 13, 14], "tag"],
+["paragraph", ""],
+[[12], "text"],
+["<p>", ""],
+["", "content"],
+[[15], "text"],
+["</p>", ""],
+[[17], "file-ending"],
+["</body>\n</html>", ""]
+]

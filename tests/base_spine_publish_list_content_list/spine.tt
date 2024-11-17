@@ -1,0 +1,14 @@
+# A spine with a file list in tag publish and in tag content
+
+#template-path template
+#publication-path pub
+
+#file-list chapters
+##file chapter 1
+##file chapter 2
+##file chapter 3
+
+#publish chapters
+##extension html
+##content chapters
+##template style
