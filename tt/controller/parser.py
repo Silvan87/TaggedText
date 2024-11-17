@@ -515,6 +515,9 @@ class _Reader:
 
         :param tt_spine_rel_path: the relative path of tt spine file respect to make.py
         """
+        Templates.reset()
+        TaggedTexts.reset()
+
         spine.initialize()
         spine.paths.prepare_reading_starting_from_spine_path(tt_spine_rel_path)
         cls._parse_tt_file(os.path.basename(tt_spine_rel_path), TtType.SPINE)
@@ -582,9 +585,11 @@ class _Reader:
                     """To give a name to a list of files and call the list instead of each file"""
 
                     list_name = Compositor.get_raw_first_value_of_item(definition)
-                    file_names = Regex.whitespace_split(
-                        Compositor.get_raw_subtag_value_of_tag(definition, 'list')
+                    file_names = Compositor.get_raw_subtag_value_of_tag(definition, 'file')
+                    file_names += Regex.whitespace_split(
+                        Compositor.get_raw_subtag_value_of_tag(definition, 'files')
                     )
+                    file_names = list(filter(bool, file_names))
                     spine.set_file_names_to_a_list(list_name, file_names)
 
                 @classmethod
@@ -593,7 +598,7 @@ class _Reader:
                     list of content files and a template or a list of templates."""
 
                     publishing_name = Compositor.get_raw_first_value_of_item(definition)
-                    pub_format = Compositor.get_raw_subtag_value_of_tag(definition, 'format')
+                    pub_format = Compositor.get_raw_subtag_value_of_tag(definition, 'extension')
                     pub_file_names = []
 
                     name_with_format = publishing_name.split('.', maxsplit=1)
