@@ -18,6 +18,7 @@
                 <li>Valutazione di linguaggi simili esistenti</li>
                 <li>Definizione di contenuto semplice</li>
                 <li>Definizione di contenuto taggato</li>
+                <li>Definizione di linea vuota</li>
                 <li>Definizione di tag in linea</li>
                 <li>Definizione di tag senza contenuto</li>
                 <li>Definizione di tag di 2° livello ed oltre</li>
@@ -104,7 +105,17 @@
 
     <code><span class="tab"></span><b class="tag1">#titolo-capitolo</b> La spada fantasma<br /><br /><b class="tag1">#titolo-sezione</b> Incontro nel castello<br /><br /><span class="tab"></span><b class="tag1">#paragrafo</b><br /><span class="tab"></span>Questo è il primo paragrafo della prima sezione...<br /><br /><span class="tab"></span><b class="tag1">#paragrafo</b><br /><span class="tab"></span>Questo è il secondo paragrafo della prima sezione...<br /><br /><b class="tag1">#titolo-sezione</b> Nella stanza segreta<br /><br /><span class="tab"></span><b class="tag1">#paragrafo</b><br /><span class="tab"></span>Questo è il primo paragrafo della seconda sezione...</code>
 
-    <h3>1.5. Definizione di tag in linea</h3>
+    <p>Se il contenuto di un tag si struttura su più linee, a ciascuna linea vengono rimossi i caratteri bianchi iniziali e finali, ad eccezione del ritorno a capo che distingue una linea dalla successiva. Se si desidera conservare gli spazi bianchi si può usare il carattere di uscita <span class="key">\</span> che si vedrà in una definizione più avanti. Ecco un esempio delle due modalità:</p>
+
+    <code><b class="tag1">#paragrafo</b> Paragrafo di esempio.<br /><span class="tab"></span>Riga con una tabulazione che verrà rimossa.<br />Ultima riga del paragrafo.<br /><br /><b class="tag1">#paragrafo</b> Paragrafo di esempio.<br /><b class="esc">\</b><span class="tab"></span>Riga con una tabulazione che verrà conservata.<br />Ultima riga del paragrafo.</code>
+
+    <h3>1.5. Definizione di linea vuota <span class="badge">User story 14</span></h3>
+
+    <p>Quando si fa un ritorno a capo, due linee di testo continuano ad essere parte dello stesso contenuto ma, se si fanno due o più ritorni a capo, si crea una linea o una serie di linee vuote. Anche se c'è una serie di linee vuote, queste verranno considerate come una sola linea vuota. Questa interruzione ha un valore speciale. Se il contenuto testuale di un tag di primo livello viene separato da una linea vuota, allora questa avrà valore di un ritorno a capo. Ma se la linea vuota viene inserita nel contenuto di un tag di secondo livello, allora le ulteriori linee che seguiranno non saranno parte del corrente tag di secondo livello, ma verranno associate al tag padre del tag corrente. Un esempio può chiarire meglio:</p>
+
+    <code><b class="tag1">#lista-principale</b><br />Voce 1 della lista principale<br />Voce 2 della lista principale<br /><br /><b class="tag2">##lista-secondaria</b><br />Voce 1 della lista secondaria<br />Voce 2 della lista secondaria<br /><br />Voce 3 della lista principale</code>
+
+    <h3>1.6. Definizione di tag in linea</h3>
 
     <p>La possibilità di taggare una sotto stringa è offerta da html ma con la sua tipica verbosità e non è presente in un linguaggio più elegante come yaml. Quello che si propone qui è di prendere ispirazione dai commenti in linea di alcuni linguaggi di programmazione e adottare una colorazione tipica dei commenti, quindi meno vistosa rispetto al contenuto che si vuol taggare. Per aprire un tag in linea si userà slash-asterisco <span class="key">/</span><span class="key">*</span> e per chiuderlo asterisco-slash <span class="key">*</span><span class="key">/</span> , la combinazione di chiusura <span class="key">*</span><span class="key">/</span> verrà usata due volte: la prima volta indica la fine del nome del tag, la seconda volta indica la fine della sottostringa taggata. I caratteri da usare sono 2, però non richiedono Shift, Alt Gr o altri tasti da premere in simultanea, e risultano vicini nel tastierino numerico. Inoltre, gli asterischi che saranno ad inizio e alla fine del nome del tag in linea enfatizzeranno quel tag. Ecco una rappresentazione:</p>
 
@@ -118,7 +129,7 @@
 
     <p>È anche possibile proseguire i livelli della struttura gerarchica di tag inserendo tag in linea dentro tag in linea. L'unico uso che sarà vietato, come in html, sarà l'intersecazione parziale di due sottostringe taggate. Ma siccome i due caratteri di chiusura non riportano il nome del tag che chiudono, è di fatto impossibile creare queste indesiderate intersecazioni. Per esempio, in html potremmo avere: <b>&lt;tag-1&gt;</b>Parole di <b>&lt;tag-2&gt;</b>esempio<b class="error">&lt;/tag-1&gt;</b> tag parzialmente intersecati<b>&lt;/tag-2&gt;</b>. Se si prova a ripetere questo caso con la sintassi proposta: <b>/*tag-1*/</b>Parole di <b>/*tag-2*/</b>esempio<b>*/</b> tag parzialmente intersecati<b>*/</b>. Si nota che il tag-2 sarà applicato solo ad 'esempio' e tag-1 viene esteso a tutta la frase. La stessa sintassi risolve automaticamente questo tipo di casi indesiderati.</p>
 
-    <h3>1.6. Definizione di tag senza contenuto</h3>
+    <h3>1.7. Definizione di tag senza contenuto</h3>
 
     <p>Non sempre serve un contenuto da trattare in qualche modo seguendo la direttiva di un tag. Potremmo avere la necessità di inserire un indice completamente costruito o una nota automaticamente numerata o un altro elemento semplicemente da nominare con un tag che non richiede alcun contenuto. È già possibile fare questo con la sintassi introdotta fino a qui.</p>
 
@@ -130,7 +141,7 @@
 
     <p>Entrambe le due opzioni qui sopra illustrate porteranno allo stesso risultato, semplicemente il secondo modo sarà raccomandabile perché più leggibile.</p>
 
-    <h3>1.7. Definizione di tag di 2° livello ed oltre</h3>
+    <h3>1.8. Definizione di tag di 2° livello ed oltre</h3>
 
     <p>Attraverso l'uso di tag in linea abbiamo già visto come creare tag di 2° livello, e creando tag in linea dentro tag in linea, si arrivano a definire tag di 3° o 4° o ulteriore livello. Però, la sintassi deve offrire un modo di creare queste strutture nello stile principale dei tag ordinari (quelli definiti dedicando una riga di testo a loro). La soluzione proposta consiste nell'usare più simboli cancelletto <span class="key">#</span> per definire il livello al quale ci si trova. Segue un esempio.</p>
 
@@ -150,7 +161,7 @@
 
     <p>Invece i tag di primo livello non ammetteranno spazi tra il cancelletto e il nome del tag.</p>
 
-    <h3>1.8. Definizione di tag con id</h3>
+    <h3>1.9. Definizione di tag con id</h3>
 
     <p>Non si intende trascurare le strategie per abbreviare la quantità di testo taggato scritto. Una situazione facilmente immaginabile è quando per oggetti diversi, come le canzoni dell'esempio sopra, abbiamo lo stesso artista che a sua volta può essere un oggetto complesso. Così risulterà utile definire una volta soltanto quell'oggetto ripetuto. Questo è possibile se si associa un id ad un tag e riutilizzando quell'id per un successivo tag con lo stesso nome, l'interprete della sintassi potrà capire che si tratta dello stesso oggetto.</p>
 
@@ -167,7 +178,7 @@
 
     <p>Anche nel caso del tag <b>#playlist</b> senza contenuto, esso potrebbe essere un oggetto complesso costruito da un modello applicato a questo tag e per evitare che venga costruito ogni volta o per assicurarsi che la sua ricostruzione in un punto diverso del documento eviti il rischio di cambiamenti non previsti, si può usare l'id e si avrà quanto prodotto ad inizio documento anche a fine documento.</p>
 
-    <h3>1.9. Definizione di commento</h3>
+    <h3>1.10. Definizione di commento</h3>
 
     <p>Il cancelletto è usato nelle piattaforme social per definire una parola chiave, e in diversi linguaggi di programmazione è usato per definire un commento. In questo contesto si intende avvalersi di entrambi i significati. Siccome il tag di primo livello non accetta nessuno spazio tra il cancelletto singolo e il nome del tag, si userà questa combinazione cancelletto e spazio <span class="key">#</span> <span class="key">&nbsp;&nbsp;</span> ad inizio riga per definire un commento su una riga singola.</p>
 
@@ -179,7 +190,7 @@
 
     <code><b class="esc">###<br />Questo è un commento multilinea dove /*i caratteri speciali*/ vengono ignorati*/. /<br />Alcune parole </b><b class="tag5">#chiave</b> <b class="esc">potrebbero essere evidenziate</b> <b class="tag5">#taggandole</b> <b class="esc">come al solito.<br />Può tornare utile anche per indicare un </b><b class="tag5">#TODO</b><b class="esc"> o un </b><b class="tag5">#BUG</b><b class="esc">.<br />###</b><br />Finito il commento il testo torna ad essere un contenuto generico.</code>
 
-    <h3>1.10. Definizione del carattere di uscita</h3>
+    <h3>1.11. Definizione del carattere di uscita</h3>
 
     <p>Nel caso in cui volessimo usare dei caratteri speciali come carattere normali, dunque facenti parte del contenuto inserito, possiamo usare il classico carattere di uscita barra rovesciata <span class="key">\</span> prima di un carattere speciale. Il carattere di uscita avrà la stessa colorazione dei commenti, dato che è una sorta di commento ad un singolo carattere (quello successivo) ed esso dovrebbe essere visivamente ignorabile insieme ai commenti qualora ci si focalizzi sul contenuto. Segue l'elenco di tutti gli usi significativi possibili:</p>
 
@@ -197,7 +208,7 @@
 
     <p>In sintesi, gli usi possibili si riassumono in tre casistiche: (1) il carattere di uscita ad inizio riga forza il carattere successivo ad essere interpretato come normale contenuto; (2) il carattere di uscita a fine righe forza i caratteri bianchi che sarebbero normalmente rimossi a far parte del contenuto; (3) il carattere di uscita prima di una sequenza di caratteri speciali forza essi ad essere interpretati come normale contenuto. In qualsiasi altro caso, la barra rovesciata non sarà un carattere speciale ma verrà considerata parte del normale contenuto.</p>
 
-    <h3>1.11 Nome della sintassi ideata</h3>
+    <h3>1.12 Nome della sintassi ideata</h3>
 
     <p>L'aspetto più caratterizzante di questo tipo di sintassi è il classico tag con cui possiamo qualificare una porzione di testo. Questi tag possono essere strutturati in modo gerarchico e c'è una sola variante rispetto al simbolo speciale cancelletto # adottata per il tag in linea, che resta pur sempre un tag riscrivibile con le definizioni basate sul cancelletto. Dunque il nome di questa sintassi sarà <b>Tagged Text</b> (testo taggato) in sigla TT.</p>
 

@@ -18,6 +18,7 @@
                 <li>Analysis of existing similar languages</li>
                 <li>Definition of simple content</li>
                 <li>Definition of tagged content</li>
+                <li>Definition of empty line</li>
                 <li>Definition of inline tag</li>
                 <li>Definition of tag without content</li>
                 <li>Definition of tag of 2° and higher level</li>
@@ -104,7 +105,17 @@
 
     <code><span class="tab"></span><b class="tag1">#chapter-title</b> The Phantom Sword<br /><br /><b class="tag1">#section-title</b> Meeting in the Castle<br /><br /><span class="tab"></span><b class="tag1">#paragraph</b><br /><span class="tab"></span>This is the first paragraph of the first section...<br /><br /><span class="tab"></span><b class="tag1">#paragraph</b><br /><span class="tab"></span>This is the second paragraph of the first section...<br /><br /><b class="tag1">#section-title</b> In the secret room<br /><br /><span class="tab"></span><b class="tag1">#paragraph</b><br /><span class="tab"></span>This is the first paragraph of the second section...</code>
 
-    <h3>1.5. Definition of inline tag</h3>
+    <p>If the content of a tag spans multiple lines, each line is stripped of leading and trailing whitespace, except for the carriage return that distinguishes one line from the next. If you want to preserve whitespace, you can use the exit character <span class="key">\</span>, which you will see in a definition later. Here is an example of the two modes:</p>
+
+    <code><b class="tag1">#paragraph</b> Paragraph for example.<br /><span class="tab"></span>Line with a tabulation that will be removed.<br />Last line of the paragraph.<br /><br /><b class="tag1">#paragraph</b> Paragraph for example.<br /><b class="esc">\</b><span class="tab"></span>Line with a tabulation that will be kept.<br />Last line of the paragraph.</code>
+
+    <h3>1.5. Definition of empty line <span class="badge">User story 14</span></h3>
+
+    <p>When you make a carriage return, two lines of text continue to be part of the same content, but if you make two or more carriage returns, you create a blank line or series of blank lines. Even if there is a series of blank lines, they will be treated as one blank line. This break has a special value. If the text content of a first-level tag is separated by an empty line, then this will be treated as a carriage return. But if the empty line is inserted into the content of a second-level tag, then the additional lines that follow will not be part of the current second-level tag, but will be associated with the parent tag of the current tag. An example can clarify better:</p>
+
+    <code><b class="tag1">#main-list</b><br />Voice 1 of the main list<br />Voice 2 of the main list<br /><br /><b class="tag2">##secondary-list</b><br />Voice 1 of the secondary list<br />Voice 2 of the secondary list<br /><br />Voice 3 of the main list</code>
+
+    <h3>1.6. Definition of inline tag</h3>
 
     <p>The possibility to tag a substring is offered by HTML but with its typical verbosity and it is not present in a more elegant language such as YAML. What is proposed here is to take inspiration from inline comments in some programming languages and adopt a typical coloring of comments, therefore less noticeable compared to the content to be tagged. To open an inline tag, it will be used slash-asterisk <span class="key">/</span><span class="key">*</span> and to close it asterisk-slash <span class="key">*</span><span class="key">/</span> , the closing combination <span class="key">*</span><span class="key">/</span> will be used twice: the first time indicates the end of the tag name, the second time indicates the end of the tagged substring. The characters to be used are 2, but they do not require Shift, Alt Gr, or other keys to be pressed simultaneously and are close on the numeric keypad. Furthermore, the asterisks that will be at the beginning and end of the inline tag will emphasize that tag. Here is a representation:</p>
 
@@ -118,7 +129,7 @@
 
     <p>It is also possible to continue the levels of the tag hierarchy by inserting inline tags within inline tags. The only use that will be prohibited, as in html, will be the partial intersection of two tagged substrings. But since the two closing characters do not carry the name of the tag they close, it is effectively impossible to create these unwanted intersections. For example, in html it would be <b>&lt;tag-1&gt;</b>Words of <b>&lt;tag-2&gt;</b>example<b class="error">&lt;/tag-1&gt;</b> partially intersected tags<b>&lt;/tag-2&gt;</b>. If you try to repeat this case with the proposed syntax: <b>/*tag-1*/</b>Words of <b>/*tag-2*/</b>example<b>*/</b> partially intersected <b>*/</b> tags. Note that tag-2 will only be applied to 'example' and tag-1 is extended to the whole sentence. The same syntax automatically fixes this kind of undesirable case.</p>
 
-    <h3>1.6. Definition of tag without content</h3>
+    <h3>1.7. Definition of tag without content</h3>
 
     <p>Not always is a content needed to be somehow processed following the directive of a tag. We may need to insert a fully constructed index or an automatically numbered note or another element simply to be named with a tag that does not require any content. This is already possible with the syntax introduced so far.</p>
 
@@ -130,7 +141,7 @@
 
     <p>Both of the options illustrated above will lead to the same result; simply, the second way is recommended because it is more readable.</p>
 
-    <h3>1.7. Definition of tag of 2° and higher level</h3>
+    <h3>1.8. Definition of tag of 2° and higher level</h3>
 
     <p>Through the use of inline tags, we have already seen how to create second-level tags, and by creating inline tags within inline tags, we can define third-level or fourth-level tags, or even further. However, the syntax must provide a way to create these structures in the main style of regular tags (those defined by dedicating a line of text to them). The proposed solution is to use multiple hash symbols <span class="key">#</span> to define the level we are at. Here is an example.</p>
 
@@ -150,7 +161,7 @@
 
     <p>Meanwhile top-level tags will not allow spaces between the hashtag sign and the tag name.</p>
 
-    <h3>1.8. Definition of tag with id</h3>
+    <h3>1.9. Definition of tag with id</h3>
 
     <p>It is not intended to overlook strategies for abbreviating the amount of tagged text written. An easily imaginable situation is when, for different objects such as the songs in the above example, we have the same artist who can in turn be a complex object. Thus, it will be useful to define that repeated object only once. This is possible if an ID is associated with a tag and by reusing that ID for a subsequent tag with the same name, the interpreter of the syntax can understand that it is the same object.</p>
 
@@ -166,7 +177,7 @@
 
     <p>Even in the case of the <b>#playlist</b> tag without content, it could be a complex object constructed from a template applied to this tagged text. To prevent it from being constructed every time or to ensure that its reconstruction in a different part of the document avoids the risk of unforeseen changes, you can use the ID and have what was produced at the beginning of the document also at the end of the document.</p>
 
-    <h3>1.9. Definition of comment</h3>
+    <h3>1.10. Definition of comment</h3>
 
     <p>The hashtag is used on social platforms to define a keyword, and in various programming languages, it is used to define a comment. In this context, we intend to make use of both meanings. Since the top-level tag does not accept any space between the single hashtag and the tag name, this combination of hashtag and space <span class="key">#</span> <span class="key">&nbsp;&nbsp;</span> at the beginning of a line will be used to define a single-line comment.</p>
 
@@ -178,7 +189,7 @@
 
     <code><b class="esc">###<br />This is a multiline comment where /*the special characters*/ are ignored*/. /<br />Some</b> <b class="tag5">#key</b> <b class="esc">words could be highlighted</b> <b class="tag5">#tagging</b> <b class="esc">them as usual.<br />It could be useful to indicate a </b><b class="tag5">#TODO</b><b class="esc"> or a </b><b class="tag5">#BUG</b><b class="esc">.<br />###</b><br />After the comment, the text returns to being generic content.</code>
 
-    <h3>1.10. Definition of escape character</h3>
+    <h3>1.11. Definition of escape character</h3>
 
     <p>In case we want to use special characters as normal characters, that is, as part of the inserted content, we can use the classic escape character, the backslash <span class="key">\</span>, before a special character. The escape character will have the same styling as comments, as it is a kind of comment for a single character (the one that follows it), and it should be visually ignorable along with comments when focusing on the content. Here is a list of all the possible meaningful uses:</p>
 
@@ -195,7 +206,7 @@
 
     <p>In summary, the possible uses can be summarized in three scenarios: (1) the escape character at the beginning of a line forces the next character to be interpreted as normal content; (2) the escape character at the end of a line forces whitespace that would normally be removed to be part of the content; (3) the escape character before a sequence of special characters forces them to be interpreted as normal content. In any other case, the backslash will not be a special character but will be considered part of the normal content.</p>
 
-    <h3>1.11 Name of the conceived syntax</h3>
+    <h3>1.12 Name of the conceived syntax</h3>
 
     <p>The most distinctive aspect of this syntax type is the classic tag that we can use to qualify a portion of text. These tags can be structured hierarchically, and there is only one variation compared to the special hashtag symbol # used for inline tags, which still remains a tag rewritable with hashtag-based definitions. Therefore, the name of this syntax will be <b>Tagged Text</b> abbreviated as TT.</p>
 
