@@ -31,6 +31,7 @@ class Parser:
         _previous_parents = 0
         _parent_stack = []
         _hashtag_id_name_to_apply = ''
+        _new_line_char = ''
 
         @classmethod
         def reset_cursors(cls):
@@ -92,7 +93,7 @@ class Parser:
 
         @classmethod
         def strip_escape_char_from_beginning_and_end_of_line(cls, line: str):
-            """Remove the escape char in the beginning and in the end of the line.
+            """Remove the escape char in the beginning and at the end of the line.
 
             :param line: the line where to check the escape chars.
             :return: the line edited.
@@ -302,18 +303,66 @@ class Parser:
             search_start = cls._current_line_index
             search_steps = 1
             while search_start + search_steps < len(cls._lines):
-                forward_line = cls._lines[search_start + search_steps].lstrip()
-                match = re.search('^' + Regex.hashtag, forward_line)
+                forward_line = cls._lines[search_start + search_steps]
+                match = re.search('^' + Regex.hashtag, forward_line.lstrip())
                 # TODO BUG currently this cycle that picks lines it is not ready to skip the comments
                 if match:
                     break
                 else:
-                    cls._current_text_value += forward_line
+                    line_end_char = '\n'
+                    forward_line = forward_line.strip()
+
+                    if forward_line == '':
+                        if len(cls._current_text_value) > 0 and cls._current_text_value[-1] == '\n':
+                            cls._current_text_value = cls._current_text_value[0:-1]
+                        line_end_char = '\v'
+
+                    cls._current_text_value += (
+                        cls.strip_escape_char_from_beginning_and_end_of_line(forward_line) + line_end_char
+                    )
+
                 search_steps += 1
 
             cls._current_line_index = search_start + search_steps - 1
+            if (len(text_to_prepend) > 0 and len(cls._current_text_value) > 0 and
+                    cls._current_text_value[0] == '\v' and text_to_prepend[-1] == '\n'):
+                text_to_prepend = text_to_prepend[0:-1]
             cls._current_text_value = text_to_prepend + cls._current_text_value
-            cls._current_text_value = cls._current_text_value.rstrip().replace('\n', '\\n')
+
+            if not cls._new_line_char:
+                cls.detect_new_line_char()
+
+            if cls._new_line_char:
+                # Use a standard new line char in the parsed text
+                if cls._new_line_char != '\n':
+                    cls._current_text_value = re.sub(cls._new_line_char, '\n', cls._current_text_value)
+
+                # 2 or more consecutive vertical tab chars have to be substituted with 1 vertical tab char \v
+                cls._current_text_value = re.sub('\v{2,}', '\v', cls._current_text_value)
+
+                if len(cls._current_text_value) > 0 and cls._current_text_value[-1] == '\n':
+                    cls._current_text_value = cls._current_text_value[0:-1]
+
+            # If the current value is made of only white chars, set an empty string
+            if cls._current_text_value.strip() == '':
+                cls._current_text_value = ''
+
+        @classmethod
+        def detect_new_line_char(cls):
+            n_char_index = cls._current_text_value.find('\n')
+            r_char_index = cls._current_text_value.find('\r')
+
+            if n_char_index != -1 and r_char_index == -1:
+                cls._new_line_char = '\n'
+
+            elif r_char_index != -1 and n_char_index == -1:
+                cls._new_line_char = '\r'
+
+            elif r_char_index != -1 and n_char_index != -1:
+                if r_char_index > n_char_index:
+                    cls._new_line_char = '\n\r'
+                else:
+                    cls._new_line_char = '\r\n'
 
         @classmethod
         def give_next_text_to_tag(cls, tag_name: str, after_tag: str):
@@ -359,6 +408,17 @@ class Parser:
             :param tag_name: if available, the current tag name that can receive the line (divided or not).
             """
 
+            # If vertical tab char is present in a content of a tag of level 2 or more, that char splits the content
+            # into a first and a second part. The first part will be assigned to the current tag, the second part will
+            # be assigned as a new child of the previous parent.
+            extra_content = []
+            if cls._current_level > 1:
+                if '\v' in line:
+                    extra_content = line.split('\v', maxsplit=1)
+                    if len(extra_content) == 2:
+                        line = extra_content[0] + '\v'
+                        extra_content = extra_content[1:]
+
             # If a tag applies to multiple tagged text strings, there will be an array of indexes
             # Those indexes refer to the future append strings with only 1 level of depth
             parent_position = parsing_tree.get_number_of_parsed_pieces()
@@ -370,6 +430,18 @@ class Parser:
                     parsing_tree.append_tagged_piece(line, tag_name)
                 else:
                     parsing_tree.remove_first_piece_id_from_piece_value(cls._parent_stack[-1])
+
+            if len(extra_content) > 0:
+                extra_content_text = '\n\n'.join(extra_content)
+                child_position = parsing_tree.get_number_of_parsed_pieces()
+                child_indexes = cls.look_for_inline_tags(extra_content_text)
+                if child_indexes:
+                    child_indexes = [index - 1 for index in child_indexes]
+                    parsing_tree.append_id_to_tagged_piece_value(cls._parent_stack[-2], child_indexes)
+                else:
+                    if extra_content_text:
+                        parsing_tree.append_id_to_tagged_piece_value(cls._parent_stack[-2], child_position)
+                        parsing_tree.append_tagged_piece([extra_content_text, ''])
 
         @classmethod
         def look_for_inline_tags(cls, line: str):
@@ -389,7 +461,7 @@ class Parser:
                 cls._previous_parents += 1
                 i = 0
                 while i < len(chunks):
-                    child_ids.append(parsing_tree.get_number_of_parsed_pieces() + cls._previous_parents)
+                    child_ids.append(parsing_tree.get_number_of_parsed_pieces() + 1)
                     if re.search('^' + Regex.open_inline_tag + '$', chunks[i]):
                         sub_line = chunks[i + 1]
                         tag_name = chunks[i][2:-2]
@@ -401,6 +473,10 @@ class Parser:
                         tag_name = chunks[i][1:-1]
                         parsing_tree.append_tagged_piece('', tag_name)
                         i += 1
+                    elif re.search('^\v$', chunks[i]):
+                        tag_name = '_empty_line'
+                        parsing_tree.append_tagged_piece('', tag_name)
+                        i += 1
                     else:
                         parsing_tree.append_tagged_piece(chunks[i], '')
                         i += 1
@@ -408,7 +484,7 @@ class Parser:
 
         @classmethod
         def split_line_into_chunks(cls, line: str):
-            """Split a text line in substrings according to the inline tags found.
+            """Split a text line in substrings according to the inline tags found and the double new line used.
 
             :param line: the line where to look for inline tags.
             :return: a list of substrings in which the line has been split.
@@ -479,6 +555,7 @@ class Parser:
             :param line: the text line where to look for.
             """
             match_hashtag_no_value = re.search(Regex.hashtag_no_value, line)
+            match_empty_line = re.search('\v', line)
 
             # If there is an escape \ before the special chars, ignore them
             if match_hashtag_no_value:
@@ -486,7 +563,26 @@ class Parser:
                     if line[match_hashtag_no_value.start() - 1] == '\\':
                         match_hashtag_no_value = None
 
-            if match_hashtag_no_value:
+            if match_hashtag_no_value and match_empty_line:
+                if match_hashtag_no_value.start() < match_empty_line.start():
+                    if match_hashtag_no_value.start() > 0:
+                        cls._chunks.append(line[0:match_hashtag_no_value.start()])
+                    cls._chunks.append(line[match_hashtag_no_value.start():match_hashtag_no_value.end()])
+                    cls.look_for_inline_hashtag_without_value(line[match_hashtag_no_value.end():])
+
+                elif match_empty_line.start() < match_hashtag_no_value.start():
+                    if match_empty_line.start() > 0:
+                        cls._chunks.append(line[0:match_empty_line.start()])
+                    cls._chunks.append(line[match_empty_line.start():match_empty_line.end()])
+                    cls.look_for_inline_hashtag_without_value(line[match_empty_line.end():])
+
+            elif match_empty_line and not match_hashtag_no_value:
+                if match_empty_line.start() > 0:
+                    cls._chunks.append(line[0:match_empty_line.start()])
+                cls._chunks.append(line[match_empty_line.start():match_empty_line.end()])
+                cls.look_for_inline_hashtag_without_value(line[match_empty_line.end():])
+
+            elif match_hashtag_no_value and not match_empty_line:
                 if match_hashtag_no_value.start() > 0:
                     cls._chunks.append(line[0:match_hashtag_no_value.start()])
                 cls._chunks.append(line[match_hashtag_no_value.start():match_hashtag_no_value.end()])
@@ -497,7 +593,7 @@ class Parser:
 
     @classmethod
     def parse_spine_and_all_required_files(cls, tt_spine_rel_path: str):
-        """Parse every required files (tt contents and templates) starting from spine file.
+        """Parse every required file (tt contents and templates) starting from the spine file.
 
         :param tt_spine_rel_path: the relative path of tt spine file respect to make.py
         """
@@ -586,6 +682,9 @@ class _Reader:
 
                     list_name = Compositor.get_raw_first_value_of_item(definition)
                     file_names = Compositor.get_raw_subtag_value_of_tag(definition, 'file')
+                    if type(file_names) is str:
+                        file_names = [file_names]
+
                     file_names += Regex.whitespace_split(
                         Compositor.get_raw_subtag_value_of_tag(definition, 'files')
                     )
@@ -664,7 +763,7 @@ class _Reader:
                         )
 
         # Pass the json data to parsing_tree object
-        with open(spine.paths.get_current_json_file_abs_path()) as json_file_stream:
+        with open(spine.paths.get_current_json_file_abs_path(), encoding="utf-8") as json_file_stream:
             parsing_tree.set_json_data(json.load(json_file_stream))
             json_file_stream.close()
 
@@ -787,7 +886,7 @@ class _Reader:
     def _read_all_text_lines(cls):
         """Read all the text lines from the textual tt file."""
 
-        f = open(spine.paths.get_current_tt_file_abs_path(), 'r')
+        f = open(spine.paths.get_current_tt_file_abs_path(), 'r', encoding='utf-8')
         Parser.Text._lines = f.readlines()
         f.close()
 
@@ -795,31 +894,41 @@ class _Reader:
     def _save_json_file(cls):
         """Save as a json file in the permanent memory in the dedicated json folder the parsed content."""
 
-        f = open(spine.paths.get_current_json_file_abs_path(existing_file=False), 'w')
+        f = open(spine.paths.get_current_json_file_abs_path(existing_file=False), 'w', encoding='utf-8')
         f.write('[\n')
-        is_first_item = True
-        for item in parsing_tree.get_json_data():
-            if is_first_item:
-                is_first_item = False
-            else:
+        for index, item in enumerate(parsing_tree.get_json_data()):
+            if index > 0:
                 f.write(',\n')
             f.write('[')
             if isinstance(item[0], str):
                 if len(item[0]) > 0 and item[0][-1] == '\\':
                     item[0] = item[0][:-1]
                 line_with_managed_escapes = (
-                    item[0].replace('\\n', '\n')
-                    .replace('\\', '\\\\').replace('"', '\\"')
+                    item[0].replace('\\', '\\\\')
                     .replace('\n', '\\n')
+                    .replace('\v', '\\n\\n')
+                    .replace('"', '\\"')
                 )
                 f.write('"' + line_with_managed_escapes + '"')
             else:
                 if len(item[0]) == 0:
                     f.write('""')
                 else:
+                    item[0].sort()
+                    # When inline tags are present and nested, it's hard to assign the correct IDs, they respect the
+                    # general structure, but they need to be shifted. It's easier to do that now.
+                    if item[0][0] <= index:
+                        shift = index - item[0][0] + 1
+                        i = 0
+                        while i < len(item[0]):
+                            item[0][i] += shift
+                            i += 1
+
                     f.write(str(item[0]))
+
             f.write(', "' + str(item[1]) + '"')
             f.write(']')
+
         f.write('\n]')
         f.close()
 
@@ -829,7 +938,7 @@ class _Reader:
 
         for file_name in spine.get_tt_content_file_names():
             json_file_path = spine.paths.get_json_file_abs_path(file_name)
-            with open(json_file_path) as json_file_stream:
+            with open(json_file_path, encoding="utf-8") as json_file_stream:
                 TaggedTexts.put(file_name, json.load(json_file_stream))
                 json_file_stream.close()
 
@@ -842,9 +951,11 @@ class _Reader:
         TaggedTexts.set_current_tt_type(TtType.TEMPLATE)
         for template_name in Templates.get_tt_file_names():
             input_file_name = spine.paths.put_file_ext(template_name, 'json')
-            with open(spine.paths.get_json_file_abs_path(input_file_name)) as json_file_stream:
+
+            with open(spine.paths.get_json_file_abs_path(input_file_name), encoding="utf-8") as json_file_stream:
                 parsing_tree.set_json_data(json.load(json_file_stream))
                 json_file_stream.close()
+
             Compositor.set_content_reference(spine.get_tt_content_file_names())
             Compositor.set_template_reference([template_name])
             Compositor.set_current_template_name(template_name)
@@ -854,9 +965,14 @@ class _Reader:
                 if item[1] in ['file-opening', 'file-ending']:
                     Templates.set_trigger(tag_name=item[1], rule_index=index, template_name=template_name)
 
-                elif item[1] in ['tag', 'content-list', 'catching-tag']:
+                elif item[1] in ['tag', 'catching-tag']:
                     trigger_tag = Compositor.get_raw_first_value_of_item(item)
                     Templates.set_trigger(tag_name=trigger_tag, rule_index=index, template_name=template_name)
+
+                elif item[1] == 'content-list':
+                    trigger_tags = Regex.whitespace_split(Compositor.get_raw_first_value_of_item(item))
+                    for trigger_tag in trigger_tags:
+                        Templates.set_trigger(tag_name=trigger_tag, rule_index=index, template_name=template_name)
 
                 elif item[1] == 'tag-list':
                     trigger_tags = Regex.whitespace_split(Compositor.get_raw_first_value_of_item(item))
