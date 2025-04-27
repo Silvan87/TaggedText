@@ -419,6 +419,33 @@
                     <li><span class="state-8"></span> The entire test collection must be passed again all at once</li>
                 </ul>
             </article>
+            <article>
+                <header>
+                    <div class="us-id">14</div>
+                    <h2>As a content creator, you need a special function for carriage return, a single carriage return will have no special effect, but 2 or more carriage returns must assign the next text to the parent tag of the current one only if the current tag is of second or next level</h2>
+                    <div class="priority high"></div>
+                </header>
+                <div class="description">
+                    <p>A first level tag can have several second level subtags. If a subtag ends its content and the next content is to be assigned again to the first level tag, currently it is necessary to divide all the content of the first level tag into subtags. Instead, now, we want to introduce the possibility of using 2 or more carriage returns to assign the next content in text form to the parent tag of the current tag. If the current tag is already a first level tag, that is, it has no parents, then the next content remains assigned to the current tag.</p>
+                </div>
+                <div class="assignment">
+                    <p><b>Epic</b>: Syntax definition</p>
+                    <p><b>State</b>: <span class="state-8"></span></p>
+                    <p><b>Assignee</b>: Silvan</p>
+                </div>
+                <div class="duration">
+                    <p><b>Creator</b>: Silvan</p>
+                    <p><b>Creation date</b>: Dic 2024</p>
+                    <p><b>Start date</b>: Dic 2024</p>
+                    <p><b>End date</b>: 23 Apr 2025</p>
+                </div>
+                <ul class="subtasks">
+                    <li><span class="state-8"></span> Update the technical documentation with this new double carriage return behavior</li>
+                    <li><span class="state-8"></span> Implement the new double carriage return behavior in your code</li>
+                    <li><span class="state-8"></span> E2E tests that exploit this new feature</li>
+                    <li><span class="state-8"></span> Positive outcome of the test described in the activity above</li>
+                </ul>
+            </article>
         </section>
         <section id="sprint-backlog">
         </section>
