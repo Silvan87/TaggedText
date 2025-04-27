@@ -41,21 +41,6 @@ class Templates:
             :param rule_index: the index of the rule to apply.
             """
             self._triggers[tag_name] = rule_index
-            # if tag_name.startswith('_list_'):
-            #     if tag_name not in self._triggers:
-            #         self._triggers[tag_name] = {}
-            #         self._triggers[tag_name]['list'] = []
-            #     else:
-            #         tag_rule_index = self._triggers[tag_name]
-            #         self._triggers[tag_name] = {}
-            #         self._triggers[tag_name]['tag'] = tag_rule_index
-            #         self._triggers[tag_name]['list'] = []
-            #     self._triggers[tag_name]['list'].append(rule_index)
-            # else:
-            #     if tag_name in self._triggers and type(self._triggers[tag_name]) is dict:
-            #         self._triggers[tag_name]['tag'] = rule_index
-            #     else:
-            #         self._triggers[tag_name] = rule_index  # ordinary case
 
         def set_rules(self, rules: list):
             """Set all the rules to the template removing the previous ones.
