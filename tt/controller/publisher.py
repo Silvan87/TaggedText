@@ -16,7 +16,7 @@ class Publisher:
         spine.paths.make_directory(spine.paths.get_publication_files_abs_folder())
         for pub_file_name in Publications.get_all():
             publication = Publications.get(pub_file_name)
-            f = open(publication.get_path(), 'w')
+            f = open(publication.get_path(), 'w', encoding='utf-8')
             f.write(publication.get_text())
             f.close()
         spine.print_writing_operation_info()
