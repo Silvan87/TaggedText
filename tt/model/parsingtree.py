@@ -33,9 +33,9 @@ class ParsingTree:
         """Append a tagged piece to the current parsed data. This piece is a list with two elements, the 1st is the
         tagged value and the 2nd is the tag name. The value can be a string or a list of tagged piece IDs.
 
-        :param tagged_piece: if the 2nd parameter is omitted it should be the list with two elements (the value and the
+        :param tagged_piece: if the 2nd parameter is omitted, it should be the list with two elements (the value and the
         tag name). If the 2nd parameter is present, this parameter should be only the tagged value.
-        :param tag_name: the tag name of the tagged piece. Optional but if omitted it changes the structure of the 1st
+        :param tag_name: the tag name of the tagged piece. Optional but if omitted, it changes the structure of the 1st
         parameter.
         """
         if tag_name is None:
@@ -49,12 +49,12 @@ class ParsingTree:
 
     def insert_parsed_piece(self, piece_position: int, tagged_piece, tag_name: str = None):
         """Insert a tagged piece in a specific position. This piece is a list with two elements, the 1st is the tagged
-        value and the 2nd is the tag name. The value can be a string or a list of tagged piece IDs.
+        value, and the 2nd is the tag name. The value can be a string or a list of tagged piece IDs.
 
         :param piece_position: the index of a piece after which insert the new piece.
-        :param tagged_piece: if the 2nd parameter is omitted it should be the list with two elements (the value and the
+        :param tagged_piece: if the 2nd parameter is omitted, it should be the list with two elements (the value and the
         tag name). If the 2nd parameter is present, this parameter should be only the tagged value.
-        :param tag_name: the tag name of the tagged piece. Optional but if omitted it changes the structure of the 1st
+        :param tag_name: the tag name of the tagged piece. Optional but if omitted, it changes the structure of the 1st
         parameter.
         """
         if tag_name is None:
@@ -74,12 +74,15 @@ class ParsingTree:
             return piece
 
         if len(piece) > 0 and piece[0] == '\\':
-            piece = piece[1:]
+            if len(piece) == 1:
+                piece = piece[1:]
+
+            elif not piece[1] in 'nv':
+                piece = piece[1:]
 
         if len(piece) > 0 and piece[-1] == '\\':
             piece = piece[:-1]
 
-        piece = piece.replace('\\n\\', '\\n')
         piece = piece.replace('\\\\n', '\\n')
 
         return piece
@@ -118,13 +121,16 @@ class ParsingTree:
         """
         return self._parsed_data[piece_id][0]
 
-    def append_id_to_tagged_piece_value(self, parent_piece_id: int, child_piece_id: int):
-        """Append an ID to a value of a tagged piece. The value must be a list of piece IDs.
+    def append_id_to_tagged_piece_value(self, parent_piece_id: int, child_piece_id: int | list):
+        """Append an ID or a list of IDs to a value of a tagged piece. The value must be a list of piece IDs.
 
         :param parent_piece_id: the ID of a parent piece that has child IDs on its value.
         :param child_piece_id: the ID of a piece that is a child of the parent piece.
         """
-        self._parsed_data[parent_piece_id][0].append(child_piece_id)
+        if type(child_piece_id) is list:
+            self._parsed_data[parent_piece_id][0] += child_piece_id
+        else:
+            self._parsed_data[parent_piece_id][0].append(child_piece_id)
 
 
 parsing_tree = ParsingTree()
