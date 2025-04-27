@@ -446,6 +446,32 @@
                     <li><span class="state-8"></span> Positive outcome of the test described in the activity above</li>
                 </ul>
             </article>
+            <article>
+                <header>
+                    <div class="us-id defect">15</div>
+                    <h2>As an end user, in the syntax highlighting.tt file dedicated to visual testing, you see the escape character, at the beginning of the line and in the same line of a tag, in normal color instead of colored as a special character, correct this defect</h2>
+                    <div class="priority low"></div>
+                </header>
+                <div class="description">
+                    <p>The test for this defect is already present and it is the visual test provided by the syntax highlighting.tt file. When using the escape character after a tag but on the same line as a tag to include white characters before normal text content, it is not colored as a special character, but remains the color of normal text. Fix the syntax definition file to recognize this special case.</p>
+                    <p>It should be noted that the actual behavior is well interpreted, so it is just a low-priority visual defect.</p>
+                </div>
+                <div class="assignment">
+                    <p><b>Epic</b>: Syntax definition</p>
+                    <p><b>State</b>: <span class="state-8"></span></p>
+                    <p><b>Assignee</b>: Silvan</p>
+                </div>
+                <div class="duration">
+                    <p><b>Creator</b>: Silvan</p>
+                    <p><b>Creation date</b>: 24 Apr 2025</p>
+                    <p><b>Start date</b>: 24 Apr 2025</p>
+                    <p><b>End date</b>: 24 Apr 2025</p>
+                </div>
+                <ul class="subtasks">
+                    <li><span class="state-8"></span> Fix the existing syntax definition files (Kate only)</li>
+                    <li><span class="state-8"></span> Check that the visual test shows the expected highlighting.</li>
+                </ul>
+            </article>
         </section>
         <section id="sprint-backlog">
         </section>
