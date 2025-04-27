@@ -83,6 +83,9 @@ class E2E(unittest.TestCase):
     def test_base_spine_some_tabbed_tags(self):
         self._launch_standard_e2e_test()
 
+    def test_double_new_line_all_cases(self):
+        self._launch_standard_e2e_test()
+
     def test_articulated_file_opening_ending_text(self):
         self._launch_standard_e2e_test()
 

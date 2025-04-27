@@ -1,0 +1,67 @@
+#file-opening
+<!DOCTYPE html>
+<html>
+<head>
+\    <title>Publication</title>
+</head>
+<body>
+
+#file-ending
+</body>
+</html>
+
+#tag title
+##text <h2>
+##content
+##text </h2>
+##new-line
+
+#tag paragraph
+##text <p>
+##content
+##text </p>
+##new-line
+
+#tag bold
+##text <b>
+##content
+##text </b>
+
+#content-list section
+##list
+    ###text <section>
+    ###new-line
+    ###content
+    ###text </section>
+    ###new-line
+##item-separator
+    ###new-line
+##item
+    ###text <p>
+    ###content
+    ###text </p>
+    ###new-line
+
+#tag-list point
+##list
+    ###text <ul>
+    ###new-line
+    ###content
+    ###new-line
+    ###text </ul>
+    ###new-line
+##item-separator
+    ###new-line
+##item
+    ###text <li>
+    ###content
+    ###text </li>
+
+#tag point
+##content
+
+#tag object-4
+##new-line
+##text <p>
+##content
+##text </p>

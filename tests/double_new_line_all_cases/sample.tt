@@ -1,0 +1,38 @@
+#title
+Uses of double new line
+
+#paragraph
+This is an example of main tag /*bold*/with some tagged sub items.*//*bold*/and here another one*/. Then it continues with normal text.
+
+#paragraph
+Other specific tests of the empty line behaviour are only in the json of sample file. Check there if needed.
+
+#section
+This is the first paragraph.
+
+##point This is element 1 of a list
+##point This is element 2 of a list
+##point This is element 3 of a list
+
+This is the second paragraph.
+
+This is the third paragraph.
+
+#object-1
+##property-1 Value of property 1
+Other value of property 1
+
+#object-2
+##property-2 Value of property 2
+
+Other property of object 2
+
+#object-3
+##property-3 Value of property 3
+\
+Other value of property 3
+
+#object-4
+A text line for object 4.
+
+Another text line for object 4.
