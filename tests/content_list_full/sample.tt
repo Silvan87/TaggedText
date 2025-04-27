@@ -4,11 +4,11 @@ Example of full content list
 #section
 This is the section title
 
-- This is the first paragraph.
+    This is the /*bold*/first*/ paragraph.
 
-- This is the second paragraph.
+    This is the /*italic*/second*/ paragraph.
 
-- This is the third paragraph.
+    This is the /*underline*/third*/ paragraph.
 
 #footer
 The first line of the footer.

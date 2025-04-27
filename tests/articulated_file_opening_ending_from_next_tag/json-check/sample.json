@@ -1,6 +1,8 @@
 [
 [[1], ""],
+[[2, 3], ""],
 ["This is just a line of not tagged text.", ""],
-[[3], "my-title"],
+["", "_empty_line"],
+[[5], "my-title"],
 ["My title from tag", ""]
 ]

@@ -1,8 +1,10 @@
 [
 [[1], "file-opening"],
 [[2], "from-file"],
+[[3, 4], ""],
 ["start.html", ""],
-[[4], "file-ending"],
-[[5], "from-file"],
+["", "_empty_line"],
+[[6], "file-ending"],
+[[7], "from-file"],
 ["end.html", ""]
 ]

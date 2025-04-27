@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Minimal publication</title>
+\    <title>Minimal publication</title>
 </head>
 <body>
 
@@ -19,8 +19,6 @@
     ###new-line
 ##item-separator
     ###new-line
-    ###text -
-    ###space
 ##item
     ###text <h2>
     ###content
@@ -35,13 +33,29 @@
 #content-list footer
 ##list
     ###text <div class="footer">
+    ###new-line
     ###content
     ###text </div>
     ###new-line
 ##item-separator
     ###new-line
 ##item
-    ###text <p>
+    ###text \    <p>
     ###content
     ###text </p>
     ###new-line
+
+#tag bold
+    ##text <b>
+    ##content
+    ##text </b>
+
+#tag italic
+    ##text <i>
+    ##content
+    ##text </i>
+
+#tag underline
+    ##text <u>
+    ##content
+    ##text </u>

@@ -18,6 +18,7 @@
         <context name="afterTag" attribute="normal" lineEndContext="#pop" fallthroughContext="normalText">
             <RegExpr attribute="tagId" context="escapeAfterTag" String="\|[A-Za-z0-9-]+" />
             <RegExpr attribute="escape" context="#pop" String=" *\\ *" />
+            <RegExpr attribute="escape" context="#pop" String=" *\\" />
             <RegExpr attribute="escape" context="ignoreTagAfterTag" String="\\(?=\|[A-Za-z0-9-]+)" />
         </context>
         <context name="escapeAfterTag" attribute="normal" lineEndContext="#pop" fallthroughContext="normalText">

@@ -13,11 +13,13 @@
 ["publication</title></head>", ""],
 ["", "new-line"],
 [[14], "text"],
+[[15, 16], ""],
 ["<body><p>", ""],
-[[16, 18, 19], "file-ending"],
-[[17], "text"],
+["", "_empty_line"],
+[[18, 20, 21], "file-ending"],
+[[19], "text"],
 ["</p></body>", ""],
 ["", "new-line"],
-[[20], "text"],
+[[22], "text"],
 ["</html>", ""]
 ]

@@ -1,13 +1,17 @@
 [
 [[1], "file-opening"],
+[[2, 3], ""],
 ["<!DOCTYPE html>\n<html>\n<head><title>Minimal publication</title></head>\n<body><p>", ""],
-[[3], "file-ending"],
+["", "_empty_line"],
+[[5], "file-ending"],
+[[6, 7], ""],
 ["</p></body>\n</html>", ""],
-[[5, 6, 8, 9], "tag"],
+["", "_empty_line"],
+[[9, 10, 12, 13], "tag"],
 ["bold", ""],
-[[7], "text"],
+[[11], "text"],
 ["<b>", ""],
 ["", "content"],
-[[10], "text"],
+[[14], "text"],
 ["</b>", ""]
 ]

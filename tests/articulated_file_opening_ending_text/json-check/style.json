@@ -1,8 +1,10 @@
 [
 [[1], "file-opening"],
 [[2], "text"],
+[[3, 4], ""],
 ["<!DOCTYPE html>\n<html>\n<head><title>Minimal publication</title></head>\n<body><p>", ""],
-[[4], "file-ending"],
-[[5], "text"],
+["", "_empty_line"],
+[[6], "file-ending"],
+[[7], "text"],
 ["</p></body>\n</html>", ""]
 ]

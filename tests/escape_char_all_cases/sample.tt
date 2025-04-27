@@ -28,7 +28,13 @@ This is a line with \#tag# special chars escaped.
 This is a line with a tag with an escaped id.
 
 #paragraph
-This is a line with \/*bold* no need to escape anything.
+This is a line with /*bold* no need to escape anything.
 
 #paragraph
-This is a line with \#tag no need to escape anything.
+This is a line with #tag no need to escape anything.
+
+#paragraph
+An escape char \with no special char to escape remains present as normal text.
+
+#paragraph
+Escaped chars normal in tagged text but special in json \" \\ \/ \b \f \n \r \t \u200 end.

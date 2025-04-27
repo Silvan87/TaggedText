@@ -1,10 +1,16 @@
 [
 [[1], "title"],
+[[2, 3], ""],
 ["Example of legal use of subtag content inside a tag list", ""],
-[[3], "item"],
-["This will be repeated twice.", ""],
+["", "_empty_line"],
 [[5], "item"],
+[[6, 7], ""],
+["This will be repeated twice.", ""],
+["", "_empty_line"],
+[[9], "item"],
+[[10, 11], ""],
 ["Also this will be repeated twice.", ""],
-[[7], "url"],
+["", "_empty_line"],
+[[13], "url"],
 ["repeated-3-times", ""]
 ]

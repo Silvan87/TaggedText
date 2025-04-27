@@ -4,11 +4,13 @@
 [[3], "template-path"],
 [".", ""],
 [[5], "publication-path"],
+[[6, 7], ""],
 ["../pub", ""],
-[[7, 8, 10], "publish"],
+["", "_empty_line"],
+[[9, 10, 12], "publish"],
 ["publication.html", ""],
-[[9], "content"],
+[[11], "content"],
 ["sample", ""],
-[[11], "template"],
+[[13], "template"],
 ["style", ""]
 ]

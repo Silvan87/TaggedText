@@ -1,6 +1,8 @@
 [
 [[1], "title"],
+[[2, 3], ""],
 ["Chapter 3", ""],
-[[3], "paragraph"],
+["", "_empty_line"],
+[[5], "paragraph"],
 ["This is the content of chapter 3.", ""]
 ]
