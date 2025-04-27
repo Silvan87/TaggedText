@@ -156,7 +156,7 @@ def check_pub_files_are_equal_to_expected_pub_files(test_case):
 
 
 def _check_filtered_files_in_a_folder_with_checking_files(
-        test_case, file_format_list, file_folder,checking_file_folder
+        test_case, file_format_list, file_folder, checking_file_folder
     ):
     """Check some generated files with other checking files in a prepared folder. The generated files have to be
     equal to checking files.
@@ -182,7 +182,12 @@ def _check_filtered_files_in_a_folder_with_checking_files(
         ]
         for file_name in file_list:
             file_path = os.path.join(file_rel_folder, file_name)
-            checking_file_path = file_path.replace('/' + file_folder + '/', '/' + checking_file_folder + '/')
+            if '/' + file_folder + '/' in file_path:
+                checking_file_path = file_path.replace('/' + file_folder + '/', '/' + checking_file_folder + '/')
+            elif '\\' + file_folder + '\\' in file_path:
+                checking_file_path = file_path.replace('\\' + file_folder + '\\', '\\' + checking_file_folder + '\\')
+            else:
+                raise Exception("The rewriting from produced file path to checking file path failed.")
 
             if not os.path.exists(checking_file_path):
                 test_case.fail("The checking file " + checking_file_path + " does not exist.")
