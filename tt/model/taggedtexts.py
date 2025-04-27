@@ -43,9 +43,6 @@ class TaggedTexts:
         :param tt_file_name: tt file name without extension, even a list of tt file names.
         :return: the content of a tagged text in json format.
         """
-        if type(tt_file_name) is set:
-            tt_file_name = list(tt_file_name)
-
         if type(tt_file_name) is list:
             if len(tt_file_name) > 1:
                 tuple_key = tuple(tt_file_name)
@@ -93,9 +90,6 @@ class TaggedTexts:
         :param item_index: the index of the item.
         :return: the name of the original tagged text before the conjunction.
         """
-        if type(tt_file_name_list) is set:
-            tt_file_name_list = list(tt_file_name_list)
-
         tt_lengths = []
         farthest_reached_index = 0
         for tt_name in tt_file_name_list:
@@ -105,6 +99,8 @@ class TaggedTexts:
         for file_index, farthest_index in enumerate(tt_lengths):
             if item_index <= farthest_index:
                 return tt_file_name_list[file_index]
+
+        return None
 
     @classmethod
     def get_item_number(cls, tt_file_name: str | list):

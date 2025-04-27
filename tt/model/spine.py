@@ -114,7 +114,7 @@ class Spine:
         self._current_pub_info_item_index = 0
         self._file_name_lists = {}  # key: list name; value: file name list
         self._pub_file_name_indexes = {}  # key: pub file name; value: pub info index
-        self._tt_file_names = set()
+        self._tt_file_names = []
         self._json_file_names = []
         self._detected_tt_files = []
         self._unchanged_json_files = []
@@ -334,9 +334,11 @@ class Spine:
         """
         if type(tt_file_names) is list:
             for tt_file_name in tt_file_names:
-                self._tt_file_names.add(tt_file_name)
+                if tt_file_name not in self._tt_file_names:
+                    self._tt_file_names.append(tt_file_name)
         else:
-            self._tt_file_names.add(tt_file_names)
+            if tt_file_names not in self._tt_file_names:
+                self._tt_file_names.append(tt_file_names)
 
     def get_tt_content_file_names(self):
         """Get the set of tt content file names."""
@@ -399,7 +401,7 @@ class Paths:
     """
     def __init__(self, spine_instance: Spine):
         """Instantiate the Paths object with variables to hold the computed paths and a reference to the Spine object
-        to obtain information.
+        to collect information.
 
         :param spine_instance: the instantiated Spine object.
         """
@@ -463,8 +465,7 @@ class Paths:
     def get_current_tt_file_abs_path(self):
         """Get the current and existing tt file abs path or else None is returned."""
 
-        if os.path.isfile(self.current_tt_file_abs_path):
-            return self.current_tt_file_abs_path
+        return self.current_tt_file_abs_path
 
     def get_current_json_file_abs_path(self, existing_file: bool = True):
         """Get the current json file abs path, only if requested it should also exist.
@@ -475,6 +476,7 @@ class Paths:
         if existing_file is True:
             if os.path.isfile(self.current_json_file_abs_path):
                 return self.current_json_file_abs_path
+            return None
         else:
             return self.current_json_file_abs_path
 
