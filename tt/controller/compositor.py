@@ -79,19 +79,18 @@ class TemplateRule:
 class ContentPiece:
     """A parsed text piece with content and context."""
 
-    def __init__(self, content_data: list, content_index: int, template_names: list, found_rule: TemplateRule = None):
+    def __init__(self, content_data: list, content_index: int, template_names: list):
         """Constructor of a content piece with its context.
 
         :param content_data: the tagged text in json format where to find the data for the content.
         :param content_index: the index of the content piece inside the content data.
         :param template_names: the list of template names where to search the rule.
-        :param found_rule: the TemplateRule with all the information for the rule.
         """
         self._content_data = content_data
         self._piece_index = content_index
         self._piece = content_data[content_index]
         self._template_names = template_names
-        self._found_rule = found_rule  # TODO is it really useful to pass the already found rule?
+        self._found_rule = None
         self._found_list_rule = None
         self._involved_tag_number = 1
 
@@ -101,7 +100,7 @@ class ContentPiece:
 
         # Since a tag can have a tag rule with a tag list rule at the same time,
         # it needs to search in every template and put together these types of rules.
-        # Moreover, the subsequent template rules overwrite the previous template rules.
+        # Moreover, the following template rules overwrite the previous template rules.
         template_name_index = len(template_names) - 1
         while template_name_index > -1:
             rule_template_name = template_names[template_name_index]
@@ -217,7 +216,9 @@ class ContentPiece:
     def apply_rule_and_arrange_value(self):
         """Apply the found rule of the parsed text piece producing the text result with the Compositor."""
 
-        index_jump = 0
+        # The value will be overwritten but move of at least 1 index avoids loops
+        index_jump = 1
+
         if self._found_list_rule:
             index_jump = Compositor.arrange_tag_list_value(self)
 
@@ -225,15 +226,17 @@ class ContentPiece:
             rule_tag = self._found_rule.get_tag()
 
             if rule_tag == 'tag':
-                Compositor.arrange_value(self)
+                index_jump = Compositor.arrange_value(self)
 
             elif rule_tag == 'content-list':
-                Compositor.arrange_content_list(self)
+                index_jump = Compositor.arrange_content_list(self)
 
             elif rule_tag == 'catching-tag':
-                Compositor.arrange_catching_tag_value(self._template_names, self.get_found_rule().get_rule())
+                index_jump = Compositor.arrange_catching_tag_value(self._template_names, self.get_found_rule().get_rule())
             else:
                 raise CompositorError.NotSupportedTagRuleError(self._found_rule.get_template_name(), rule_tag)
+        else:
+            index_jump = Compositor.get_involved_item_number_in_an_item(self.get_index(), self.get_content_data())
 
         return index_jump
 
@@ -277,20 +280,28 @@ class Compositor:
         cls._current_template_name = template_name
 
     @classmethod
-    def get_involved_item_number_in_an_item(cls, item_index: int):
+    def get_involved_item_number_in_an_item(cls, item_index: int, content_data: list = None):
         """Get the number of the involved items in an item identified by its index.
 
         :param item_index: the index of the item to analyze.
+        :param content_data: the content data to use.
         """
-        content_data = TaggedTexts.get(cls._json_content_name_list)
-        final_index = item_index
+        if not content_data:
+            content_data = TaggedTexts.get(cls._json_content_name_list)
+
+        # If the index is out of range for the content, it is working with a template file as a content.
+        # This case can be ignored returning 0 and if a random number is calculated, it is not used anyway.
+        if item_index >= len(content_data):
+            return 0
+
+        initial_index = item_index
         item = content_data[item_index]
 
         while type(item[0]) is list:
-            final_index = item[0][-1]
-            item = content_data[final_index]
+            item_index = item[0][-1]
+            item = content_data[item_index]
 
-        return final_index - item_index + 1
+        return item_index - initial_index + 1
 
     @classmethod
     def look_for_rule_in_templates(cls, tag: str, tag_list_first: bool = False):
@@ -343,20 +354,29 @@ class Compositor:
 
         if TaggedTexts.get_current_tt_type() == TtType.SPINE:
             content_data = parsing_tree.get_json_data()
+
         elif TaggedTexts.get_current_tt_type() == TtType.TEMPLATE:
             content_data = Templates.get_rules(cls._current_template_name)
+
         else:  # TtType.CONTENT
             content_data = TaggedTexts.get(cls._json_content_name_list)
 
         return content_data
 
     @classmethod
-    def get_raw_first_value_of_item(cls, item: list | TemplateRule, content_data: list = None):
-        """Get a simple string of the first child of this item. If it is composed by sub pieces they are ignored.
-        An item can be a template rule.
+    def get_raw_first_value_of_item(
+            cls, item: list | TemplateRule, content_data: list = None, only_direct_first_value: bool = False
+        ):
+        """Get a simple string of the first child of this item. If it is composed by sub pieces, get the raw value from
+        the sub pieces. An item can be a template rule. The initial and ending white spaces are removed. With only_
+        _direct_first_value you can force to get an empty string in case the raw value is not directly available.
 
         :param item: the item passed as a piece of the parsed text.
         :param content_data: all the content data of the parsed text.
+        :param only_direct_first_value: if True it forces to consider only a direct first raw value or else an empty
+        string is returned. The default is False. There are three exceptions: the direct value is a list of one not
+        tagged value; the direct value is a list of one not tagged value and a special tag "empty line"; the direct
+        value is a list of a not tagged list and this one indicates one not tagged value and a special tag "empty line".
         :return: the string value of that item.
         """
 
@@ -365,20 +385,33 @@ class Compositor:
 
         piece_index = item[0]
         if type(piece_index) is list:
+            if only_direct_first_value:
+                if type(content_data[piece_index[0]][0]) is str and content_data[piece_index[0]][1] == "":
+                    pass
+                elif type(content_data[piece_index[0]][0]) is list and content_data[piece_index[0]][1] == "" and \
+                        type(content_data[content_data[piece_index[0]][0][0]][0]) is str and \
+                        content_data[content_data[piece_index[0]][0][0]][1] == "":
+                    pass
+                else:
+                    return ""
             piece_index = item[0][0]
 
-        value = content_data[piece_index][0]
+        if type(piece_index) is int:
+            value = content_data[piece_index][0]
+        else:
+            value = item[0]
 
-        # If the first child is a list, there is no simple string value
-        while type(value) is list:
-            value = ''
+        # If the first child is a list, continue to assemble a raw value
+        if type(value) is list:
+            value = ContentPiece(content_data, piece_index, []).get_raw_value()
+
         return value
 
     @classmethod
     def get_raw_first_value_of_item_thru_piece(
             cls, item: list, content_piece: ContentPiece, template_as_content: bool = False
         ):
-        """Get a simple string from the first value of an item. If it is composed by pieces take the first value of the
+        """Get a simple string from the first value of an item. If it is composed by pieces, take the first value of the
         first piece that is not a list.
 
         :param item: the item passed as a piece of the parsed text.
@@ -393,9 +426,10 @@ class Compositor:
         value = content_data[item[0][0]][0]
 
         # If the value is described by a list, that is not expected.
-        # So, take the first value in the list that is not a list.
+        # So, take the first value indicated by the id in the found list.
         while type(value) is list:
-            value = value[0]
+            value = content_data[value[0]][0]
+
         return value
 
     @classmethod
@@ -403,14 +437,14 @@ class Compositor:
             cls, item: list, subtag: str, default='', content_data: list = None, with_index: bool = False
         ):
         """Get a simple string from a subtag corresponding to a specified tag. If more sub tags are present, a list of
-        simple strings are returned.
+        simple strings is returned.
 
-        :param item: the item where to search for the sub item.
-        :param subtag: the tag requested for the sub item.
+        :param item: the item where to search for the subitem.
+        :param subtag: the tag requested for the subitem.
         :param default: a default string value if nothing is found.
-        :param content_data: the content data where to search for the item and its sub items.
-        :param with_index: True to get a tuple with the index of the sub item and its value.
-        :return: the string value of a sub item tagged as requested. With with_index=True a tuple is returned as defined
+        :param content_data: the content data where to search for the item and its subitems.
+        :param with_index: True to get a tuple with the index of the subitem and its value.
+        :return: the string value of a subitem tagged as requested. With with_index=True a tuple is returned as defined
         above. If more sub tags are found, a tuple of lists is returned: a list of indexes and a list of strings.
         """
         if content_data is None:
@@ -489,7 +523,7 @@ class Compositor:
     def arrange_first_value_of_item_thru_its_content(cls, item: list, content_data: list):
         """Arrange the value of the first child of this item in the developing tree.
 
-        :param item: the item where to take the first sub item.
+        :param item: the item where to take the first subitem.
         :param content_data: the content data of which the item is part of.
         """
         value = content_data[item[0][0]][0]
@@ -500,12 +534,11 @@ class Compositor:
 
     @classmethod
     def arrange_value(cls, content_piece: ContentPiece):
-        """Arrange the value on the content developing tree by applying a template rule to an indexed content.
+        """Arrange the value on the content of the developing tree by applying a template rule to an indexed content.
 
-        :param content_piece: the piece of content whose value to process and arrange in the publication.
+        :param content_piece: The piece of content whose value has to be processed and arranged in the publication.
+        :return: The number of indexes processed.
         """
-
-        content_occurrences = 0
         template_rule = content_piece.get_found_rule()
 
         if template_rule:
@@ -513,7 +546,8 @@ class Compositor:
         else:
             if content_piece.get_tag() == '':
                 Publications.add_branch(content_piece.get_raw_value())
-            return
+
+            return cls.get_involved_item_number_in_an_item(content_piece.get_index(), content_piece.get_content_data())
 
         content_index = content_piece.get_index()
         content_data = content_piece.get_content_data()
@@ -533,7 +567,7 @@ class Compositor:
             elif rule_piece[1] == 'from-subtag':
                 subtag_name = cls.get_raw_first_value_of_item(rule_piece, template_data)
                 subtag_index, subtag_value = cls.get_raw_subtag_value_of_tag(
-                    content_data[content_index], subtag_name,'', with_index=True
+                    content_data[content_index], subtag_name, '', content_data, True
                 )
                 if type(subtag_value) is list:
                     cls.look_for_rules_for_each_items(subtag_value, content_data)
@@ -569,29 +603,26 @@ class Compositor:
                 )
                 template_rel_folder = spine.paths.get_template_files_rel_folder()
                 file_path = os.path.join(spine.paths.make_file_abs_folder, template_rel_folder, file_name)
-                f = open(file_path, 'r')
+                f = open(file_path, 'r', encoding='utf-8')
                 value = ''.join(f.readlines())
                 f.close()
                 Publications.add_branch(value)
 
             elif rule_piece[1] == 'content':
                 cls.look_for_rules_for_each_items(content_data[content_index][0], content_data)
-
-                content_occurrences += 1
-                if content_occurrences > 1:
-                    raise CompositorError.RepeatedContentSubtagError
-
             else:
                 if rule_piece[1] != "":
                     print("rule_piece[1] not managed:", rule_piece[1])
+
+        return cls.get_involved_item_number_in_an_item(content_piece.get_index(), content_piece.get_content_data())
 
     @classmethod
     def arrange_content_list(cls, content_piece: ContentPiece):
         """Arrange the value of a content split into pieces and composed in a list in the publication.
 
-        :param content_piece: the piece of content whose value to process and arrange in the publication.
+        :param content_piece: the piece of content whose value has to be processed and arranged in the publication.
         """
-        # lists of couples: {key: type of text piece; value: value of text piece}
+        # lists of couples: {key: type of text piece; value: value of the text piece}
         # 1° list: the beginning of the list
         # 2° list: the end of the list
         # In the middle can be present only 1 content (the list of items)
@@ -599,7 +630,7 @@ class Compositor:
         item_separator = ''
 
         # list of item_text subrules, each list is a list of 3 lists of couples.
-        # Lists of couple: {key: type of text piece; value: value of text piece}
+        # Lists of couples: {key: type of text piece; value: value of the text piece}
         # 1° list: the beginning of the item
         # 2° list: the content and the things between contents of the item
         # 3° list: the end of the item
@@ -691,7 +722,7 @@ class Compositor:
                             item_part_index += 1
 
                         if item_last_content_index == -1:
-                            # Until there is a content subtag to be processed, the item part has to be the middle part
+                            # Until there is a content subtag to be processed, the item part has to be the middle part.
                             # So it needs to find the last occurrence of content subtag.
                             exploring_index = len(rule_piece[0]) - 1
                             while exploring_index >= 0:
@@ -723,38 +754,81 @@ class Compositor:
             else:
                 Publications.add_branch(list_text_piece['value'])
 
-        index = 0
-        item_text_index = -1
+        # Look for items that correspond to the item separator
+        divided_content = [[]]
+        start_new_list = False
+        sub_piece_index = content_piece.get_sub_pieces()[0]
+        sub_piece_max_index = content_piece.get_sub_pieces()[-1]
 
-        # Split content into items
-        contents = Compositor.get_raw_first_value_of_item(
-            content_piece.get_sub_pieces(), content_piece.get_content_data()
-        )
-        contents = contents.strip(item_separator).split(item_separator)
+        while sub_piece_index <= sub_piece_max_index:
+            piece = content_piece.get_content_data()[sub_piece_index]
 
-        # List body (items from split contents)
-        while index < len(contents):
-            content = contents[index]
+            if type(piece[0]) is list:
+                sub_piece_max_index = max(sub_piece_max_index, *piece[0])
+                if sub_piece_index > content_piece.get_sub_pieces()[0]:
+                    divided_content[-1].append(sub_piece_index)
 
-            if item_text_index + 1 < len(items_text):
-                item_text_index += 1
+            elif piece[0] == item_separator or (item_separator == '\n' and piece[1] == '_empty_line'):
+                if len(divided_content[-1]) > 0:
+                    start_new_list = True
+            else:
+                divided_content[-1].append(sub_piece_index)
 
-            # Initial part of an item of the list
-            cls._add_text_pieces_to_publication(items_text[item_text_index][0])
+            if sub_piece_index + 1 <= sub_piece_max_index and start_new_list:
+                divided_content.append([])
+                start_new_list = False
 
-            for item_text_piece in items_text[item_text_index][1]:
-                if item_text_piece['type'] == 'content':
-                    Publications.add_branch(content)
+            sub_piece_index += 1
 
-                elif item_text_piece['type'] == 'dynamic-text':
-                    item_text_piece['value'][0](*item_text_piece['value'][1:])
-                else:
-                    Publications.add_branch(item_text_piece['value'])
+        # List body (items from divided content)
+        content_part_index = 0
+        content_part_count = len(divided_content)
+        item_text_index = 0
 
-            # Final part of an item of the list
-            cls._add_text_pieces_to_publication(items_text[item_text_index][2])
+        while content_part_index < content_part_count:
+            content_part = divided_content[content_part_index]
+            first_subpart_index = content_part[0]
+            piece = content_piece.get_content_data()[first_subpart_index]
 
-            index += 1
+            # If there is a second-level tag, manage it without considering it an item of this list
+            if piece[1] != '':
+                separated_piece = ContentPiece(
+                    content_piece.get_content_data(), first_subpart_index, content_piece.get_template_name_list()
+                )
+                separated_piece.apply_rule_and_arrange_value()
+            else:
+                # Initial part of an item of the list
+                cls._add_text_pieces_to_publication(items_text[item_text_index][0])
+
+                for item_text_piece in items_text[item_text_index][1]:
+                    if item_text_piece['type'] == 'content':
+                        indexes_of_content = []
+                        p = 0
+                        while p < len(content_part):
+                            # Check if the current ID is not mentioned previously and collect it
+                            if not content_part[p] in indexes_of_content:
+                                if (p == 0 or
+                                        (type(content_piece.get_content_data()[content_part[p - 1]][0]) is str) or
+                                        (p > 0 and not content_part[p] in
+                                            content_piece.get_content_data()[content_part[p - 1]][0])):
+                                    indexes_of_content += [content_part[p]]
+
+                            p += 1
+
+                        cls.look_for_rules_for_each_items(indexes_of_content, content_piece.get_content_data())
+
+                    elif item_text_piece['type'] == 'dynamic-text':
+                        item_text_piece['value'][0](*item_text_piece['value'][1:])
+                    else:
+                        Publications.add_branch(item_text_piece['value'])
+
+                # Final part of an item of the list
+                cls._add_text_pieces_to_publication(items_text[item_text_index][2])
+
+                if item_text_index < len(items_text) - 1:
+                    item_text_index += 1
+
+            content_part_index += 1
 
         # List ending
         for list_text_piece in list_text[1]:
@@ -763,7 +837,7 @@ class Compositor:
             else:
                 Publications.add_branch(list_text_piece['value'])
 
-        return 1
+        return cls.get_involved_item_number_in_an_item(content_piece.get_index(), content_piece.get_content_data())
 
     @classmethod
     def arrange_tag_list_value(cls, content_piece: ContentPiece):
@@ -778,8 +852,8 @@ class Compositor:
         list_text = [[], []]
         item_separator = ''
 
-        # list of item_text subrules, each list is a list of 3 lists of couples.
-        # Lists of couple: {key: type of text piece; value: value of text piece}
+        # List of item_text subrules, each list is a list of 3 lists of couples.
+        # Lists of couples: {key: type of text piece; value: value of a text piece}
         # 1° list: the beginning of the item
         # 2° list: the content and the things between contents of the item
         # 3° list: the end of the item
@@ -793,12 +867,11 @@ class Compositor:
             cls.get_raw_first_value_of_item(template_rule, template_data)
         )
 
-        rule_piece_number = 0
+        rule_piece_number = 1
         max_piece_number = len(template_rule.get_sub_pieces())
         while rule_piece_number < max_piece_number:
             rule_piece_index = template_rule.get_sub_pieces()[rule_piece_number]
             rule_piece = template_data[rule_piece_index]
-
             if rule_piece[1] == 'list':
                 part = 0
                 for sub_rule_index in rule_piece[0]:
@@ -875,7 +948,7 @@ class Compositor:
                             item_part_index += 1
 
                         if item_last_content_index == -1:
-                            # Until there is a content subtag to be processed, the item part has to be the middle part
+                            # Until there is a content subtag to be processed, the item part has to be the middle part.
                             # So it needs to find the last occurrence of content subtag.
                             exploring_index = len(rule_piece[0]) - 1
                             while exploring_index >= 0:
@@ -931,14 +1004,12 @@ class Compositor:
                 if not rule:
                     if type(tagged_line[0]) is list:
 
-                        # List body (sub items)
+                        # List body (subitems)
                         for sub_item_index in tagged_line[0]:
                             content_piece = ContentPiece(
-                                content_data, sub_item_index,
-                                cls._current_template_name_list,
-                                rule
+                                content_data, sub_item_index, cls._current_template_name_list
                             )
-                            if content_piece.get_found_rule():
+                            if content_piece.get_found_rule() or content_piece.get_found_list_rule():
                                 if item_text_index + 1 < len(items_text):
                                     item_text_index += 1
 
@@ -970,10 +1041,8 @@ class Compositor:
                     if item_text_index + 1 < len(items_text):
                         item_text_index += 1
 
-                    content_piece = ContentPiece(
-                        content_data, index,
-                        cls._current_template_name_list
-                    )
+                    content_piece = ContentPiece(content_data, index, cls._current_template_name_list)
+
                     if item_separator and index > starting_index:
                         Publications.add_branch(item_separator)
 
@@ -1000,7 +1069,7 @@ class Compositor:
                 else:
                     exit("Not managed RULE TAG inside a tag-list:" + rule[1])
 
-            involved_items = cls.get_involved_item_number_in_an_item(index)
+            involved_items = cls.get_involved_item_number_in_an_item(index, content_piece.get_content_data())
             index += involved_items
 
         # List ending
@@ -1029,7 +1098,7 @@ class Compositor:
         """Arrange the value of a catching tag on the content developing tree."""
 
         Publications.add_branch('<LISTA FROM CATCHING TAG>')
-        return  # TODO BUG method to be refactored
+        return 1  # TODO BUG method to be refactored
 
         tags_to_catch = []
         list_text = ['', '']
@@ -1151,15 +1220,15 @@ class Compositor:
             if tag == '':
                 cls.look_for_rules_for_each_items(item[0], content_data)
 
+            elif tag == '_empty_line':
+                if 0 < item_number < len(item_list) - 1:
+                    Publications.add_branch('\n')
+
             elif cls.look_for_rule_in_templates(tag, tag_list_first=True):
                 rule = cls.get_last_found_rule()
 
                 if rule[1] == 'tag':
-                    content_piece = ContentPiece(
-                        content_data, item_index,
-                        cls._current_template_name_list,
-                        cls.look_for_rule_in_templates(tag)
-                    )
+                    content_piece = ContentPiece(content_data, item_index, cls._current_template_name_list)
                     cls.arrange_value(content_piece)
 
                 elif rule[1] == 'catching-tag':
@@ -1167,11 +1236,7 @@ class Compositor:
                     Publications.add_branch(text)
 
                 elif rule[1] == 'tag-list':
-                    content_piece = ContentPiece(
-                        content_data, item_index,
-                        cls._current_template_name_list,
-                        rule
-                    )
+                    content_piece = ContentPiece(content_data, item_index, cls._current_template_name_list)
                     index_jump = cls.arrange_tag_list_value(content_piece)
                 else:
                     exit("Not managed RULE TAG inside a first-level tag:" + rule[1])
@@ -1197,7 +1262,8 @@ class Compositor:
             if cls.look_for_rule_in_templates('file-opening'):
                 value = cls.get_raw_first_value_of_item(
                     cls._current_rule,
-                    Templates.get_rules(cls._current_template_name)
+                    Templates.get_rules(cls._current_template_name),
+                    only_direct_first_value=True
                 )
                 if value != '':
                     Publications.add_branch(value)
@@ -1205,8 +1271,7 @@ class Compositor:
                 piece = ContentPiece(
                     Templates.get_rules(cls._current_template_name),
                     cls._current_rule_index,
-                    cls._current_template_name_list,
-                    TemplateRule(cls._current_rule_index, cls._current_template_name)
+                    cls._current_template_name_list
                 )
                 cls.arrange_value(piece)
 
@@ -1215,7 +1280,8 @@ class Compositor:
             if cls.look_for_rule_in_templates('file-ending'):
                 value = cls.get_raw_first_value_of_item(
                     cls._current_rule,
-                    Templates.get_rules(cls._current_template_name)
+                    Templates.get_rules(cls._current_template_name),
+                    only_direct_first_value=True
                 )
                 if value != '':
                     Publications.add_branch(value)
@@ -1223,8 +1289,7 @@ class Compositor:
                 piece = ContentPiece(
                     Templates.get_rules(cls._current_template_name),
                     cls._current_rule_index,
-                    cls._current_template_name_list,
-                    TemplateRule(cls._current_rule_index, cls._current_template_name)
+                    cls._current_template_name_list
                 )
                 cls.arrange_value(piece)
 
@@ -1235,23 +1300,14 @@ class Compositor:
                 tagged_line = TaggedTexts.get_tagged_line(head_input_file, index)
                 tag = tagged_line[1]
                 if tag == '':
-                    piece = ContentPiece(
-                        TaggedTexts.get(head_input_file), index, cls._current_template_name_list
-                    )
-                    cls.arrange_value(piece)
-                    index += cls.get_involved_item_number_in_an_item(index)
+                    piece = ContentPiece(TaggedTexts.get(head_input_file), index, cls._current_template_name_list)
+                    index_jump = cls.arrange_value(piece)
                 else:
                     piece = ContentPiece(
-                        TaggedTexts.get(file_info.get_content_list()), index,
-                        cls._current_template_name_list,
-                        cls.look_for_rule_in_templates(tag)
+                        TaggedTexts.get(file_info.get_content_list()),
+                        index,
+                        cls._current_template_name_list
                     )
                     index_jump = piece.apply_rule_and_arrange_value()
 
-                    if index_jump > 0:
-                        index += index_jump
-                    else:
-                        used_tag_count = piece.get_involved_tag_number()
-                        while used_tag_count > 0:
-                            used_tag_count -= 1
-                            index += cls.get_involved_item_number_in_an_item(index)
+                index += index_jump
