@@ -382,6 +382,10 @@
 
     <code><b class="tag1">#tag-list</b> note reference curiosity<br /><b class="tag2">##list</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;div class="note-group"&gt;<br /><span class="tab"></span><b class="tag2">###content</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;/div&gt;<br /><b class="tag2">##item-separator</b> &lt;hr /&gt;<br /><b class="tag2">##item</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;h3&gt;<br /><span class="tab"></span><b class="tag2">###content</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;/h3&gt;<br /><b class="tag2">##item</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;p&gt;<br /><span class="tab"></span><b class="tag2">###content</b><br /><span class="tab"></span><b class="tag2">###text</b> &lt;/p&gt;</code>
 
+    <p>It is necessary to note that the tags listed in the tag-list rule must be handled by specific rules themselves. This allows for greater flexibility, so you can have tags ignored if no rule is present; or further specific processing according to the defined rule. Some examples:</p>
+
+    <code><b class="tag1">#tag</b> note<br /><b class="tag2">##text</b> [<br /><b class="tag2">##from-counter</b> nth-note<br /><b class="tag2">##text</b> ] <b class="esc">\</b><br /><b class="tag2">##content</b><br /><br /><b class="tag1">#tag</b> reference<br /><b class="tag2">##content</b><br />(in this way you can report the content without further processing)<br /><br />('curiosity' has no rule so it is ignored)</code>
+
     <h4>2.2.5. Rule to split the content into elements and compose them into a list</h4>
 
     <p>It is convenient to be able to define a list in the most user-friendly way, and instead of tagging each element, one or more arbitrary characters, including line breaks, will be used to determine how many and which elements the content of a single tag should be divided into. Once this is defined, we can apply the subtags <b>##list</b> and <b>##item</b> exactly as seen above. Here's an example.</p>
