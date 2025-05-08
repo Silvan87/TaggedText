@@ -943,6 +943,12 @@ class Compositor:
                             "type": "new-line",
                             "value": "\n"
                         })
+                    elif sub_rule_piece[1] == 'from-subtag':
+                        subtag_name = cls.get_raw_first_value_of_item(sub_rule_piece, template_data)
+                        items_text.append({
+                            "type": "from-subtag",
+                            "value": subtag_name
+                        })
                     elif sub_rule_piece[1] == 'content':
                         if item_part_index == 0:
                             item_part_index += 1
@@ -1055,6 +1061,15 @@ class Compositor:
 
                         elif item_text_piece['type'] == 'dynamic-text':
                             item_text_piece['value'][0](*item_text_piece['value'][1:])
+
+                        elif item_text_piece['type'] == 'from-subtag':
+                            value = cls.get_raw_subtag_value_of_tag(
+                                content_piece.get_piece(),
+                                item_text_piece['value'],
+                                '',
+                                content_piece.get_content_data()
+                            )
+                            Publications.add_branch(value)
                         else:
                             Publications.add_branch(item_text_piece['value'])
 
