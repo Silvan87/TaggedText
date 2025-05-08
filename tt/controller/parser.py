@@ -699,8 +699,13 @@ class _Reader:
                     publishing_name = Compositor.get_raw_first_value_of_item(definition)
                     pub_format = Compositor.get_raw_subtag_value_of_tag(definition, 'extension')
                     pub_file_names = []
+                    name_with_format = []
 
-                    name_with_format = publishing_name.split('.', maxsplit=1)
+                    if '.' in publishing_name:
+                        name_with_format = publishing_name.split('.')
+                        name_with_format[0] = '.'.join(name_with_format[0:-1])
+                        name_with_format[1] = name_with_format[-1]
+                        name_with_format = name_with_format[0:2]
 
                     if pub_format == '' and len(name_with_format) > 1:
                         pub_format = name_with_format[1]
@@ -967,7 +972,13 @@ class _Reader:
 
                 elif item[1] in ['tag', 'catching-tag']:
                     trigger_tag = Compositor.get_raw_first_value_of_item(item)
-                    Templates.set_trigger(tag_name=trigger_tag, rule_index=index, template_name=template_name)
+                    if ' ' in trigger_tag:
+                        trigger_tags = Regex.whitespace_split(trigger_tag)
+                    else:
+                        trigger_tags = [trigger_tag]
+
+                    for trigger_tag in trigger_tags:
+                        Templates.set_trigger(tag_name=trigger_tag, rule_index=index, template_name=template_name)
 
                 elif item[1] == 'content-list':
                     trigger_tags = Regex.whitespace_split(Compositor.get_raw_first_value_of_item(item))
