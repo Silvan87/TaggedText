@@ -945,7 +945,7 @@ class Compositor:
                         })
                     elif sub_rule_piece[1] == 'from-subtag':
                         subtag_name = cls.get_raw_first_value_of_item(sub_rule_piece, template_data)
-                        items_text.append({
+                        items_text[item_text_index][item_part_index].append({
                             "type": "from-subtag",
                             "value": subtag_name
                         })
@@ -977,6 +977,12 @@ class Compositor:
                         raise CompositorError.NotSupportedSubtagRuleError(
                             template_rule.get_template_name(), sub_rule_piece[1]
                         )
+
+                # if sub_rule content was not present, normalize items_text
+                if len(items_text[item_text_index][1]) == 0:
+                    items_text[item_text_index][1] = items_text[item_text_index][0]
+                    items_text[item_text_index][0] = []
+
             rule_piece_number += 1
 
         content_data = content_piece.get_content_data()
