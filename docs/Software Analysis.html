@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<!-- This version of Software Analysis html file with work_items.js is bilingual Italian and English.
+If you want only English or another couple of languages you need to customize it. -->
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<script src="work_items.js"></script>
+<title>Software Analysis</title>
+<link href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABqUlEQVR4nO2VvU7DMBSFPwmpO0gwoCJGWGDqhIpYysZ78AiteAHKMyAWFiQ68rcTMnVsNwYW0oW1KzKKdC2syG6u3cACR7qK7eT6nNwfG/7x81gFLoF34BXoAysaxxZwAcyAAhjKWgw2gAlgKnamcR56HIeJ5J/AEXAi8zfNBoV8fAB0ZVwkkFv7EBF2rBbQBQ4jBLjk5XMfuHciUT6vUlNwHklezkvsOXtMgTWNgJaIKJRFGCJfd9anzrq6A4wT/pCIRslD4Q91QuPk1Q6wCHXC2CmwzjLk+YK/9lkG7HharROISC1MpD0DpzJ+BJ4qrRZFjrNxDG7E50FEmFTyVAG2Vlwbp5BXBeSK/CNpmEkkynTs8o1jicRExlECMkX+Q9gCRh6fkbxTCdAid6JRHlADYC77zOXu71fWBqET1SQICKXtFmg737Vlzb5/aaoGjONjIgSYpmrAeATUpUAlQAufgE3g2iP6Dtj+DQEWPWetHFuoBORL1EBozygB2RI1sOhve1oBTbWhnUe3oRauj+8g8nVG7UFkEsxFXRcEkSWSh+6F6MuIP4kvW1p1D8pfl7cAAAAASUVORK5CYII=" rel="icon" type="image/x-icon" />
+<style>
+* {
+	margin:0;
+	padding:0;
+	box-sizing:border-box;
+}
+.state-0, .state-1, .state-2, .state-3, .state-4, .state-5, .state-6, .state-7, .state-8, .state-9, .state-10 {
+    padding:.25em .75em;
+    border-radius:1em;
+    margin-right:4px;
+    height:26px;
+}
+.state-0 { border:.15em dashed #333; }
+.state-1 { background:#ccc; }
+.state-2 { background:#cc0; }
+.state-3 { background:#7df; }
+.state-4 { background:#79f; }
+.state-5 { background:#f88; }
+.state-6 { background:#f94; }
+.state-7 { background:#de0; }
+.state-8 { background:#0e0; }
+.state-9 { background:#ccc; }
+.state-10 { background:#f55; }
+
+html {
+	font-size:16px;
+}
+body, input, textarea, code, select, button {
+	background:#555;
+	color:#cfcfcf;
+	font-size:15px;
+	line-height:20px;
+	font-family:Verdana, sans-serif;
+}
+select {
+	padding:0 4px;
+}
+button {
+	background:#ddd;
+	color:#555;
+	padding:2px 5px 3px 5px;
+	border-radius:8px;
+}
+button.circle {
+	border-radius:100%;
+	width:32px;
+	height:32px;
+}
+button.todayButton {
+	font-size: 11px;
+	height: 19px;
+	text-transform: uppercase;
+	padding-top: 0px;
+	line-height: 15px;
+	vertical-align: text-bottom;
+}
+input:focus, textarea:focus, button:focus, code:focus {
+	outline:none;
+}
+textarea {
+	resize:none;
+	overflow-y:scroll;
+}
+header, .row {
+	margin-bottom:12px;
+}
+.username {
+	width: 150px;
+}
+.checkItemRow {
+	margin-top:12px;
+}
+.flex {
+	display:flex;
+}
+span.break {
+	display:block;
+	height:8px;
+}
+.inline-block {
+	display:inline-block;
+}
+.description {
+	margin-bottom:20px;
+}
+.fieldDesc {
+	display:inline-block;
+	color:#666;
+	font-size:11px;
+	font-weight:bold;
+}
+.digits2 {
+	width:50px;
+}
+.digits4 {
+	width:70px;
+}
+#workItemForm {
+	display:inline-block;
+	margin:8px 0;
+	padding:0;
+	position:relative;
+	background:#c0c0c0;
+	color:#000;
+	width:800px;
+	left:calc(50vw - 400px);
+	border-radius:16px;
+	height:0px;
+	transition:height 0.5s ease-in-out;
+	overflow:hidden;
+}
+#workItemForm h1 {
+	font-size:16px;
+}
+#workItemForm h2 {
+	font-size:14px;
+	margin-bottom:4px;
+}
+#idLabel {
+	margin-left:8px;
+	font-weight:bold;
+}
+#selectedPriorityInput {
+	color:#000;
+}
+#workItemForm .editTitle, #workItemForm .subtask {
+	width:calc(100% - 30px);
+}
+#workItemForm label.lang {
+	display:inline-block;
+	width:22px;
+	margin-right:6px;
+}
+#workItemForm label.date {
+	display:inline-block;
+	width:122px;
+}
+#workItemForm .parallelDesc {
+	display:flex;
+	width:100%;
+}
+#workItemForm .parallelDesc div {
+	width:50%;
+}
+#titleIntro {
+	margin-bottom:2px;
+}
+#workItemForm textarea.itemDesc {
+	width:100%;
+	overflow-y:scroll;
+}
+#workItemForm .commands {
+	text-align:right;
+}
+#deleteButton {
+	float:left;
+	background:#f1bfa5;
+}
+header {
+	display:flex;
+	justify-content:space-between;
+}
+#workItemCheckList {
+	text-align:right;
+}
+#workItemCheckList .circle {
+	margin-bottom:4px;
+}
+.checkItemRow > input, .checkItemRow > select {
+	margin-right:12px;
+}
+aside {
+    display:block;
+    width:208px;
+    padding:0 0 0 7px;
+    z-index:2;
+    color:#ddf;
+}
+aside li {
+    list-style:none;
+    text-align:center;
+    padding:12px 0 0 0;
+}
+aside #tabs li {
+    list-style:none;
+    padding:10px 0;
+    font-weight:bold;
+    text-align:center;
+    border-radius:24px 0 0 24px;
+    transition:margin-left 0.1s linear;
+}
+aside #tabs li:hover {
+    margin-left:-6px !important;
+}
+#langs {
+	text-align:right;
+	margin:8px 12px 8px 0;
+}
+#langs div {
+	display:inline-block;
+	background:#ccc;
+	border-radius:100%;
+	padding:1px;
+	height:36px;
+	width:37px;
+}
+#langs div:hover {
+	background:#fff;
+}
+#tabs ul {
+	width:200px;
+}
+#actions li {
+	margin-left:12px;
+}
+#actions li:hover {
+	color:#fff;
+}
+#actions img {
+	vertical-align:bottom;
+}
+#content {
+    border-width:8px medium 8px 8px;
+    color:#555;
+    overflow-x:hidden;
+}
+::-webkit-scrollbar {
+	display:none;
+}
+#content section {
+	width:calc(100vw - 208px);
+    padding:16px 16px 0 16px;
+    border-radius:16px 0 0 16px;
+    min-height:400px;
+}
+#content section article {
+    padding:25px 16px 16px 16px;
+    margin-bottom:16px;
+    border-radius:16px;
+    background:#eee;
+}
+.assignment, .duration {
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+}
+#content header {
+    display:flex;
+    justify-content:space-between;
+}
+#content header .priority {
+    display:block;
+    min-width:24px;
+    max-width:24px;
+    min-height:24px;
+    max-height:24px;
+    border-radius:16px;
+    margin-left:8px;
+}
+#content header .priority.high { background:#c00; color:#fff; }
+#content header .priority.medium { background:#fc0; }
+#content header .priority.low { background:#70cc00; }
+
+#content .itemId {
+    font-size:14px;
+    font-weight:bold;
+    text-align:center;
+    line-height:105%;
+    color:#333;
+    height:40px;
+    padding:4px;
+    margin:0 6px 0 0;
+    border-radius:4px;
+    max-width:40px;
+}
+#content .itemId::before {
+    content:"ID ";
+}
+#content .itemId .editIcon {
+	position:absolute;
+	margin:-15px 0 0 -23px;
+	opacity:0;
+	transition:all 0.2s linear;
+}
+#content .itemId:hover .editIcon {
+	opacity:1;
+}
+#content .typeIcon {
+	width:32px;
+	height:32px;
+	margin:3px 6px 0 0;
+}
+#content .typeTitle {
+	position:absolute;
+	margin-left:46px;
+	margin-top:-20px;
+	font-size:11px;
+	text-transform:uppercase;
+}
+#content h2 {
+    text-align:left;
+    font-size:16px;
+    color:#444;
+    margin-bottom:.5em;
+    min-height:2.75em;
+    width:100%;
+}
+#content p, #content ul {
+    font-size:14px;
+    margin-bottom:.5em;
+}
+#content ul li {
+    margin-left:1.5em;
+}
+#content .subtasks {
+    list-style-type:none;
+    margin-top:.5em;
+}
+#content .subtasks li {
+    list-style-type:none;
+    margin:-2px 0 0 0;
+    padding:6px 4px;
+    border-radius:16px;
+    background:#eee;
+    border:2px dashed #888;
+}
+#content .subtaskAssignee {
+	display:inline-block;
+	margin:0 8px 0 8px;
+}
+@media (max-width: 800px) {
+	body > .flex {
+		flex-wrap:wrap;
+	}
+	aside, #workItemForm, #content section, #tabs ul {
+		width:100%;
+	}
+	#tabs ul li {
+		margin-right:0 !important;
+	}
+	#actions ul {
+		margin-bottom:12px;
+	}
+	#workItemForm {
+		left:0;
+	}
+	#content section {
+		width:100vw;
+	}
+	#content .typeIcon {
+		margin:45px 7px 0px -39px;
+	}
+	#content .subtaskAssignee {
+		margin:4px 8px 0 8px;
+	}
+}
+</style>
+</head>
+
+<body onload="loadWorkItems(); colorSections(); setLanguage(); showSprintOrProductBacklog()">
+	<div id="workItemForm">
+		<header>
+			<div>
+				<h1 id="workItemFormTitle" class="inline-block"></h1>
+				<select id="workItemType" class="inline-block"></select>
+				<span id="idLabel">ID&nbsp;<span id="idLabelValue"></span></span>
+			</div>
+			<div><label id="priorityLabel"></label> <select id="selectedPriorityInput" onchange="updatePriorityBackgroundColor(this)"></select></div>
+		</header>
+		<div class="row">
+			<label for="creatorName" id="creatorNameLabel"></label> <input type="text" id="creatorName" class="username"></input>
+			<select id="creatorRole" class="roles" onchange="updateRoleDesc(this)"></select> <p id="selectedRoleDesc" class="fieldDesc"></p>
+		</div>
+		<div class="row">
+			<h2><label id="titleLabel"></label> <span class="fieldDesc" id="titleTip"></span></h2>
+			<div id="titleIntro"></div>
+			<div><label class="lang" for="workItemTitleIt">IT</label><input type="text" id="workItemTitleIt" class="editTitle"></input></div>
+			<div><label class="lang" for="workItemTitleEn">EN</label><input type="text" id="workItemTitleEn" class="editTitle"></input></div>
+		</div>
+		<div class="row">
+			<h2><label id="descLabel"></label> <span class="fieldDesc" id="descTip"></span></h2>
+			<div class="parallelDesc">
+				<div><label class="lang" for="workItemDescIt">IT</label><textarea id="workItemDescIt" class="itemDesc" rows="15"></textarea></div>
+				<div><label class="lang" for="workItemDescEn">EN</label><textarea id="workItemDescEn" class="itemDesc" rows="15"></textarea></div>
+			</div>
+		</div>
+		<div class="row">
+			<div>
+				<label class="date" for="workItemCreationDay" id="creationDateLabel"></label>
+				<input type="number" min="1" max="31" id="workItemCreationDay" class="digits2"></input>
+				<input type="number" min="1" max="12" id="workItemCreationMonth" class="digits2"></input>
+				<input type="number" id="workItemCreationYear" class="digits4"></input>
+			</div>
+			<div>
+				<label class="date" for="workItemStartDay" id="startDateLabel"></label>
+				<input type="number" min="1" max="31" id="workItemStartDay" class="digits2"></input>
+				<input type="number" min="1" max="12" id="workItemStartMonth" class="digits2"></input>
+				<input type="number" id="workItemStartYear" class="digits4"></input>
+				<button class="todayButton" onclick="setTodayOn('workItemStart')">Today</button>
+			</div>
+			<div>
+				<label class="date" for="workItemEndDay" id="endDateLabel"></label>
+				<input type="number" min="1" max="31" id="workItemEndDay" class="digits2"></input>
+				<input type="number" min="1" max="12" id="workItemEndMonth" class="digits2"></input>
+				<input type="number" id="workItemEndYear" class="digits4"></input>
+				<button class="todayButton" onclick="setTodayOn('workItemEnd')">Today</button>
+			</div>
+		</div>
+		<div class="row">
+			<h2>Check list <button class="circle" onclick="addSubtask()">+</button></h2>
+			<div id="workItemCheckList"></div>
+		</div>
+		<div class="row commands">
+			<button id="deleteButton" onclick="deleteWorkItem()"></button>
+			<button id="cancelButton" onclick="hideWorkItemForm()"></button>
+			<button id="createButton" onclick="createWorkItem(); refreshBacklogs();"></button>
+			<button id="saveButton" onclick="saveWorkItem(); refreshBacklogs();"></button>
+		</div>
+	</div>
+	<div class="flex">
+		<aside>
+			<nav id="langs">
+			<div onclick="setLanguage(1)"><img src="data:image/png;base64,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" alt="EN" /></div>
+			<div onclick="setLanguage(0)"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAAAXNSR0IB2cksfwAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAxpJREFUWMPNmNlPE0Ecx78z3S6FlkOOdoMgqCEkJpgYIUBBBUN8UK4Ib0YhaEDAP4Jnny1gogSPNzUSlGiCBwLlsMqDGBOVWAlE2uWQY3vRdscHCJEEaJvQLp/XnfntJ7+Zyfx+QxAioijqOC7qjExJDsAywRAHACBYZSBWlcy++nyeIb1eL4USlwQzqK0N9HLdp8rUQ1mtYCgFoAowxQ+C96qpCVNCbmkvAeRA/6CBBjR3F1RKWdU/lp22TjCUBSEBACowlGlss52oMX5nxagINIHb7UPD/aLYxGh9l+SZq5XWbeDVGoSMRmuAOGIAQS+rKejF4lgdGcBy0BlpvWfMSIxK/iZ55mqxX4hjlUgyTrJiHAlKpLHbeFyjSbFIXnsa9htxJA1CkYUV49ieIi2mEl28Wnjr8NpTEC7sZj0Mxg8sf/O07SQSExf/eG39TwbCjTiShrTCBzuK3OwqLJd89ipECnG0mp3FxW0ijXdPq2P4pDuINEn5JlaycXIpABBeXeH0LmREXGRhPBN+XNoSieESm6EUiaeaAYC2mEp0Hnm1VDGR1dkydgFazq/15BOZqRQT8c2r4EUepYzlQmkI8qgMJkB5BEpAkw5ARpIpYTJTXIRBpoySxQMgskgJg/0ALI2dMiZbDsBm/UgdnHucUs6vmAKX4ocTFvro2hcHT+PfKSYSm95PPsNJAcAtL3UoJrI00b516QnWqBdatf53xCVSCqzg8GpLpK1twOf02W5FXEQcayED8G2r0DrqP/bFqg09EZPQFz4nw3i9Y83qWFm5GsunToddwlA0g9nR+l2L5/bWAUnyzJzX8cJ8GCVEiOZzZByre/Y1HQ2WXy6XmKflhdmwZEI055JBWIPq9Ew3Rqb/uudPxPHpD/dvTxT0YsF8kgxiJqQmvOu6ee32lSd1YKRCxwtT61536HeS22GHoWgKQDl5Nla1W98b1GtAZ8PoS93PnuyEGEMTJXgDbBy3QAUgJeh3Gw434ak5mwyhb1/eR/7HZrNp1dHRxTIjOQTsKBjiNyOtMBArJWzS63INC4LgCCXuPxBAGL4/NUiiAAAAAElFTkSuQmCC" alt="IT" /></div>
+			</nav>
+			<nav id="tabs"><ul>
+				<li onclick="showSection(0)">Vision</li>
+				<li onclick="showSection(1)">Done backlog</li>
+				<li onclick="showSection(2)">Product backlog</li>
+				<li onclick="showSection(3)">Sprint backlog</li>
+			</ul></nav>
+			<nav id="actions"><ul>
+				<li onclick="newWorkItem()">New work item</li>
+				<li onclick="downloadData()">Download data</li>
+			</ul></nav>
+		</aside>
+		<main id="content">
+			<section id="vision"></section>
+			<section id="done-backlog"></section>
+			<section id="product-backlog"></section>
+			<section id="sprint-backlog"></section>
+		</main>
+    </div>
+
+<script>
+var sectionColors = ['#37c', '#27bc23', '#aa0', '#c50']
+var borderColors = ['#008', '#1b760d', '#660', '#820']
+var textColors = ['#ccf', '#145e09', '#440', '#600']
+
+var lang = 0 // 0: IT, 1: EN
+var str = {
+"newWorkItem": ["Nuovo elemento", "New work item"],
+"downloadData": ["Scarica i dati", "Download data"],
+"title": ["Titolo", "Title"],
+"titleTip": ["Descrizione concisa della questione o dell'obiettivo", "Concise description of the issue or the goal"],
+"description": ["Descrizione", "Description"],
+"descriptionTip": ["Spiegazione estesa della questione", "Extensive explanation of the issue"],
+"notSavedData": ["Dati modificati non ancora salvati!", "Changed data not saved yet!"],
+"priority": ["Priorità", "Priority"],
+"as": ["Come", "As"],
+"creator": ["Creatore", "Creator"],
+"creationDate": ["Data creazione", "Creation date"],
+"startDate": ["Data inizio", "Start date"],
+"endDate": ["Data fine", "End date"],
+"createWorkItem": ["Crea elemento", "Create work item"],
+"editWorkItem": ["Modifica elemento di lavoro", "Edit work item"],
+"assignee": ["Assegnatario", "Assignee"],
+"state": ["Stato", "State"],
+"edit": ["Modifica", "Edit"],
+"cancel": ["Annulla", "Cancel"],
+"saveChanges": ["Salva modifiche", "Save changes"],
+"deleteWorkItem": ["Elimina elemento", "Delete work item"],
+"sureToDelete": ["Sicuro di voler eliminare", "Are you sure to delete"],
+"emptyCreatorNameAlert": ["Inserire il nome del creatore dell'elemento di lavoro.", "Insert the creator's name of the work item."],
+"emptyWorkItemTitleAlert": ["Inserire il titolo dell'elemento di lavoro per ogni lingua.", "Insert the title of the work item for every language."],
+"emptySubtaskTitleAlert": ["Inserire il titolo della sotto attività per ogni lingua.", "Insert the title of the subtask for every language."],
+"notAssigned": ["Non assegnata", "Not assigned"]
+}
+
+var nextAvailableId = 0
+var creatorNames = []
+var assigneeNames = []
+var doneWorkItemIndexes = []
+var dproductWorkItemIndexes = []
+var sprintWorkItemIndexes = []
+var dataChanged = false
+var lastResizeTime = 0
+var shownSection = 0
+
+var workItemForm = byId("workItemForm")
+var workItemFormTitle = byId("workItemFormTitle")
+var selectRoleDesc = byId("selectedRoleDesc")
+var idLabelValue = byId("idLabelValue")
+
+// roles fields: [nome ruolo (it), descrizione ruolo (it)], [role name (en), role description (en)]
+var roles = [
+[["Committente", "Chi ha avviato il progetto e ne porta avanti la visione, come anche le richieste degli utenti finali.", "Creatore di contenuti"],
+["Product Owner", "Who started the project and carries forward its vision, as well as the feedback of the end users.", "Content creator"]],
+[["Analista", "Chi progetta la sintassi Tagged Text e sceglie tra varie implementazioni tecniche per soddisfare i requisiti del PO."],
+["Analyst", "Who designs the Tagged Text syntax and chooses between various technical implementations to meet the PO requirements."]],
+[["Sviluppatore", "Chi scrive il codice per avere la libreria Tagged Text funzionante e corregge i difetti."],
+["Developer", "Who writes the code to have a working Tagged Text library and fixes defects."]],
+[["Tester", "Chi scrive i test automatici E2E ed esegue tutti i test periodicamente controllando le regressioni."],
+["Tester", "Who writes the automated E2E tests and executes all the tests periodically checking regressions."]]
+]
+
+// work item types: [nome (it), name (en), background color]
+var itemTypes = [
+["Storia utente", "User Story", "#ccc"],
+["Ristrutturazione", "Refactoring", "#d8d641"],
+["Difetto", "Defect", "#ed9191"],
+["Test", "Test", "#85bc81"],
+["Documentazione", "Documentation", "#e692cd"],
+["Manuale utente", "User Manual", "#99b4f2"]
+]
+
+// All the possible states for a work item: [nome (it), name (en)]
+var states = [
+["Bozza","Draft"],
+["Pronta da sviluppare","Ready to develop"],
+["In sviluppo","In progress"],
+["Da revisionare","Ready to review"],
+["In revisione","In review"],
+["Da testare","To be tested"],
+["Sotto test","In testing"],
+["Da rilasciare","Ready to release"],
+["Fatto","Done"],
+["Sospesa","Suspended"],
+["Bloccata","Blocked"]
+]
+
+// priority fields: [nome (it), name (en)], color
+var priorities = [[["Bassa","Low"], "#70cc00"], [["Media","Medium"], "#fc0"], [["Alta","High"], "#c00"]]
+
+const workItemFormObserver = new ResizeObserver(div => {
+	if (Date.now() - lastResizeTime < 550) {
+		let tabsItems = byId('tabs').firstChild.children
+		if (window.innerWidth <= 784) {
+			tabsItems[shownSection].style.marginRight = '0'
+		} else {
+			tabsItems[shownSection].style.marginRight = '-9px'
+		}
+		if (div[0].target.offsetHeight === 0) return
+		updateFormHeight()
+	}
+	lastResizeTime = Date.now()
+});
+workItemFormObserver.observe(workItemForm);
+
+function byId(elementId) {
+	return document.getElementById(elementId)
+}
+
+function colorSections() {
+    let tabsItems = byId('tabs').firstChild.children
+    let contentSections = byId('content').children
+
+    for (let n = 0; n < tabsItems.length; n++) {
+        contentSections[n].style.background = sectionColors[n]
+        contentSections[n].style.border = '8px solid ' + borderColors[n]
+        contentSections[n].style.borderRight = 'none'
+        tabsItems[n].style.background = sectionColors[n]
+        tabsItems[n].style.color = textColors[n]
+        tabsItems[n].style.border = '2px solid ' + sectionColors[n]
+    }
+}
+
+function updateFormHeight(open) {
+	if (!open && workItemForm.style.height === "0px") return
+	workItemForm.style.height = (byId("cancelButton").offsetTop + 40) + "px"
+}
+
+function setLanguage(langIndex) {
+	if (langIndex === undefined) {
+		switch (navigator.language) {
+			case "it": case "it-IT": langIndex = 0; break
+			default: langIndex = 1;
+		}
+	}
+	lang = langIndex
+    let actions = byId('actions').firstChild.children
+	actions[0].innerText = str.newWorkItem[lang]
+	updateDownloadDataButton()
+	workItemFormTitle.innerText = str.createWorkItem[lang]
+	loadWorkItemTypesInTypeSelectBox()
+	byId("creatorNameLabel").innerText = str.creator[lang] + ":"
+	byId("priorityLabel").innerText = str.priority[lang] + ":"
+	loadPrioritiesInPrioritySelectBox()
+	updatePriorityBackgroundColor(byId("selectedPriorityInput"))
+	loadRolesInRoleSelectBoxes()
+	byId("titleLabel").innerText = str.title[lang]
+	byId("titleTip").innerText = str.titleTip[lang]
+	byId("descLabel").innerText = str.description[lang]
+	byId("descTip").innerText = str.descriptionTip[lang]
+	byId("creationDateLabel").innerText = str.creationDate[lang] + ":"
+	byId("startDateLabel").innerText = str.startDate[lang] + ":"
+	byId("endDateLabel").innerText = str.endDate[lang] + ":"
+	byId("cancelButton").innerText = str.cancel[lang]
+	byId("createButton").innerText = str.createWorkItem[lang]
+	byId("saveButton").innerText = str.saveChanges[lang]
+	byId("deleteButton").innerText = str.deleteWorkItem[lang]
+	loadStatesInStateSelectBoxes();
+	["assignee", "state"].forEach(name => {
+		let labels = document.getElementsByClassName(name + "Labels")
+		for (let i = 0; i < labels.length; i++) {
+			labels[i].textContent = str[name][lang] + ': '
+		}
+	})
+	refreshBacklogs()
+}
+
+function setTodayOn(id) {
+	let today = new Date();
+	byId(id + "Day").value = today.getDate()
+	byId(id + "Month").value = today.getMonth() + 1
+	byId(id + "Year").value = today.getFullYear()
+}
+
+function updateDownloadDataButton() {
+	let actions = byId('actions').firstChild.children
+	actions[1].innerHTML = str.downloadData[lang] + (
+		(dataChanged ? ' <img title="' + str.notSavedData[lang] + '" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABvElEQVQ4T8WUzysEYRjHv+/OLk7s+HFePxclNrtLue2BUm5yl4vmxNamOFCSy6YUibR/AO1NXMiZ7DpsVvkRkZPYnXKQjXk9s1l2xoyx2vIen+f7/TzP8z7vDEORDysyD/8DlI8wqk7i9GPNaiLLDuVD1CkCTknIbAxtFV5c/gS1BKbjiIJj8AMSFX0Y+jMwHUOAzPv5AMbRR6PvmkFNO+SbEOR6xMnYoTMnnU/wsABejaCmwFQMEiVXVNN8pAF2QcHE8HWWwQGp0ofVXwPlBESewTkZqlXTeLgVDruCcPAsx0gJb3CXd+NRDzXskO5ukYRjOfHUkht2O8esdPHl51gU/QhaAh9iaBGABAkdOfHceiMEGnly5Crf/6oo8FR1IalZmr6CHMcO5+jPjy9vuCDYOKShW62cYU/0otcUmIpjgJ7Flr7IQcIJhTbR0yF/2wOFB2hB27nE5x3yJErSz0hQoFnvGp5uz44cmTkxWuylswJtrAkvavITKMcQomphI8fdfRlKHQpqxIxRWo2F6Ata0ABps+ojqzVzWMSvCVivBR7DRfeXfXeFHs7wIHbiRgMsFGKmt/zbFFroHeY5dRX1KJ6WAAAAAElFTkSuQmCC" alt="IT" />' : '')
+	)
+}
+
+function showSection(sectionNumber) {
+	shownSection = sectionNumber
+    let tabsItems = byId('tabs').firstChild.children
+    let contentSections = byId('content').children
+
+    for (let n = 0; n < tabsItems.length; n++) {
+        contentSections[n].style.display = (n == sectionNumber) ? 'inline-block' : 'none'
+        tabsItems[n].style.color = (n == sectionNumber) ? textColors[n] : borderColors[n]
+        tabsItems[n].style.borderLeft = '4px solid ' + ((n == sectionNumber) ? borderColors[n] : sectionColors[n])
+        tabsItems[n].style.borderRight = '2px solid ' + sectionColors[n]
+        tabsItems[n].style.marginLeft = (n == sectionNumber) ? '-6px' : '6px'
+        if (window.innerWidth <= 784) {
+			tabsItems[n].style.marginRight = '0'
+        } else {
+			tabsItems[n].style.marginRight = (n == sectionNumber) ? '-9px' : '0'
+        }
+        tabsItems[n].style.borderRadius = (n == sectionNumber) ? '0' : '24px 0 0 24px'
+    }
+}
+
+function loadWorkItems() {
+	findNextAvailableIdAndExistingNames()
+	workItemForm.style.height = "0px"
+	emptyWorkItemForm()
+}
+
+function findNextAvailableIdAndExistingNames() {
+	let id_list = []
+	for (let i = 0; i < work_items.length; i++) {
+		id_list.push(work_items[i][0])
+		if (!creatorNames.includes(work_items[i][3][0])) creatorNames.push(work_items[i][3][0]);
+		for (let j = 0; j < work_items[i][9].length; j++) {
+			if (!assigneeNames.includes(work_items[i][9][j][1][0])) assigneeNames.push(work_items[i][9][j][1][0]);
+		}
+	}
+	nextAvailableId = Math.max(...id_list) + 1
+}
+
+function loadWorkItemTypesInTypeSelectBox() {
+	let selectedValue = (byId("workItemType").value === "") ? 0 : byId("workItemType").value
+	let htmlString = ""
+	for (let i = 0; i < itemTypes.length; i++) {
+		htmlString += '<option value="'+ i +'">'+ itemTypes[i][lang] +'</option>'
+	}
+	byId("workItemType").innerHTML = htmlString
+	byId("workItemType").value = selectedValue
+}
+
+function loadPrioritiesInPrioritySelectBox() {
+	let selectedValue = (byId("selectedPriorityInput").value === "") ? 0 : byId("selectedPriorityInput").value
+	let htmlString = ""
+	for (let i = 0; i < priorities.length; i++) {
+		htmlString += '<option style="background:'+ priorities[i][1] +';" value="'+ i +'">'+ priorities[i][0][lang] +'</option>'
+	}
+	byId("selectedPriorityInput").innerHTML = htmlString
+	byId("selectedPriorityInput").value = selectedValue
+}
+
+function loadRolesInRoleSelectBoxes() {
+	let rolesSelectBoxes = document.getElementsByClassName("roles")
+	for (let i = 0; i < rolesSelectBoxes.length; i++) {
+		let selectedValue = rolesSelectBoxes[i].value
+		let htmlString = ""
+		for (let j = 0; j < roles.length; j++) {
+			htmlString += '<option value="'+ j +'">'+ roles[j][lang][0] +'</option>'
+		}
+		rolesSelectBoxes[i].innerHTML = htmlString
+		rolesSelectBoxes[i].value = selectedValue
+	}
+	if (rolesSelectBoxes[0].value === "") rolesSelectBoxes[0].value = 0
+	updateRoleDesc(rolesSelectBoxes[0])
+}
+
+function loadStatesInStateSelectBoxes() {
+	let statesSelectBoxes = document.getElementsByClassName("states")
+	for (let i = 0; i < statesSelectBoxes.length; i++) {
+		let selectedValue = statesSelectBoxes[i].value
+		let htmlString = ""
+		for (let j = 0; j < states.length; j++) {
+			htmlString += '<option value="'+ j +'">'+ states[j][lang] +'</option>'
+		}
+		statesSelectBoxes[i].innerHTML = htmlString
+		statesSelectBoxes[i].value = selectedValue
+	}
+}
+
+function refreshBacklogs() {
+
+	// Empty backlogs
+	byId("vision").innerHTML = ""
+	byId("done-backlog").innerHTML = ""
+	byId("product-backlog").innerHTML = ""
+	byId("sprint-backlog").innerHTML = ""
+	doneWorkItemIndexes = []
+	productWorkItemIndexes = []
+	sprintWorkItemIndexes = []
+
+	// Write on Vision page
+	const article = document.createElement('article')
+	article.innerHTML = pages.vision[lang]
+	byId("vision").appendChild(article)
+
+	// Classify work items among done, product or sprint backlog
+	for (let i = 0; i < work_items.length; i++) {
+		let subtasks = work_items[i][9]
+		let onlyDone = true
+		let inSprint = false
+
+		for (let j = 0; j < subtasks.length; j++) {
+			if (subtasks[j][2] !== 8) onlyDone = false
+			if ([7, 6, 5, 4, 3, 2].includes(subtasks[j][2])) {
+				sprintWorkItemIndexes.push(i)
+				inSprint = true
+				break
+			}
+		}
+		if (inSprint) continue
+		if (onlyDone) {
+			doneWorkItemIndexes.push(i)
+		} else {
+			productWorkItemIndexes.push(i)
+		}
+	}
+
+	// Order work items IDs
+	doneWorkItemIndexes.sort((a, b) => work_items[b][0] - work_items[a][0])
+	productWorkItemIndexes.sort((a, b) => {
+		if (work_items[b][2] !== work_items[a][2]) return work_items[b][2] - work_items[a][2];
+		return work_items[b][0] - work_items[a][0];
+	});
+	sprintWorkItemIndexes.sort((a, b) => {
+		if (work_items[b][2] !== work_items[a][2]) return work_items[b][2] - work_items[a][2];
+		return work_items[b][0] - work_items[a][0];
+	});
+
+	// Populate backlogs
+	for (let i = 0; i < doneWorkItemIndexes.length; i++) {
+		let article = composeWorkItemArticle(doneWorkItemIndexes[i])
+		byId("done-backlog").appendChild(article)
+	}
+
+	for (let i = 0; i < productWorkItemIndexes.length; i++) {
+		let article = composeWorkItemArticle(productWorkItemIndexes[i])
+		byId("product-backlog").appendChild(article)
+	}
+
+	for (let i = 0; i < sprintWorkItemIndexes.length; i++) {
+		let article = composeWorkItemArticle(sprintWorkItemIndexes[i])
+		byId("sprint-backlog").appendChild(article)
+	}
+}
+
+function showSprintOrProductBacklog() {
+	if (sprintWorkItemIndexes.length > 0) {
+		showSection(3);
+	} else {
+		showSection(2);
+	}
+}
+
+function composeWorkItemArticle(workItemIndex) {
+	const article = document.createElement('article')
+	const header = document.createElement('header')
+	let id = work_items[workItemIndex][0]
+	let typeIndex = work_items[workItemIndex][1]
+
+	const idDiv = document.createElement('div')
+	idDiv.classList.add('itemId')
+	idDiv.innerText = id
+	idDiv.style.backgroundColor = itemTypes[typeIndex][2]
+	const editImg = document.createElement('img')
+	editImg.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAABI0lEQVR4nO3VsWrCUBSA4R+vGdQXcLOgnXTzndwcsxYHly7tOyh0sQr6BLq7WehYiD6Abt0shWO5yL3kxpw4WA8cSA4kX87JzQ3ccJSAGFgCL0DtWvAAOFr5WjRYBtpAHfi04FXR6AT4kFHXLTwuGk2AptRKgg/k+C8WZ+/hkpwCFQfalM47rqdcA0OgmyN9aCL1sg/u5RivAd7O0AbwBbwDke/CPPAJ3WZF88CnhbT1jPd3/GjDdqctqT1YnVaBmTZsUtBIFtxREzYBKNqwCURVYZMBVYONA23Jue+TUYH7wN6BenckLXgsN3kCHoFdwOagAm+sn8EhpVM1uAp8Cz6SsaehKnAkeNZQ30BC4w4743/CY8G1chgCPwuunXO1+WnFD4AinpL/HTzOAAAAAElFTkSuQmCC"
+	editImg.alt = str.edit[lang]
+	editImg.classList.add("editIcon")
+	editImg.style.backgroundColor = itemTypes[typeIndex][2]
+	editImg.addEventListener('click', function() { editWorkItem(id) })
+	idDiv.appendChild(editImg)
+	header.appendChild(idDiv)
+
+	const typeStrong = document.createElement('strong')
+	typeStrong.classList.add("typeTitle")
+	typeStrong.innerText = itemTypes[typeIndex][lang]
+	typeStrong.style.color = itemTypes[typeIndex][2]
+	typeStrong.style.filter = "brightness(80%)"
+	header.appendChild(typeStrong)
+
+	const h2 = document.createElement('h2')
+	let labelIndex = 0
+	if (work_items[workItemIndex][3][1] === 0) labelIndex = 2
+	h2.innerText = str.as[lang] + " " + roles[work_items[workItemIndex][3][1]][lang][labelIndex].toLowerCase() + ", "
+	if (lang === 1 && work_items[workItemIndex][4][lang][0] === "I") {
+		h2.innerText += work_items[workItemIndex][4][lang]
+	} else {
+		h2.innerText += work_items[workItemIndex][4][lang][0].toLowerCase() + work_items[workItemIndex][4][lang].substring(1)
+	}
+	header.appendChild(h2)
+
+	const priorityDiv = document.createElement('div')
+	priorityDiv.classList.add('priority')
+	priorityDiv.title = str.priority[lang]
+	switch (work_items[workItemIndex][2]) {
+		case 0: priorityDiv.classList.add('low'); break;
+		case 1: priorityDiv.classList.add('medium'); break;
+		case 2: priorityDiv.classList.add('high'); break;
+	}
+
+	if (work_items[workItemIndex][2] === 2) priorityDiv.classList.add('defect')
+	header.appendChild(priorityDiv)
+	article.appendChild(header)
+
+	const descriptionDiv = document.createElement('div')
+	descriptionDiv.classList.add('description')
+	descriptionDiv.innerHTML = renderTextToHtml(work_items[workItemIndex][5][lang])
+	article.appendChild(descriptionDiv)
+
+	const durationDiv = document.createElement('div')
+	durationDiv.classList.add('duration')
+	let htmlString = (
+		"<p><b>" + str.creator[lang] + "</b>: " + work_items[workItemIndex][3][0] + "</p>" +
+		"<p><b>" + str.creationDate[lang] + "</b>: " + formatDate(work_items[workItemIndex][6]) + "</p>" +
+		"<p><b>" + str.startDate[lang] + "</b>: " + formatDate(work_items[workItemIndex][7]) + "</p>" +
+		"<p><b>" + str.endDate[lang] + "</b>: " + formatDate(work_items[workItemIndex][8]) + "</p>"
+	)
+	durationDiv.innerHTML = htmlString
+	article.appendChild(durationDiv)
+
+	const subtasksUl = document.createElement('ul')
+	subtasksUl.classList.add('subtasks')
+	for (let j = 0; j < work_items[workItemIndex][9].length; j++) {
+		const subtaskLi = document.createElement('li')
+		subtaskLi.style.display = "flex"
+		subtaskLi.style.justifyContent = "space-between"
+		subtaskLi.style.flexWrap = "wrap"
+
+		const leftSpan = document.createElement('span')
+		leftSpan.innerText = work_items[workItemIndex][9][j][0][lang]
+
+		const stateSpan = document.createElement('span')
+		stateIndex = work_items[workItemIndex][9][j][2]
+		stateSpan.classList.add('state-' + stateIndex)
+		stateSpan.innerText = states[stateIndex][lang]
+		leftSpan.prepend(stateSpan)
+
+		const rightSpan = document.createElement('span')
+		rightSpan.classList.add('subtaskAssignee')
+		rightSpan.innerText = work_items[workItemIndex][9][j][1][0]
+
+		const roleLabel = document.createElement('b')
+		roleLabel.innerText = roles[work_items[workItemIndex][9][j][1][1]][lang][0] + ": "
+		rightSpan.prepend(roleLabel)
+
+		subtaskLi.appendChild(leftSpan)
+		subtaskLi.appendChild(rightSpan)
+		subtasksUl.appendChild(subtaskLi)
+	}
+	article.appendChild(subtasksUl)
+	return article
+}
+
+function formatDate(dateList) {
+	let dateString = "?"
+	if (dateList.length > 0)
+		dateString = dateList[0]
+	if (dateList.length > 1)
+		dateString = getMonthAbbreviation(dateList[1]) + " " + dateString
+	if (dateList.length === 3)
+		dateString = dateList[2] + " " + dateString
+	return dateString
+}
+
+function getMonthAbbreviation(monthNumber) {
+	switch (parseInt(monthNumber)) {
+		case 1:
+			return (lang === 0) ? 'Gen' : 'Jan'
+		case 2:
+			return 'Feb'
+		case 3:
+			return 'Mar'
+		case 4:
+			return 'Apr'
+		case 5:
+			return (lang === 0) ? 'Mag' : 'May'
+		case 6:
+			return (lang === 0) ? 'Giu' : 'Jun'
+		case 7:
+			return (lang === 0) ? 'Lug' : 'Jul'
+		case 8:
+			return (lang === 0) ? 'Ago' : 'Aug'
+		case 9:
+			return (lang === 0) ? 'Set' : 'Sep'
+		case 10:
+			return (lang === 0) ? 'Ott' : 'Oct'
+		case 11:
+			return 'Nov'
+		case 12:
+			return (lang === 0) ? 'Dic' : 'Dec'
+	}
+}
+
+function updateRoleDesc(element) {
+	selectRoleDesc.innerText = roles[element.selectedIndex][lang][1]
+	byId("titleIntro").innerText = str.as[lang] + " " + roles[element.selectedIndex][lang][element.selectedIndex === 0 ? 2 : 0].toLowerCase() + ","
+}
+
+function updatePriorityBackgroundColor(element) {
+	element.style.background = priorities[element.selectedIndex][1]
+}
+
+function hideWorkItemForm() {
+	workItemForm.style.height = "0px"
+	setTimeout(function() { workItemForm.style.padding = "0px" }, 450);
+	window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function emptyWorkItemForm() {
+	byId("creatorName").value = ""
+	idLabelValue.innerText = "0"
+	byId("workItemType").value = 0
+	byId("selectedPriorityInput").value = 0
+	byId("selectedPriorityInput").style.background = priorities[0][1]
+	byId("creatorRole").value = 0
+	byId("workItemTitleIt").value = ""
+	byId("workItemTitleEn").value = ""
+	byId("workItemDescIt").value = ""
+	byId("workItemDescEn").value = ""
+	byId("workItemCreationDay").value = ""
+	byId("workItemCreationMonth").value = ""
+	byId("workItemCreationYear").value = ""
+	byId("workItemStartDay").value = ""
+	byId("workItemStartMonth").value = ""
+	byId("workItemStartYear").value = ""
+	byId("workItemEndDay").value = ""
+	byId("workItemEndMonth").value = ""
+	byId("workItemEndYear").value = ""
+	byId('workItemCheckList').innerHTML = ""
+	updateFormHeight()
+}
+
+function newWorkItem() {
+	if (byId("saveButton").style.display === "inline-block") {
+		emptyWorkItemForm()
+	}
+	idLabelValue.innerText = nextAvailableId
+	if (creatorNames.length === 1) {
+		byId("creatorName").value = creatorNames[0]
+	} else {
+		byId("creatorName").value = ""
+	}
+	setTodayOn("workItemCreation")
+	byId("createButton").style.display = "inline-block"
+	byId("saveButton").style.display = "none"
+	byId("deleteButton").style.display = "none"
+	workItemForm.style.padding = "8px 16px"
+	updateFormHeight(true)
+	window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function editWorkItem(id) {
+	emptyWorkItemForm()
+
+	let index = getWorkItemIndexFromId(id)
+	workItemFormTitle.innerText = str.editWorkItem[lang]
+	idLabelValue.innerText = id
+	byId("workItemType").value = work_items[index][1]
+	byId("selectedPriorityInput").value = work_items[index][2]
+	byId("selectedPriorityInput").style.background = priorities[work_items[index][2]][1]
+	byId("creatorName").value = work_items[index][3][0]
+	byId("creatorRole").value = work_items[index][3][1]
+	byId("workItemTitleIt").value = work_items[index][4][0]
+	byId("workItemTitleEn").value = work_items[index][4][1]
+	byId("workItemDescIt").value = work_items[index][5][0]
+	byId("workItemDescEn").value = work_items[index][5][1]
+
+	if (work_items[index][6].length > 0) byId("workItemCreationYear").value = work_items[index][6][0]
+	if (work_items[index][6].length > 1) byId("workItemCreationMonth").value = work_items[index][6][1]
+	if (work_items[index][6].length > 2) byId("workItemCreationDay").value = work_items[index][6][2]
+	if (work_items[index][7].length > 0) byId("workItemStartYear").value = work_items[index][7][0]
+	if (work_items[index][7].length > 1) byId("workItemStartMonth").value = work_items[index][7][1]
+	if (work_items[index][7].length > 2) byId("workItemStartDay").value = work_items[index][7][2]
+	if (work_items[index][8].length > 0) byId("workItemEndYear").value = work_items[index][8][0]
+	if (work_items[index][8].length > 1) byId("workItemEndMonth").value = work_items[index][8][1]
+	if (work_items[index][8].length > 2) byId("workItemEndDay").value = work_items[index][8][2]
+
+	byId('workItemCheckList').innerHTML = ""
+	for (let i = 0; i < work_items[index][9].length; i++) {
+		addSubtask(work_items[index][9][i])
+	}
+
+	byId("createButton").style.display = "none"
+	byId("saveButton").style.display = "inline-block"
+	byId("deleteButton").style.display = "inline-block"
+
+	window.scrollTo({ top: 0, behavior: 'smooth' });
+	workItemForm.style.padding = "8px 16px"
+	updateFormHeight(true)
+}
+
+function getWorkItemIndexFromId(id) {
+	for (let i = 0; i < work_items.length; i++) {
+		if (work_items[i][0] === id) return i
+	}
+}
+
+function addSubtask(listSubtask) {
+	const divSubtask = document.createElement('div')
+	divSubtask.classList.add('checkItemRow')
+
+	const assigneelabel = document.createElement('label')
+	assigneelabel.classList.add('assigneeLabels')
+	assigneelabel.textContent = str.assignee[lang] + ': '
+	divSubtask.appendChild(assigneelabel)
+
+	const assigneeInput = document.createElement('input')
+	assigneeInput.type = 'text';
+	assigneeInput.classList.add('username')
+	if (listSubtask !== undefined) {
+		assigneeInput.value = listSubtask[1][0]
+	} else {
+		if (assigneeNames.length === 1) assigneeInput.value = assigneeNames[0]
+	}
+	divSubtask.appendChild(assigneeInput)
+
+	const assigneeRoleSelect = document.createElement('select')
+	assigneeRoleSelect.classList.add('roles')
+	let roleIndex = 0
+	roles.forEach(roleName => {
+		const option = document.createElement('option')
+		option.textContent = roleName[lang][0]
+		option.value = roleIndex
+		assigneeRoleSelect.appendChild(option)
+		roleIndex++
+	})
+	if (listSubtask !== undefined) assigneeRoleSelect.value = listSubtask[1][1]
+	divSubtask.appendChild(assigneeRoleSelect)
+
+	const statelabel = document.createElement('label')
+	statelabel.classList.add('stateLabels')
+	statelabel.textContent = str.state[lang] + ': '
+	divSubtask.appendChild(statelabel)
+
+	const stateSelect = document.createElement('select')
+	stateSelect.classList.add('states')
+	let stateIndex = 0
+	states.forEach(stateName => {
+		const option = document.createElement('option')
+		option.textContent = stateName[lang]
+		option.value = stateIndex
+		stateSelect.appendChild(option)
+		stateIndex++
+	})
+	if (listSubtask !== undefined) stateSelect.value = listSubtask[2]
+	divSubtask.appendChild(stateSelect)
+
+	const removeButton = document.createElement('button');
+	removeButton.textContent = '−'
+	removeButton.classList.add('circle')
+	removeButton.addEventListener('click', function() {
+		divSubtask.remove()
+		updateFormHeight()
+	})
+	divSubtask.appendChild(removeButton)
+
+	const divTextIt = document.createElement('div')
+	const divTextEn = document.createElement('div')
+
+	const labelIt = document.createElement('label')
+	const labelEn = document.createElement('label')
+	labelIt.classList.add('lang')
+	labelEn.classList.add('lang')
+	labelIt.textContent = 'IT'
+	labelEn.textContent = 'EN'
+
+	const inputTextIt = document.createElement('input');
+	const inputTextEn = document.createElement('input');
+	inputTextIt.type = 'text';
+	inputTextEn.type = 'text';
+	if (listSubtask !== undefined) {
+		inputTextIt.value = listSubtask[0][0]
+		inputTextEn.value = listSubtask[0][1]
+	}
+	inputTextIt.classList.add('subtask')
+	inputTextEn.classList.add('subtask')
+
+	divTextIt.appendChild(labelIt)
+	divTextIt.appendChild(inputTextIt)
+	divTextEn.appendChild(labelEn)
+	divTextEn.appendChild(inputTextEn)
+	divSubtask.appendChild(divTextIt)
+	divSubtask.appendChild(divTextEn)
+
+	byId('workItemCheckList').appendChild(divSubtask)
+	updateFormHeight()
+}
+
+function createWorkItem() {
+	workItem = []
+	workItem.push(nextAvailableId)
+	workItem.push(parseInt(byId("workItemType").value))
+	workItem.push(parseInt(byId("selectedPriorityInput").value))
+	if (byId("creatorName").value.trim() === "") {
+		alert(str.emptyCreatorNameAlert[lang])
+		return
+	}
+	workItem.push([byId("creatorName").value, parseInt(byId("creatorRole").value)])
+	if (byId("workItemTitleIt").value.trim() === "" || byId("workItemTitleEn").value.trim() === "") {
+		alert(str.emptyWorkItemTitleAlert[lang])
+		return
+	}
+	workItem.push([byId("workItemTitleIt").value, byId("workItemTitleEn").value])
+	workItem.push([byId("workItemDescIt").value, byId("workItemDescEn").value])
+
+	workItem.push(dateByNumbers(byId("workItemCreationYear").value, byId("workItemCreationMonth").value, byId("workItemCreationDay").value))
+	workItem.push(dateByNumbers(byId("workItemStartYear").value, byId("workItemStartMonth").value, byId("workItemStartDay").value))
+	workItem.push(dateByNumbers(byId("workItemEndYear").value, byId("workItemEndMonth").value, byId("workItemEndDay").value))
+
+	let subtasks = collectSubtasksFromWorkItemForm()
+	if (subtasks === false) return
+	workItem.push(subtasks)
+	workItem.push(new Date().toISOString())
+	workItem.push(new Date().toISOString())
+	work_items.push(workItem)
+	dataChanged = true
+	updateDownloadDataButton()
+
+	findNextAvailableIdAndExistingNames()
+	emptyWorkItemForm()
+	hideWorkItemForm()
+}
+
+function saveWorkItem() {
+	let id = parseInt(idLabelValue.innerText)
+	let index = getWorkItemIndexFromId(id)
+	work_items[index][1] = parseInt(byId("workItemType").value)
+	work_items[index][2] = parseInt(byId("selectedPriorityInput").value)
+	work_items[index][3][0] = byId("creatorName").value
+	work_items[index][3][1] = parseInt(byId("creatorRole").value)
+	work_items[index][4][0] = byId("workItemTitleIt").value
+	work_items[index][4][1] = byId("workItemTitleEn").value
+	work_items[index][5][0] = byId("workItemDescIt").value
+	work_items[index][5][1] = byId("workItemDescEn").value
+	work_items[index][6] = dateByNumbers(byId("workItemCreationYear").value, byId("workItemCreationMonth").value, byId("workItemCreationDay").value)
+	work_items[index][7] = dateByNumbers(byId("workItemStartYear").value, byId("workItemStartMonth").value, byId("workItemStartDay").value)
+	work_items[index][8] = dateByNumbers(byId("workItemEndYear").value, byId("workItemEndMonth").value, byId("workItemEndDay").value)
+	let subtasks = collectSubtasksFromWorkItemForm()
+	work_items[index][9] = subtasks
+	work_items[index][11] = new Date().toISOString()
+	dataChanged = true
+	updateDownloadDataButton()
+
+	findNextAvailableIdAndExistingNames()
+	emptyWorkItemForm()
+	hideWorkItemForm()
+}
+
+function deleteWorkItem() {
+	let id = parseInt(idLabelValue.innerText)
+	index = getWorkItemIndexFromId(id)
+	if (confirm(str.sureToDelete[lang] + " ID " + id + "?")) {
+		work_items.splice(index, 1)
+		dataChanged = true
+		updateDownloadDataButton()
+		emptyWorkItemForm()
+		hideWorkItemForm()
+		refreshBacklogs()
+	}
+}
+
+function collectSubtasksFromWorkItemForm() {
+	let subtasks = []
+	subtaskNodes = byId("workItemCheckList").childNodes
+	subtaskNodes.forEach(subtaskNode => {
+		let subtask = []
+		if (subtaskNode.childNodes[6].childNodes[1].value.trim() === "" || subtaskNode.childNodes[7].childNodes[1].value.trim() === "") {
+			alert(str.emptySubtaskTitleAlert[lang])
+			return false
+		}
+		subtask.push([subtaskNode.childNodes[6].childNodes[1].value, subtaskNode.childNodes[7].childNodes[1].value])
+		subtask.push([subtaskNode.childNodes[1].value, parseInt(subtaskNode.childNodes[2].value)])
+		subtask.push(parseInt(subtaskNode.childNodes[4].value))
+		subtasks.push(subtask)
+	})
+	return subtasks
+}
+
+function renderTextToHtml(text) {
+	let html = text.replaceAll('\n\n', '<span class="break"></span>')
+	return html
+}
+
+function dateByNumbers(strYear, strMonth, strDay) {
+	if (strYear === '') return []
+	if (strMonth === '') return [parseInt(strYear)]
+	if (strDay === '') return [parseInt(strYear), parseInt(strMonth)]
+	return [parseInt(strYear), parseInt(strMonth), parseInt(strDay)]
+}
+
+function downloadData() {
+    let a = document.createElement('a');
+    let str = 'var pages = ' + JSON.stringify(pages)
+
+    str += '\n\nvar work_items = []\n\nwork_items = work_items.concat([\n'
+    for (let i = 0; i < work_items.length; i++) {
+		str += JSON.stringify(work_items[i]) + ',\n'
+	}
+	str += '])'
+	// This feature is not ready:
+	/*+ '/* You can add other work_items content just pasting from other files:\n'
+	+ 'work_items = work_items.concat([\n'
+	+ '	...\n'
+	+ '])\n'
+	+ 'and the Software Analysis html file will merge them automatically.\n'
+	+ '*\/\n'*/
+
+    a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(str));
+    a.setAttribute('download', 'work_items.js');
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+	dataChanged = false
+	updateDownloadDataButton()
+}
+</script>
+</body>
+</html>
