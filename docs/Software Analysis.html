@@ -407,14 +407,14 @@ aside #tabs li:hover {
 				<input type="number" min="1" max="31" id="workItemStartDay" class="digits2"></input>
 				<input type="number" min="1" max="12" id="workItemStartMonth" class="digits2"></input>
 				<input type="number" id="workItemStartYear" class="digits4"></input>
-				<button class="todayButton" onclick="setTodayOn('workItemStart')">Today</button>
+				<button class="todayButton" onclick="setTodayOn('workItemStart')"></button>
 			</div>
 			<div>
 				<label class="date" for="workItemEndDay" id="endDateLabel"></label>
 				<input type="number" min="1" max="31" id="workItemEndDay" class="digits2"></input>
 				<input type="number" min="1" max="12" id="workItemEndMonth" class="digits2"></input>
 				<input type="number" id="workItemEndYear" class="digits4"></input>
-				<button class="todayButton" onclick="setTodayOn('workItemEnd')">Today</button>
+				<button class="todayButton" onclick="setTodayOn('workItemEnd')"></button>
 			</div>
 		</div>
 		<div class="row">
@@ -468,11 +468,12 @@ var str = {
 "descriptionTip": ["Spiegazione estesa della questione", "Extensive explanation of the issue"],
 "notSavedData": ["Dati modificati non ancora salvati!", "Changed data not saved yet!"],
 "priority": ["Priorità", "Priority"],
-"as": ["Come", "As"],
+"as": ["Come", "As a"],
 "creator": ["Creatore", "Creator"],
 "creationDate": ["Data creazione", "Creation date"],
 "startDate": ["Data inizio", "Start date"],
 "endDate": ["Data fine", "End date"],
+"today": ["Oggi", "Today"],
 "createWorkItem": ["Crea elemento", "Create work item"],
 "editWorkItem": ["Modifica elemento di lavoro", "Edit work item"],
 "assignee": ["Assegnatario", "Assignee"],
@@ -606,6 +607,8 @@ function setLanguage(langIndex) {
 	byId("creationDateLabel").innerText = str.creationDate[lang] + ":"
 	byId("startDateLabel").innerText = str.startDate[lang] + ":"
 	byId("endDateLabel").innerText = str.endDate[lang] + ":"
+	let todayButtons = document.getElementsByClassName("todayButton")
+	for (let i = 0; i < todayButtons.length; i++) todayButtons[i].innerText = str.today[lang]
 	byId("cancelButton").innerText = str.cancel[lang]
 	byId("createButton").innerText = str.createWorkItem[lang]
 	byId("saveButton").innerText = str.saveChanges[lang]
@@ -669,7 +672,7 @@ function findNextAvailableIdAndExistingNames() {
 			if (!assigneeNames.includes(work_items[i][9][j][1][0])) assigneeNames.push(work_items[i][9][j][1][0]);
 		}
 	}
-	nextAvailableId = Math.max(...id_list) + 1
+	nextAvailableId = (work_items.length === 0) ? 1 : Math.max(...id_list) + 1
 }
 
 function loadWorkItemTypesInTypeSelectBox() {
@@ -823,8 +826,9 @@ function composeWorkItemArticle(workItemIndex) {
 	const h2 = document.createElement('h2')
 	let labelIndex = 0
 	if (work_items[workItemIndex][3][1] === 0) labelIndex = 2
-	h2.innerText = str.as[lang] + " " + roles[work_items[workItemIndex][3][1]][lang][labelIndex].toLowerCase() + ", "
-	if (lang === 1 && work_items[workItemIndex][4][lang][0] === "I") {
+	let connection = (lang === 1 && roles[work_items[workItemIndex][3][1]][lang][0][0].toLowerCase() === 'a') ? 'n ' : ' '
+	h2.innerText = str.as[lang] + connection + roles[work_items[workItemIndex][3][1]][lang][labelIndex].toLowerCase() + ', '
+	if (lang === 1 && work_items[workItemIndex][4][lang][0] === 'I') {
 		h2.innerText += work_items[workItemIndex][4][lang]
 	} else {
 		h2.innerText += work_items[workItemIndex][4][lang][0].toLowerCase() + work_items[workItemIndex][4][lang].substring(1)
@@ -935,7 +939,8 @@ function getMonthAbbreviation(monthNumber) {
 
 function updateRoleDesc(element) {
 	selectRoleDesc.innerText = roles[element.selectedIndex][lang][1]
-	byId("titleIntro").innerText = str.as[lang] + " " + roles[element.selectedIndex][lang][element.selectedIndex === 0 ? 2 : 0].toLowerCase() + ","
+	let connection = (lang === 1 && roles[element.selectedIndex][lang][0][0].toLowerCase() === 'a') ? 'n ' : ' '
+	byId('titleIntro').innerText = str.as[lang] + connection + roles[element.selectedIndex][lang][element.selectedIndex === 0 ? 2 : 0].toLowerCase() + ','
 }
 
 function updatePriorityBackgroundColor(element) {
