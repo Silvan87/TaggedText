@@ -12,7 +12,7 @@ Questo progetto si pone più obiettivi posti a diversi livelli:
 - Infine, attraverso momenti di riflessione associabili alle retrospettive dei metodi agili, si vuole criticare e perfezionare il metodo agile stesso, seguito lungo lo sviluppo di questo software, per dare forma ad un metodo adatto a progetti analoghi, ovvero di piccole dimensioni, ma cercando di mantenere un occhio sulla scalabilità.
 
 A seconda dello scopo a cui sei interessato, puoi scegliere quale introduzione seguire:
-- Vorrei vedere degli esempi della sintassi TaggedText e capire come usarla. **DA FARE**
+- Vorrei vedere degli [esempi della sintassi TaggedText](https://github.com/Silvan87/TaggedText/wiki/TaggedText-by-Examples-IT) e capire come usarla. **DA FARE**
 - Vorrei avere un'introduzione allo sviluppo di questo tool per poter contribuire. **DA FARE**
-- Vorrei avere un'introduzione al metodo agile usato e maturato finora con questo progetto. **DA FARE**
+- Vorrei avere un'[introduzione al metodo agile](https://github.com/Silvan87/TaggedText/wiki/Agile-method-adopted-IT) usato e maturato finora con questo progetto.
 - Vorrei avere una panoramica delle pratiche di programmazione applicate in questo progetto. **DA FARE**
